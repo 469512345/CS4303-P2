@@ -1,7 +1,9 @@
 package cs4303.p2.menu;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.util.screen.Screen;
+import processing.event.KeyEvent;
 
 public class MenuScreen implements Screen {
 
@@ -13,6 +15,14 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void draw() {
-		main.text("Hello World", 0, 0);
+		main.background(0);
+		main.text("Hello World", 100, 100);
+	}
+
+	@Override
+	public void keyPressed(KeyEvent event) {
+		if(event.getKey() == 'a') {
+			this.main.setScreen(new GameScreen(this.main));
+		}
 	}
 }

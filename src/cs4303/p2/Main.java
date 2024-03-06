@@ -6,9 +6,13 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
+import java.util.Random;
+
 public class Main extends PApplet {
 
 	private Screen screen = new MenuScreen(this);
+	public Properties properties = new Properties(this);
+	public final Random random = new Random();
 
 	public void setScreen(Screen screen) {
 		this.screen = screen;
