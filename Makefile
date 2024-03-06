@@ -22,10 +22,10 @@ unzipCore: mkLib
 	(find $(LIB_DIR) -mindepth 1 -maxdepth 1 | read) || unzip -o $(CLASSPATH) -d $(LIB_DIR)
 
 #Copy the lib folder into the build folder, to include in the jar
-cpLib: mkLib unzipCore
+cpLib: unzipCore
 	cp -r $(LIB_DIR)/* $(BUILD_DIR)
 
-jar: cpLib compile
+jar: mkBuild cpLib compile
 	cd $(BUILD_DIR); jar cfe ../$(JAR) $(MAIN_CLASS) .
 
 run: jar
