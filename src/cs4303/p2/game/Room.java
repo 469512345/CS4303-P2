@@ -4,17 +4,18 @@ import cs4303.p2.Main;
 import cs4303.p2.util.Either;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
+import cs4303.p2.util.collisions.Rectangle;
 
 import java.awt.Color;
 import java.util.Random;
 
-public class Room {
+public class Room implements Rectangle {
 
 	private final Main main;
-	public final float xMin;
-	public final float yMin;
-	public final float xMax;
-	public final float yMax;
+	public final float minX;
+	public final float minY;
+	public final float maxX;
+	public final float maxY;
 	@Nullable
 	public final Room parent;
 	@NotNull
@@ -24,27 +25,39 @@ public class Room {
 		@NotNull Main main,
 		@Nullable Room parent,
 		@NotNull LevelInfo levelInfo,
-		float xMin,
-		float yMin,
-		float xMax,
-		float yMax
+		float minX,
+		float minY,
+		float maxX,
+		float maxY
 	) {
 		this.main = main;
 		this.parent = parent;
-		this.xMin = xMin;
-		this.yMin = yMin;
-		this.xMax = xMax;
-		this.yMax = yMax;
+		this.minX = minX;
+		this.minY = minY;
+		this.maxX = maxX;
+		this.maxY = maxY;
 
 		Random random = main.random;
 
 		boolean verticalSplitAllowed = this.width() > 2 * levelInfo.minRoomWidth();
 		boolean horizontalSplitAllowed = this.height() > 2 * levelInfo.minRoomHeight();
 
-		if (!verticalSplitAllowed && !horizontalSplitAllowed) {
+		boolean mustVerticalSplit = this.width() > 2 * levelInfo.maxRoomWidth();
+		boolean mustHorizontalSplit = this.height() > 2 * levelInfo.maxRoomHeight();
+
+		boolean passRandomSplit = random.nextFloat(0, 1) < levelInfo.splitChance();
+
+		SplitAxis axis;
+
+		if (mustVerticalSplit && !mustHorizontalSplit) {
+			axis = SplitAxis.VERTICAL;
+		} else if (mustHorizontalSplit && !mustVerticalSplit) {
+			axis = SplitAxis.HORIZONTAL;
+		} else if (!(mustVerticalSplit || mustHorizontalSplit) && (!verticalSplitAllowed && !horizontalSplitAllowed || !passRandomSplit)) {
 			float lower = levelInfo.minMargin();
 			float upper = levelInfo.maxMargin();
 			LeafInfo leafInto = new LeafInfo(
+				this,
 				random.nextFloat(lower, upper),
 				random.nextFloat(lower, upper),
 				random.nextFloat(lower, upper),
@@ -52,10 +65,7 @@ public class Room {
 			);
 			this.data = Either.ofB(leafInto);
 			return;
-		}
-
-		SplitAxis axis;
-		if (!verticalSplitAllowed) {
+		} else if (!verticalSplitAllowed) {
 			axis = SplitAxis.HORIZONTAL;
 		} else if (!horizontalSplitAllowed) {
 			axis = SplitAxis.VERTICAL;
@@ -64,16 +74,16 @@ public class Room {
 		}
 
 		if (axis == SplitAxis.HORIZONTAL) {
-			float splitLine = this.split(this.yMin, this.yMax, levelInfo.minRoomHeight());
+			float splitLine = this.split(this.minY, this.maxY, levelInfo.minRoomHeight());
 
-			Room child1 = new Room(this.main, this, levelInfo, this.xMin, this.yMin, this.xMax, splitLine);
-			Room child2 = new Room(this.main, this, levelInfo, this.xMin, splitLine, this.xMax, this.yMax);
+			Room child1 = new Room(this.main, this, levelInfo, this.minX, this.minY, this.maxX, splitLine);
+			Room child2 = new Room(this.main, this, levelInfo, this.minX, splitLine, this.maxX, this.maxY);
 			this.data = Either.ofA(new Split(axis, child1, child2));
 		} else {
-			float splitLine = this.split(this.xMin, this.xMax, levelInfo.minRoomWidth());
+			float splitLine = this.split(this.minX, this.maxX, levelInfo.minRoomWidth());
 
-			Room child1 = new Room(this.main, this, levelInfo, this.xMin, this.yMin, splitLine, this.yMax);
-			Room child2 = new Room(this.main, this, levelInfo, splitLine, this.yMin, this.xMax, this.yMax);
+			Room child1 = new Room(this.main, this, levelInfo, this.minX, this.minY, splitLine, this.maxY);
+			Room child2 = new Room(this.main, this, levelInfo, splitLine, this.minY, this.maxX, this.maxY);
 			this.data = Either.ofA(new Split(axis, child1, child2));
 		}
 	}
@@ -117,12 +127,22 @@ public class Room {
 		return this.width() * this.height();
 	}
 
+	@Override
+	public float minX() {
+		return this.minX;
+	}
+
+	@Override
+	public float minY() {
+		return this.minY;
+	}
+
 	public float width() {
-		return this.xMax - this.xMin;
+		return this.maxX - this.minX;
 	}
 
 	public float height() {
-		return this.yMax - this.yMin;
+		return this.maxY - this.minY;
 	}
 
 	/**
@@ -142,19 +162,67 @@ public class Room {
 			LeafInfo info = this.data.b();
 			main.rect().
 				noStroke()
-				.at(this.xMin + info.leftMargin, this.yMin + info.topMargin)
 				.fill(Color.WHITE)
-				.size(
-					this.width() - info.rightMargin - info.leftMargin,
-					this.height() - info.bottomMargin - info.topMargin
-				)
+				.copy(info)
+				.draw();
+			main.ellipse()
+				.at(info.centreX(), info.centreY())
+				.radius(15)
+				.fill(Color.BLUE)
 				.draw();
 		} else {
 			Split split = this.data.a();
-			split.child1()
-				.draw();
-			split.child2()
-				.draw();
+			Room child1 = split.child1;
+			Room child2 = split.child2;
+			child1.draw();
+			child2.draw();
+
+			float halfStrokeWeight = (float) Math.ceil(main.CORRIDOR_STROKE_WEIGHT / 2f);
+
+			if (split.axis == SplitAxis.VERTICAL) {
+				float centreX = (child1.roomMaxX() + child2.roomMinX()) / 2;
+				float child1CentreY = child1.roomCentreY();
+				float child2CentreY = child2.roomCentreY();
+
+				main.line()
+					.from(child1.roomMaxX(), child1CentreY)
+					.to(centreX + halfStrokeWeight, child1CentreY)
+					.stroke(Color.RED)
+					.strokeWeight(main.CORRIDOR_STROKE_WEIGHT)
+					.draw();
+
+				main.line()
+					.from(centreX, child1CentreY)
+					.to(centreX, child2CentreY)
+					.draw();
+
+				main.line()
+					.from(child2.roomMinX(), child2CentreY)
+					.to(centreX - halfStrokeWeight, child2CentreY)
+					.draw();
+
+			} else {
+				float centreY = (child1.roomMaxY() + child2.roomMinY()) / 2;
+				float child1CentreX = child1.roomCentreX();
+				float child2CentreX = child2.roomCentreX();
+
+				main.line()
+					.from(child1CentreX, child1.roomMaxY())
+					.to(child1CentreX, centreY + halfStrokeWeight)
+					.stroke(Color.RED)
+					.strokeWeight(main.CORRIDOR_STROKE_WEIGHT)
+					.draw();
+
+				main.line()
+					.from(child1CentreX, centreY)
+					.to(child2CentreX, centreY)
+					.draw();
+
+				main.line()
+					.from(child2CentreX, child2.roomMinY())
+					.to(child2CentreX, centreY - halfStrokeWeight)
+					.draw();
+			}
 		}
 	}
 
@@ -167,12 +235,86 @@ public class Room {
 	}
 
 	private record LeafInfo(
+		Room room,
 		float leftMargin,
 		float rightMargin,
 		float topMargin,
 		float bottomMargin
-	) {
+	) implements Rectangle {
 
+
+		@Override
+		public float minX() {
+			return this.room.minX + this.leftMargin;
+		}
+
+		@Override
+		public float minY() {
+			return this.room.minY + this.topMargin;
+		}
+
+		@Override
+		public float width() {
+			return room.width() - this.rightMargin - this.leftMargin;
+		}
+
+		@Override
+		public float height() {
+			return room.height() - this.bottomMargin - this.topMargin;
+		}
 	}
 
+	public float roomMinX() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.minX();
+		} else {
+			return this.minX();
+		}
+	}
+
+	public float roomMaxX() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.maxX();
+		} else {
+			return this.maxX();
+		}
+	}
+
+	public float roomMinY() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.minY();
+		} else {
+			return this.minY();
+		}
+	}
+
+	public float roomMaxY() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.maxY();
+		} else {
+			return this.maxY();
+		}
+	}
+
+	public float roomCentreX() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.centreX();
+		} else {
+			return this.centreX();
+		}
+	}
+
+	public float roomCentreY() {
+		if (this.data.hasB()) {
+			return this.data.b()
+				.centreY();
+		} else {
+			return this.centreY();
+		}
+	}
 }

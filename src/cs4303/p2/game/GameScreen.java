@@ -31,13 +31,20 @@ public class GameScreen implements Screen {
 	}
 
 	public LevelInfo generateLevelInfo(int levelNumber) {
+		float width = main.width;
+		float height = main.height;
+		float minWidth = width / 10f;
+		float minHeight = height / 6f;
 		return new LevelInfo(
-			main.width,
-			main.height,
-			main.roomMinWidth(),
-			main.roomMinHeight(),
-			main.ROOM_MARGIN_MIN,
-			main.ROOM_MARGIN_MAX
+			width,
+			height,
+			minWidth,
+			minHeight,
+			2 * minWidth,
+			2 * minHeight,
+			5,
+			80,
+			0.8f
 		);
 	}
 }

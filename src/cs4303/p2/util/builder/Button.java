@@ -122,8 +122,7 @@ class Button implements Rectangle {
 	 */
 	public void draw() {
 		RectBuilder rect = this.app.rect()
-			.at(this.minX, this.minY)
-			.size(this.width, this.height)
+			.copy(this)
 			.fill(this.app.BUTTON_COLOR)
 			.cornerRadius(5);
 		TextBuilder text = this.app.text(this.text)

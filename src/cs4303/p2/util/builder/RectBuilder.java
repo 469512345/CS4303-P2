@@ -185,6 +185,18 @@ public final class RectBuilder implements Rectangle {
 	}
 
 	/**
+	 * Position this rectangle as a copy of another rectangle
+	 *
+	 * @param rectangle rectangle to copy
+	 *
+	 * @return this
+	 */
+	public RectBuilder copy(Rectangle rectangle) {
+		return this.at(rectangle.minX(), rectangle.minY())
+			.size(rectangle.width(), rectangle.height());
+	}
+
+	/**
 	 * Translate the rectangle in the x and y directions
 	 *
 	 * @param x change in x

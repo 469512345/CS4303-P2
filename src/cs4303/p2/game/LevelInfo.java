@@ -5,7 +5,10 @@ public record LevelInfo(
 	float height,
 	float minRoomWidth,
 	float minRoomHeight,
+	float maxRoomWidth,
+	float maxRoomHeight,
 	float minMargin,
-	float maxMargin
+	float maxMargin,
+	float splitChance
 ) {
 }

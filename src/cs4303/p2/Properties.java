@@ -6,17 +6,7 @@ import java.awt.Color;
 
 public class Properties extends PApplet {
 
-	public final float ROOM_MARGIN_MAX = 80;
-	public final float ROOM_MARGIN_MIN = 5;
-
-	public float roomMinHeight() {
-		return this.height / 6f;
-	}
-
-	public float roomMinWidth() {
-		return this.width / 10f;
-	}
-
+	//BUTTON properties
 	/**
 	 * Colour of buttons
 	 */
@@ -33,4 +23,7 @@ public class Properties extends PApplet {
 	 * Height of buttons
 	 */
 	public final int BUTTON_HEIGHT = 50;
+
+	//Map properties
+	public final int CORRIDOR_STROKE_WEIGHT = 20;
 }

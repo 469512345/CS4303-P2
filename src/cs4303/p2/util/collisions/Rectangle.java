@@ -51,6 +51,14 @@ public interface Rectangle extends Collidable {
 		return this.minY() + this.height();
 	}
 
+	default float centreX() {
+		return this.minX() + (this.width() / 2);
+	}
+
+	default float centreY() {
+		return this.minY() + (this.height() / 2);
+	}
+
 	@Override
 	default boolean intersects(Rectangle other) {
 		return Collidable.rectIntersectsRect(
