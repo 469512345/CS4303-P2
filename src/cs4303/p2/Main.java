@@ -4,8 +4,8 @@ import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.builder.EllipseBuilder;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.builder.RectBuilder;
-import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.builder.TextBuilder;
+import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -16,7 +16,8 @@ import java.util.Random;
 public class Main extends Properties implements Rectangle {
 
 	private Screen screen = new MenuScreen(this);
-	public final Random random = new Random();/**
+	public final Random random = new Random();
+	/**
 	 * TextBuilder instance, cached to avoid multiple short-lived instances every frame
 	 */
 	private TextBuilder textBuilder;
@@ -35,6 +36,16 @@ public class Main extends Properties implements Rectangle {
 
 	public void setScreen(Screen screen) {
 		this.screen = screen;
+	}
+
+	/**
+	 * Apply a transformation to render the viewport based on a scale and offset
+	 */
+	public void applyViewport() {
+		if (this.screen != null) {
+			this.scale(screen.scale());
+			this.translate(screen.offsetX() , screen.offsetY());
+		}
 	}
 
 	@Override

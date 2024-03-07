@@ -2,6 +2,7 @@ package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
 import cs4303.p2.util.collisions.Rectangle;
+import cs4303.p2.util.screen.Screen;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -15,7 +16,7 @@ public final class TextBuilder {
 	/**
 	 * GameScreen instance
 	 */
-	private final PApplet app;
+	private final Main app;
 
 	/**
 	 * TextBuilder to show
@@ -59,6 +60,22 @@ public final class TextBuilder {
 	 */
 	public TextBuilder(Main app) {
 		this.app = app;
+	}
+
+	/**
+	 * Clear the current state of this text builder
+	 *
+	 * @return this
+	 */
+	public TextBuilder clear() {
+		this.text = null;
+		this.positionX = 0;
+		this.positionY = 0;
+		this.centringWidth = -1;
+		this.centringHeight = -1;
+		this.fillColor = null;
+		this.size = 0;
+		return this;
 	}
 
 	/**
@@ -268,23 +285,36 @@ public final class TextBuilder {
 	 * Draw the text based on the current internal configuration
 	 */
 	public void draw() {
+		this.app.push();
+		this.app.pushMatrix();
+
+		this.app.applyViewport();
+
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {
 			this.app.noFill();
 		}
+
 		this.app.textSize(this.size);
+
 		float x = this.positionX;
 		float y = this.positionY;
+
 		if (this.centringWidth > 0) {
 			float textWidth = this.app.textWidth(this.text);
 			x = this.positionX + ((this.centringWidth - textWidth) / 2);
 		}
+
 		float textAscent = this.app.textAscent();
 		if (this.centringHeight > 0) {
 			y = this.positionY + ((this.centringHeight - textAscent) / 2);
 		}
+
 		this.app.text(this.text, x, y + textAscent);
+
+		this.app.popMatrix();
+		this.app.pop();
 	}
 
 }

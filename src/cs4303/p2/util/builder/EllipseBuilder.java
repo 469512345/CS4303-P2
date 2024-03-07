@@ -14,7 +14,7 @@ public final class EllipseBuilder {
 	/**
 	 * GameScreen instance
 	 */
-	private final PApplet app;
+	private final Main app;
 
 	/**
 	 * X coordinate of ellipse's centre
@@ -53,6 +53,22 @@ public final class EllipseBuilder {
 	 */
 	public EllipseBuilder(Main app) {
 		this.app = app;
+	}
+
+	/**
+	 * Clear the current state of this ellipse builder
+	 *
+	 * @return this
+	 */
+	public EllipseBuilder clear() {
+		this.positionX = 0;
+		this.positionY = 0;
+		this.width = 0;
+		this.height = 0;
+		this.fillColor = null;
+		this.strokeColor = null;
+		this.strokeWeight = 0;
+		return this;
 	}
 
 	/**
@@ -248,18 +264,28 @@ public final class EllipseBuilder {
 	 * Draw the ellipse based on the current internal configuration
 	 */
 	public void draw() {
+		this.app.push();
+		this.app.pushMatrix();
+
+		this.app.applyViewport();
+
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {
 			this.app.noFill();
 		}
+
 		if (this.strokeColor != null) {
 			this.app.stroke(this.strokeColor);
 		} else {
 			this.app.noStroke();
 		}
+
 		this.app.strokeWeight(this.strokeWeight);
 		this.app.ellipse(this.positionX, this.positionY, this.width, this.height);
+
+		this.app.popMatrix();
+		this.app.pop();
 	}
 
 }

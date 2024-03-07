@@ -15,7 +15,7 @@ public final class RectBuilder implements Rectangle {
 	/**
 	 * GameScreen instance
 	 */
-	private final PApplet app;
+	private final Main app;
 
 	/**
 	 * X coordinate - top left hand corner of the rectangle (min X)
@@ -86,6 +86,26 @@ public final class RectBuilder implements Rectangle {
 	 */
 	public RectBuilder fill(Color fillColor) {
 		return this.fill(fillColor.getRGB());
+	}
+
+	/**
+	 * Clear the current state of this rectangle builder
+	 *
+	 * @return this
+	 */
+	public RectBuilder clear() {
+		this.positionX = 0;
+		this.positionY = 0;
+		this.width = 0;
+		this.height = 0;
+		this.topLeftRadius = 0;
+		this.topRightRadius = 0;
+		this.bottomLeftRadius = 0;
+		this.bottomRightRadius = 0;
+		this.fillColor = null;
+		this.strokeColor = null;
+		this.strokeWeight = 0;
+		return this;
 	}
 
 	/**
@@ -273,16 +293,23 @@ public final class RectBuilder implements Rectangle {
 	 * Draw the rectangle based on the current internal configuration
 	 */
 	public void draw() {
+		this.app.push();
+		this.app.pushMatrix();
+
+		this.app.applyViewport();
+
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {
 			this.app.noFill();
 		}
+
 		if (this.strokeColor != null) {
 			this.app.stroke(this.strokeColor);
 		} else {
 			this.app.noStroke();
 		}
+
 		this.app.strokeWeight(this.strokeWeight);
 		this.app.rect(
 			this.positionX,
@@ -294,6 +321,9 @@ public final class RectBuilder implements Rectangle {
 			this.bottomRightRadius,
 			this.bottomLeftRadius
 		);
+
+		this.app.popMatrix();
+		this.app.pop();
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import processing.event.MouseEvent;
 /**
  * A mouse keybinding
  */
-final class MouseKeybind implements Keybind {
+public final class MouseKeybind implements Keybind {
 
 	/**
 	 * Button on mouse, according to {@link MouseEvent#getButton()}.
@@ -22,7 +22,7 @@ final class MouseKeybind implements Keybind {
 	 * @param button    button of the event
 	 * @param modifiers modifiers of the event
 	 */
-	MouseKeybind(int button, int modifiers) {
+	public MouseKeybind(int button, int modifiers) {
 		this.button = button;
 		this.modifiers = modifiers;
 	}
@@ -32,7 +32,7 @@ final class MouseKeybind implements Keybind {
 	 *
 	 * @param event event to mirror
 	 */
-	MouseKeybind(MouseEvent event) {
+	public MouseKeybind(MouseEvent event) {
 		this(event.getButton(), event.getModifiers());
 	}
 

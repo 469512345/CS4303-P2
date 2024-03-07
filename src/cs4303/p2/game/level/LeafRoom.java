@@ -21,8 +21,8 @@ public final class LeafRoom extends AbstractRoom {
 
 	@Override
 	public void draw() {
-		this.main.rect().
-			noStroke()
+		this.main.rect()
+			.noStroke()
 			.fill(Color.WHITE)
 			.copy(this)
 			.draw();

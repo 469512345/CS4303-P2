@@ -1,9 +1,13 @@
 package cs4303.p2.util.screen;
 
+import cs4303.p2.Main;
+import processing.core.PVector;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public interface Screen {
+
+	Main main();
 
 	void draw();
 
@@ -49,6 +53,18 @@ public interface Screen {
 
 	default void mouseWheel(MouseEvent event) {
 
+	}
+
+	default float scale() {
+		return 1;
+	}
+
+	default float offsetX() {
+		return 0;
+	}
+
+	default float offsetY() {
+		return 0;
 	}
 
 }

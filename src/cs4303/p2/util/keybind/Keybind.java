@@ -5,7 +5,7 @@ import processing.event.Event;
 /**
  * Abstract keybinding which may be for the keyboard or the mouse
  */
-interface Keybind {
+public interface Keybind {
 
 	/**
 	 * Test an event to see if this keybind accepts that event

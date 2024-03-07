@@ -6,7 +6,7 @@ import processing.event.KeyEvent;
 /**
  * A keyboard keybinding
  */
-final class KeyKeybind implements Keybind {
+public final class KeyKeybind implements Keybind {
 
 	/**
 	 * keyCode, according to {@link KeyEvent#getKeyCode()}.
@@ -22,7 +22,7 @@ final class KeyKeybind implements Keybind {
 	 * @param keyCode   keyCode of the event
 	 * @param modifiers modifiers of the event
 	 */
-	KeyKeybind(int keyCode, int modifiers) {
+	public KeyKeybind(int keyCode, int modifiers) {
 		this.keyCode = keyCode;
 		this.modifiers = modifiers;
 	}
@@ -32,7 +32,7 @@ final class KeyKeybind implements Keybind {
 	 *
 	 * @param event event to mirror
 	 */
-	KeyKeybind(KeyEvent event) {
+	public KeyKeybind(KeyEvent event) {
 		this(event.getKeyCode(), event.getModifiers());
 	}
 

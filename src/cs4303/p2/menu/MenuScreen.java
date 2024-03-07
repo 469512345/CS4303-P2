@@ -14,6 +14,11 @@ public class MenuScreen implements Screen {
 	}
 
 	@Override
+	public Main main() {
+		return this.main;
+	}
+
+	@Override
 	public void draw() {
 		main.background(0);
 	}

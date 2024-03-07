@@ -57,6 +57,21 @@ public final class LineBuilder {
 	}
 
 	/**
+	 * Clear the current state of this line builder
+	 *
+	 * @return this
+	 */
+	public LineBuilder clear() {
+		this.startX = 0;
+		this.startY = 0;
+		this.direction.set(0, 0);
+		this.strokeColor = null;
+		this.strokeWeight = 0;
+		this.strokeCap = PConstants.SQUARE;
+		return this;
+	}
+
+	/**
 	 * Set the stroke (outline) colour of the line
 	 *
 	 * @param strokeColor stroke color, in rgb
@@ -281,13 +296,20 @@ public final class LineBuilder {
 	 * Draw the line based on the current internal configuration
 	 */
 	public void draw() {
+		this.app.push();
+		this.app.pushMatrix();
+
+		this.app.applyViewport();
+
 		if (this.strokeColor != null) {
 			this.app.stroke(this.strokeColor);
 		} else {
 			this.app.noStroke();
 		}
+
 		this.app.strokeWeight(this.strokeWeight);
 		this.app.strokeCap(this.strokeCap);
+
 		float endX = this.startX + this.direction.x;
 		float endY = this.startY + this.direction.y;
 		this.app.line(
@@ -296,6 +318,9 @@ public final class LineBuilder {
 			endX,
 			endY
 		);
+
+		this.app.popMatrix();
+		this.app.pop();
 	}
 
 }
