@@ -1,21 +1,36 @@
 package cs4303.p2;
 
-public class Properties {
+import processing.core.PApplet;
 
-	private final Main main;
+import java.awt.Color;
 
-	public Properties(Main main) {
-		this.main = main;
-	}
+public class Properties extends PApplet {
 
-	public final float roomMarginMax = 80;
-	public final float roomMarginMin = 5;
+	public final float ROOM_MARGIN_MAX = 80;
+	public final float ROOM_MARGIN_MIN = 5;
 
 	public float roomMinHeight() {
-		return this.main.height / 6f;
+		return this.height / 6f;
 	}
 
 	public float roomMinWidth() {
-		return this.main.width / 10f;
+		return this.width / 10f;
 	}
+
+	/**
+	 * Colour of buttons
+	 */
+	public final Color BUTTON_COLOR = Color.YELLOW;
+	/**
+	 * Colour of text on buttons
+	 */
+	public final Color BUTTON_TEXT_COLOR = Color.BLACK;
+	/**
+	 * Size of text in a button
+	 */
+	public final int BUTTON_TEXT_SIZE = 50;
+	/**
+	 * Height of buttons
+	 */
+	public final int BUTTON_HEIGHT = 50;
 }

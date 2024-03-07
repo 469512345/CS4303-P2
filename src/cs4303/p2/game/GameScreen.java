@@ -13,7 +13,6 @@ public class GameScreen implements Screen {
 	private final Room room;
 
 	public GameScreen(Main main) {
-		System.out.println("New game screen");
 		this.main = main;
 		this.room = new Room(main);
 	}

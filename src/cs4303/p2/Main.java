@@ -1,6 +1,11 @@
 package cs4303.p2;
 
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.util.builder.EllipseBuilder;
+import cs4303.p2.util.builder.LineBuilder;
+import cs4303.p2.util.builder.RectBuilder;
+import cs4303.p2.util.collisions.Rectangle;
+import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -8,11 +13,25 @@ import processing.event.MouseEvent;
 
 import java.util.Random;
 
-public class Main extends PApplet {
+public class Main extends Properties implements Rectangle {
 
 	private Screen screen = new MenuScreen(this);
-	public Properties properties = new Properties(this);
-	public final Random random = new Random();
+	public final Random random = new Random();/**
+	 * TextBuilder instance, cached to avoid multiple short-lived instances every frame
+	 */
+	private TextBuilder textBuilder;
+	/**
+	 * EllipseBuilder instance, cached to avoid multiple short-lived instances every frame
+	 */
+	private EllipseBuilder ellipseBuilder;
+	/**
+	 * RectBuilder instance, cached to avoid multiple short-lived instances every frame
+	 */
+	private RectBuilder rectBuilder;
+	/**
+	 * RectBuilder instance, cached to avoid multiple short-lived instances every frame
+	 */
+	private LineBuilder lineBuilder;
 
 	public void setScreen(Screen screen) {
 		this.screen = screen;
@@ -21,6 +40,18 @@ public class Main extends PApplet {
 	@Override
 	public void settings() {
 		this.fullScreen();
+		//Use anti-aliasing
+		this.smooth(8);
+	}
+
+	@Override
+	public void setup() {
+		//Instantiate builders
+		this.textBuilder = new TextBuilder(this);
+		this.rectBuilder = new RectBuilder(this);
+		this.ellipseBuilder = new EllipseBuilder(this);
+		this.lineBuilder = new LineBuilder(this);
+		this.screen = new MenuScreen(this);
 	}
 
 	@Override
@@ -105,6 +136,64 @@ public class Main extends PApplet {
 		if (this.screen != null) {
 			screen.mouseWheel(event);
 		}
+	}
+
+	/**
+	 * Get a textBuilder to display text
+	 *
+	 * @param text text to display
+	 *
+	 * @return textBuilder builder instance
+	 */
+	public TextBuilder text(String text) {
+		return this.textBuilder.text(text);
+	}
+
+	/**
+	 * Get a ellipseBuilder to draw a circle
+	 *
+	 * @return ellipseBuilder instance
+	 */
+	public EllipseBuilder ellipse() {
+		return this.ellipseBuilder;
+	}
+
+	/**
+	 * Get a rectBuilder to draw a rectangle
+	 *
+	 * @return rectBuilder instance
+	 */
+	public RectBuilder rect() {
+		return this.rectBuilder;
+	}
+
+	/**
+	 * Get a lineBuilder to draw a line
+	 *
+	 * @return lineBuilder instance
+	 */
+	public LineBuilder line() {
+		return this.lineBuilder;
+	}
+
+	@Override
+	public float minX() {
+		return 0;
+	}
+
+	@Override
+	public float minY() {
+		return 0;
+	}
+
+	@Override
+	public float width() {
+		return this.width;
+	}
+
+	@Override
+	public float height() {
+		return this.height;
 	}
 
 	public static void main(String[] args) {
