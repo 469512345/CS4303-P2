@@ -91,26 +91,18 @@ public final class ContainerRoom extends AbstractRoom {
 
 	@Override
 	public LeafRoom findRoom(Axis axis, AxisDirection direction) {
-		System.out.println("FindRoom(axis = " + axis + ", direction = " + direction + ")");
 		ArrayList<LeafRoom> children = new ArrayList<>();
 		this.appendRooms(children);
-		System.out.println(children.stream()
-			.map(LeafRoom::toString)
-			.collect(Collectors.joining("\n")));
 		LeafRoom max = null;
 		for (LeafRoom child : children) {
 			if (max == null) {
 				max = child;
-				System.out.println("max = " + child);
 			} else if (direction == AxisDirection.MAX && child.compareTo(max, axis, direction) > 0) {
 				max = child;
-				System.out.println("max = " + child);
 			} else if (direction == AxisDirection.MIN && child.compareTo(max, axis, direction) < 0) {
 				max = child;
-				System.out.println("max = " + child);
 			}
 		}
-		System.out.println("result = " + max);
 		return max;
 	}
 
