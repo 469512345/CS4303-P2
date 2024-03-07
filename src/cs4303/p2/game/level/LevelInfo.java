@@ -1,4 +1,4 @@
-package cs4303.p2.game;
+package cs4303.p2.game.level;
 
 public record LevelInfo(
 	float width,
@@ -9,6 +9,7 @@ public record LevelInfo(
 	float maxRoomHeight,
 	float minMargin,
 	float maxMargin,
-	float splitChance
+	float splitChance,
+	float corridorWidth
 ) {
 }

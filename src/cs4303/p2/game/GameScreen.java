@@ -1,6 +1,8 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.level.AbstractRoom;
+import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.screen.Screen;
 import processing.event.KeyEvent;
@@ -10,17 +12,17 @@ import java.awt.Color;
 public class GameScreen implements Screen {
 
 	private final Main main;
-	private final Room room;
+	private final AbstractRoom containerRoom;
 
 	public GameScreen(Main main) {
 		this.main = main;
-		this.room = new Room(main, generateLevelInfo(1));
+		this.containerRoom = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
 	}
 
 	@Override
 	public void draw() {
 		main.background(Color.BLACK.getRGB());
-		this.room.draw();
+		this.containerRoom.draw();
 	}
 
 	@Override
@@ -40,11 +42,12 @@ public class GameScreen implements Screen {
 			height,
 			minWidth,
 			minHeight,
-			2 * minWidth,
-			2 * minHeight,
-			5,
+			3 * minWidth,
+			3 * minHeight,
+			11,
 			80,
-			0.8f
+			0.8f,
+			20
 		);
 	}
 }

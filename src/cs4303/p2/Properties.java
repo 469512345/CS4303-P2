@@ -24,6 +24,4 @@ public class Properties extends PApplet {
 	 */
 	public final int BUTTON_HEIGHT = 50;
 
-	//Map properties
-	public final int CORRIDOR_STROKE_WEIGHT = 20;
 }

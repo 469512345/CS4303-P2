@@ -16,10 +16,6 @@ public class MenuScreen implements Screen {
 	@Override
 	public void draw() {
 		main.background(0);
-		main.text("Hello World")
-			.at(100, 100)
-			.size(80)
-			.draw();
 	}
 
 	@Override
