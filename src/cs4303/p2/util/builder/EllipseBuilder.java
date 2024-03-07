@@ -62,7 +62,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder fill(Color fillColor) {
+	public EllipseBuilder fill(Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -76,7 +76,7 @@ public final class EllipseBuilder {
 	 * @see Color#getRGB()
 	 * @see Color#Color(int)
 	 */
-	EllipseBuilder fill(int fillColor) {
+	public EllipseBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
 	}
@@ -86,7 +86,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder noFill() {
+	public EllipseBuilder noFill() {
 		this.fillColor = null;
 		return this;
 	}
@@ -100,7 +100,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#stroke(float, float, float)
 	 */
-	EllipseBuilder stroke(Color strokeColor) {
+	public EllipseBuilder stroke(Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -113,7 +113,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
-	EllipseBuilder stroke(int strokeColor) {
+	public EllipseBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
 	}
@@ -125,7 +125,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#noStroke()
 	 */
-	EllipseBuilder noStroke() {
+	public EllipseBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
 	}
@@ -139,7 +139,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#strokeWeight(float)
 	 */
-	EllipseBuilder strokeWeight(float strokeWeight) {
+	public EllipseBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
 	}
@@ -151,7 +151,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder at(PVector position) {
+	public EllipseBuilder at(PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -163,7 +163,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder at(float x, float y) {
+	public EllipseBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
 		return this;
@@ -177,7 +177,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder translate(float x, float y) {
+	public EllipseBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
 		return this;
@@ -190,7 +190,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder translate(PVector translation) {
+	public EllipseBuilder translate(PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -201,7 +201,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder radius(float radius) {
+	public EllipseBuilder radius(float radius) {
 		float diameter = radius * 2;
 		return this.size(diameter, diameter);
 	}
@@ -214,7 +214,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder size(float width, float height) {
+	public EllipseBuilder size(float width, float height) {
 		this.width = width;
 		this.height = height;
 		return this;
@@ -227,7 +227,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder width(float width) {
+	public EllipseBuilder width(float width) {
 		this.width = width;
 		return this;
 	}
@@ -239,7 +239,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	EllipseBuilder height(float height) {
+	public EllipseBuilder height(float height) {
 		this.height = height;
 		return this;
 	}
@@ -247,7 +247,7 @@ public final class EllipseBuilder {
 	/**
 	 * Draw the ellipse based on the current internal configuration
 	 */
-	void draw() {
+	public void draw() {
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {

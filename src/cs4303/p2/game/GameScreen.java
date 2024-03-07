@@ -14,7 +14,7 @@ public class GameScreen implements Screen {
 
 	public GameScreen(Main main) {
 		this.main = main;
-		this.room = new Room(main);
+		this.room = new Room(main, generateLevelInfo(1));
 	}
 
 	@Override
@@ -25,8 +25,19 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if(event.getKey() == 'a') {
+		if (event.getKey() == 'a') {
 			this.main.setScreen(new MenuScreen(this.main));
 		}
+	}
+
+	public LevelInfo generateLevelInfo(int levelNumber) {
+		return new LevelInfo(
+			main.width,
+			main.height,
+			main.roomMinWidth(),
+			main.roomMinHeight(),
+			main.ROOM_MARGIN_MIN,
+			main.ROOM_MARGIN_MAX
+		);
 	}
 }

@@ -5,6 +5,7 @@ import cs4303.p2.util.Either;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 
+import java.awt.Color;
 import java.util.Random;
 
 public class Room {
@@ -22,6 +23,7 @@ public class Room {
 	public Room(
 		@NotNull Main main,
 		@Nullable Room parent,
+		@NotNull LevelInfo levelInfo,
 		float xMin,
 		float yMin,
 		float xMax,
@@ -36,19 +38,19 @@ public class Room {
 
 		Random random = main.random;
 
-		boolean verticalSplitAllowed = this.width() > 2 * main.roomMinWidth();
-		boolean horizontalSplitAllowed = this.height() > 2 * main.roomMinHeight();
+		boolean verticalSplitAllowed = this.width() > 2 * levelInfo.minRoomWidth();
+		boolean horizontalSplitAllowed = this.height() > 2 * levelInfo.minRoomHeight();
 
 		if (!verticalSplitAllowed && !horizontalSplitAllowed) {
-			float lower = main.ROOM_MARGIN_MIN;
-			float upper = main.ROOM_MARGIN_MAX;
-			LeafInfo info = new LeafInfo(
+			float lower = levelInfo.minMargin();
+			float upper = levelInfo.maxMargin();
+			LeafInfo leafInto = new LeafInfo(
 				random.nextFloat(lower, upper),
 				random.nextFloat(lower, upper),
 				random.nextFloat(lower, upper),
 				random.nextFloat(lower, upper)
 			);
-			this.data = Either.ofB(info);
+			this.data = Either.ofB(leafInto);
 			return;
 		}
 
@@ -62,28 +64,29 @@ public class Room {
 		}
 
 		if (axis == SplitAxis.HORIZONTAL) {
-			float splitLine = this.split(this.yMin, this.yMax, main.roomMinHeight());
+			float splitLine = this.split(this.yMin, this.yMax, levelInfo.minRoomHeight());
 
-			Room child1 = new Room(this.main, this, this.xMin, this.yMin, this.xMax, splitLine);
-			Room child2 = new Room(this.main, this, this.xMin, splitLine, this.xMax, this.yMax);
+			Room child1 = new Room(this.main, this, levelInfo, this.xMin, this.yMin, this.xMax, splitLine);
+			Room child2 = new Room(this.main, this, levelInfo, this.xMin, splitLine, this.xMax, this.yMax);
 			this.data = Either.ofA(new Split(axis, child1, child2));
 		} else {
-			float splitLine = this.split(this.xMin, this.xMax, main.roomMinWidth());
+			float splitLine = this.split(this.xMin, this.xMax, levelInfo.minRoomWidth());
 
-			Room child1 = new Room(this.main, this, this.xMin, this.yMin, splitLine, this.yMax);
-			Room child2 = new Room(this.main, this, splitLine, this.yMin, this.xMax, this.yMax);
+			Room child1 = new Room(this.main, this, levelInfo, this.xMin, this.yMin, splitLine, this.yMax);
+			Room child2 = new Room(this.main, this, levelInfo, splitLine, this.yMin, this.xMax, this.yMax);
 			this.data = Either.ofA(new Split(axis, child1, child2));
 		}
 	}
 
-	public Room(Main main) {
+	public Room(Main main, LevelInfo levelInfo) {
 		this(
 			main,
 			null,
+			levelInfo,
 			0,
 			0,
-			main.width,
-			main.height
+			levelInfo.width(),
+			levelInfo.height()
 		);
 	}
 
@@ -137,13 +140,15 @@ public class Room {
 	void draw() {
 		if (this.data.hasB()) {
 			LeafInfo info = this.data.b();
-			main.noStroke();
-			main.rect(
-				this.xMin + info.leftMargin,
-				this.yMin + info.topMargin,
-				this.width() - info.rightMargin - info.leftMargin,
-				this.height() - info.bottomMargin - info.topMargin
-			);
+			main.rect().
+				noStroke()
+				.at(this.xMin + info.leftMargin, this.yMin + info.topMargin)
+				.fill(Color.WHITE)
+				.size(
+					this.width() - info.rightMargin - info.leftMargin,
+					this.height() - info.bottomMargin - info.topMargin
+				)
+				.draw();
 		} else {
 			Split split = this.data.a();
 			split.child1()

@@ -63,7 +63,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder stroke(Color strokeColor) {
+	public LineBuilder stroke(Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -76,7 +76,7 @@ public final class LineBuilder {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
-	LineBuilder stroke(int strokeColor) {
+	public LineBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
 	}
@@ -86,7 +86,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder noStroke() {
+	public LineBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
 	}
@@ -98,7 +98,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder strokeWeight(float strokeWeight) {
+	public LineBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
 	}
@@ -112,7 +112,7 @@ public final class LineBuilder {
 	 *
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder strokeCap(int strokeCap) {
+	public LineBuilder strokeCap(int strokeCap) {
 		this.strokeCap = strokeCap;
 		return this;
 	}
@@ -125,7 +125,7 @@ public final class LineBuilder {
 	 * @see PConstants#SQUARE
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder squareCap() {
+	public LineBuilder squareCap() {
 		return this.strokeCap(PConstants.SQUARE);
 	}
 
@@ -137,7 +137,7 @@ public final class LineBuilder {
 	 * @see PConstants#ROUND
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder roundCap() {
+	public LineBuilder roundCap() {
 		return this.strokeCap(PConstants.ROUND);
 	}
 
@@ -149,7 +149,7 @@ public final class LineBuilder {
 	 * @see PConstants#PROJECT
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder projectCap() {
+	public LineBuilder projectCap() {
 		return this.strokeCap(PConstants.PROJECT);
 	}
 
@@ -161,7 +161,7 @@ public final class LineBuilder {
 	 * @see PConstants#MITER
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder miterCap() {
+	public LineBuilder miterCap() {
 		return this.strokeCap(PConstants.MITER);
 	}
 
@@ -173,7 +173,7 @@ public final class LineBuilder {
 	 * @see PConstants#BEVEL
 	 * @see PApplet#strokeCap(int)
 	 */
-	LineBuilder bevelCap() {
+	public LineBuilder bevelCap() {
 		return this.strokeCap(PConstants.BEVEL);
 	}
 
@@ -184,7 +184,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder from(PVector position) {
+	public LineBuilder from(PVector position) {
 		return this.from(position.x, position.y);
 	}
 
@@ -196,7 +196,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder from(float x, float y) {
+	public LineBuilder from(float x, float y) {
 		this.startX = x;
 		this.startY = y;
 		return this;
@@ -210,7 +210,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder translate(float x, float y) {
+	public LineBuilder translate(float x, float y) {
 		this.startX += x;
 		this.startY += y;
 		return this;
@@ -223,7 +223,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder translate(PVector translation) {
+	public LineBuilder translate(PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -234,7 +234,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder to(PVector position) {
+	public LineBuilder to(PVector position) {
 		return this.to(position.x, position.y);
 	}
 
@@ -246,7 +246,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder to(float x, float y) {
+	public LineBuilder to(float x, float y) {
 		this.direction.set(x - this.startX, y - this.startY);
 		return this;
 	}
@@ -260,7 +260,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder along(PVector vector) {
+	public LineBuilder along(PVector vector) {
 		this.direction.set(vector);
 		return this;
 	}
@@ -272,7 +272,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	LineBuilder limit(float limit) {
+	public LineBuilder limit(float limit) {
 		this.direction.limit(limit);
 		return this;
 	}
@@ -280,7 +280,7 @@ public final class LineBuilder {
 	/**
 	 * Draw the line based on the current internal configuration
 	 */
-	void draw() {
+	public void draw() {
 		if (this.strokeColor != null) {
 			this.app.stroke(this.strokeColor);
 		} else {

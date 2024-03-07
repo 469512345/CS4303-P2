@@ -80,7 +80,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder fill(Color fillColor) {
+	public TextBuilder fill(Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -91,7 +91,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder fill(int fillColor) {
+	public TextBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
 	}
@@ -101,7 +101,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder noFill() {
+	public TextBuilder noFill() {
 		this.fillColor = null;
 		return this;
 	}
@@ -113,7 +113,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder at(PVector position) {
+	public TextBuilder at(PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -125,7 +125,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder at(float x, float y) {
+	public TextBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
 		this.centringWidth = 1;
@@ -141,7 +141,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder translate(float x, float y) {
+	public TextBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
 		return this;
@@ -154,7 +154,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder translate(PVector translation) {
+	public TextBuilder translate(PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -167,7 +167,7 @@ public final class TextBuilder {
 	 *
 	 * @see PApplet#textSize(float)
 	 */
-	TextBuilder size(float size) {
+	public TextBuilder size(float size) {
 		this.size = size;
 		return this;
 	}
@@ -181,7 +181,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredInRect(PVector p1, float width, float height) {
+	public TextBuilder centredInRect(PVector p1, float width, float height) {
 		return this.centredInRect(p1.x, p1.y, width, height);
 	}
 
@@ -193,7 +193,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredHorizontally(PVector p1, float width) {
+	public TextBuilder centredHorizontally(PVector p1, float width) {
 		return this.centredHorizontally(p1.x, p1.y, width);
 	}
 
@@ -205,7 +205,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredVertically(PVector p1, float height) {
+	public TextBuilder centredVertically(PVector p1, float height) {
 		return this.centredVertically(p1.x, p1.y, height);
 	}
 
@@ -218,7 +218,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredHorizontally(float x, float y, float width) {
+	public TextBuilder centredHorizontally(float x, float y, float width) {
 		return this.centredInRect(x, y, width, -1);
 	}
 
@@ -231,7 +231,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredVertically(float x, float y, float height) {
+	public TextBuilder centredVertically(float x, float y, float height) {
 		return this.centredInRect(x, y, -1, height);
 	}
 
@@ -245,7 +245,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredInRect(float x, float y, float width, float height) {
+	public TextBuilder centredInRect(float x, float y, float width, float height) {
 		this.positionX = x;
 		this.positionY = y;
 		this.centringWidth = width;
@@ -260,14 +260,14 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	TextBuilder centredInRect(Rectangle rectangle) {
+	public TextBuilder centredInRect(Rectangle rectangle) {
 		return this.centredInRect(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
 	}
 
 	/**
 	 * Draw the text based on the current internal configuration
 	 */
-	void draw() {
+	public void draw() {
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {

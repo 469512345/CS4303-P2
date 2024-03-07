@@ -46,7 +46,7 @@ class Button implements Rectangle {
 	 * @param width  width of rectangle
 	 * @param height height of rectangle
 	 */
-	Button(Main app, String text, float minX, float minY, float width, float height) {
+	public Button(Main app, String text, float minX, float minY, float width, float height) {
 		this.app = app;
 		this.text = text;
 		this.minX = minX;
@@ -62,7 +62,7 @@ class Button implements Rectangle {
 	 * @param text      text on button
 	 * @param rectangle rectangle definition
 	 */
-	Button(Main app, String text, Rectangle rectangle) {
+	public Button(Main app, String text, Rectangle rectangle) {
 		this(app, text, rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
 	}
 
@@ -74,7 +74,7 @@ class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	Button at(float minX, float minY) {
+	public Button at(float minX, float minY) {
 		this.minX = minX;
 		this.minY = minY;
 		return this;
@@ -87,7 +87,7 @@ class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	Button at(PVector position) {
+	public Button at(PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -99,7 +99,7 @@ class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	Button size(float width, float height) {
+	public Button size(float width, float height) {
 		this.width = width;
 		this.height = height;
 		return this;
@@ -112,7 +112,7 @@ class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	Button at(Rectangle rectangle) {
+	public Button at(Rectangle rectangle) {
 		return this.at(rectangle.minX(), rectangle.minY())
 			.size(rectangle.width(), rectangle.height());
 	}
@@ -120,7 +120,7 @@ class Button implements Rectangle {
 	/**
 	 * Draw the button
 	 */
-	void draw() {
+	public void draw() {
 		RectBuilder rect = this.app.rect()
 			.at(this.minX, this.minY)
 			.size(this.width, this.height)
@@ -148,7 +148,7 @@ class Button implements Rectangle {
 	 *
 	 * @return true if mouse event occurs within the button
 	 */
-	boolean clicked(MouseEvent event) {
+	public boolean clicked(MouseEvent event) {
 		return this.containsPoint(event.getX(), event.getY());
 	}
 

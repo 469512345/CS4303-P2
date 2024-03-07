@@ -84,7 +84,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder fill(Color fillColor) {
+	public RectBuilder fill(Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -97,7 +97,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @see PApplet#fill(int)
 	 */
-	RectBuilder fill(int fillColor) {
+	public RectBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
 	}
@@ -107,7 +107,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder noFill() {
+	public RectBuilder noFill() {
 		this.fillColor = null;
 		return this;
 	}
@@ -119,7 +119,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder stroke(Color strokeColor) {
+	public RectBuilder stroke(Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -132,7 +132,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
-	RectBuilder stroke(int strokeColor) {
+	public RectBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
 	}
@@ -142,7 +142,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder noStroke() {
+	public RectBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
 	}
@@ -154,7 +154,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder strokeWeight(float strokeWeight) {
+	public RectBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
 	}
@@ -166,7 +166,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder at(PVector position) {
+	public RectBuilder at(PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -178,7 +178,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder at(float x, float y) {
+	public RectBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
 		return this;
@@ -192,7 +192,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder translate(float x, float y) {
+	public RectBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
 		return this;
@@ -205,7 +205,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder translate(PVector translation) {
+	public RectBuilder translate(PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -217,7 +217,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder size(float width, float height) {
+	public RectBuilder size(float width, float height) {
 		this.width = width;
 		this.height = height;
 		return this;
@@ -230,7 +230,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder cornerRadius(float radius) {
+	public RectBuilder cornerRadius(float radius) {
 		return this.cornerRadii(radius, radius, radius, radius);
 	}
 
@@ -244,7 +244,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	RectBuilder cornerRadii(
+	public RectBuilder cornerRadii(
 		float topLeftRadius,
 		float topRightRadius,
 		float bottomRightRadius,
@@ -260,7 +260,7 @@ public final class RectBuilder implements Rectangle {
 	/**
 	 * Draw the rectangle based on the current internal configuration
 	 */
-	void draw() {
+	public void draw() {
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
 		} else {
@@ -309,65 +309,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return immutable rectangle from current rect builder state
 	 */
-	Rectangle capture() {
+	public Rectangle capture() {
 		return new RectCapture(this.positionX, this.positionY, this.width, this.height);
 	}
 
-	/**
-	 * Immutable capture of a rectangle
-	 */
-	static class RectCapture implements Rectangle {
-
-		/**
-		 * Min x coord
-		 */
-		private final float minX;
-		/**
-		 * Min y coord
-		 */
-		private final float minY;
-		/**
-		 * Width of rectangle
-		 */
-		private final float width;
-		/**
-		 * Height of rectangle
-		 */
-		private final float height;
-
-		/**
-		 * Capture a rectangle
-		 *
-		 * @param minX   min x
-		 * @param minY   min y
-		 * @param width  width
-		 * @param height height
-		 */
-		RectCapture(float minX, float minY, float width, float height) {
-			this.minX = minX;
-			this.minY = minY;
-			this.width = width;
-			this.height = height;
-		}
-
-		@Override
-		public float minX() {
-			return this.minX;
-		}
-
-		@Override
-		public float minY() {
-			return this.minY;
-		}
-
-		@Override
-		public float width() {
-			return this.width;
-		}
-
-		@Override
-		public float height() {
-			return this.height;
-		}
-	}
 }
