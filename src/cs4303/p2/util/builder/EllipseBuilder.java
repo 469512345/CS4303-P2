@@ -1,6 +1,7 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.collisions.Circle;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -158,6 +159,18 @@ public final class EllipseBuilder {
 	public EllipseBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
+	}
+
+	/**
+	 * Copy a circle's centre and radius to this ellipse builder
+	 *
+	 * @param circle circle to copy
+	 *
+	 * @return this
+	 */
+	public EllipseBuilder copy(Circle circle) {
+		return this.at(circle.centreX(), circle.centreY())
+			.radius(circle.radius());
 	}
 
 	/**

@@ -6,11 +6,15 @@ import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
+import cs4303.p2.util.keybind.MouseKeybind;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameScreen implements Screen {
 
@@ -21,9 +25,11 @@ public class GameScreen implements Screen {
 	private Keybind down = new KeyKeybind(83, 0); // s
 	private Keybind left = new KeyKeybind(65, 0); // a
 	private Keybind right = new KeyKeybind(68, 0); // d
-	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // +
-	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // -
+	private Keybind fire = new MouseKeybind(MouseEvent.BUTTON1, 0); // left click
+	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // CTRL + +
+	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // CTRL + -
 	private float scale = 1;
+	private final Set<Integer> keysDown = new HashSet<>();
 
 	public GameScreen(Main main) {
 		this.main = main;
@@ -38,27 +44,47 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void draw() {
+		this.update();
 		main.background(Color.BLACK.getRGB());
 		this.containerRoom.draw();
 		this.player.draw();
 	}
 
+	public void update() {
+		this.player.update();
+	}
+
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if (this.up.test(event)) {
-			this.player.up();
-		} else if (this.down.test(event)) {
-			this.player.down();
-		} else if (this.left.test(event)) {
-			this.player.left();
-		} else if (this.right.test(event)) {
-			this.player.right();
-		} else if (this.zoomIn.test(event)) {
+		if (event.getKey() == ' ') {
+			this.main.setScreen(new MenuScreen(this.main));
+			return;
+		}
+		if (this.zoomIn.test(event)) {
 			this.zoomIn();
 		} else if (this.zoomOut.test(event)) {
 			this.zoomOut();
-		} else if (event.getKey() == ' ') {
-			this.main.setScreen(new MenuScreen(this.main));
+		} else if (this.fire.test(event)) {
+			this.fire();
+		} else {
+			handleKeyUpDownEvent(event, true);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent event) {
+		this.handleKeyUpDownEvent(event, false);
+	}
+
+	private void handleKeyUpDownEvent(KeyEvent event, boolean value) {
+		if (this.up.test(event)) {
+			this.player.up = value;
+		} else if (this.down.test(event)) {
+			this.player.down = value;
+		} else if (this.left.test(event)) {
+			this.player.left = value;
+		} else if (this.right.test(event)) {
+			this.player.right = value;
 		}
 	}
 
@@ -70,14 +96,18 @@ public class GameScreen implements Screen {
 		this.scale /= 1.1f;
 	}
 
+	private void fire() {
+
+	}
+
 	@Override
 	public float offsetX() {
-		return ((this.main.width / 2f) / this.scale()) - this.player.position.x;
+		return ((this.main.width / 2f) / this.scale()) - this.player.laggedPosition().x;
 	}
 
 	@Override
 	public float offsetY() {
-		return ((this.main.height / 2f) / this.scale()) - this.player.position.y;
+		return ((this.main.height / 2f) / this.scale()) - this.player.laggedPosition().y;
 	}
 
 	@Override
