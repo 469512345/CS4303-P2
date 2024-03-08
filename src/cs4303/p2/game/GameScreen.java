@@ -20,6 +20,9 @@ public class GameScreen implements Screen {
 	private Keybind down = new KeyKeybind(83, 0); // s
 	private Keybind left = new KeyKeybind(65, 0); // a
 	private Keybind right = new KeyKeybind(68, 0); // d
+	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // +
+	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // -
+	private float scale = 2;
 
 	public GameScreen(Main main) {
 		this.main = main;
@@ -49,6 +52,20 @@ public class GameScreen implements Screen {
 			this.player.left();
 		} else if (this.right.test(event)) {
 			this.player.right();
+		} else if (this.zoomIn.test(event)) {
+			this.zoomIn();
+		} else if (this.zoomOut.test(event)) {
+			this.zoomOut();
+		}
+	}
+
+	private void zoomIn() {
+		this.scale += 0.1f;
+	}
+
+	private void zoomOut() {
+		if(this.scale > 0.1) {
+			this.scale -= 0.1f;
 		}
 	}
 
@@ -64,7 +81,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public float scale() {
-		return 2;
+		return this.scale;
 	}
 
 	public LevelInfo generateLevelInfo(int levelNumber) {
