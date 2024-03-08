@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Main extends Properties implements Rectangle {
 
-	private Screen screen = new MenuScreen(this);
+	private Screen screen;
 	public final Random random = new Random();
 	/**
 	 * TextBuilder instance, cached to avoid multiple short-lived instances every frame
@@ -44,7 +44,7 @@ public class Main extends Properties implements Rectangle {
 	public void applyViewport() {
 		if (this.screen != null) {
 			this.scale(screen.scale());
-			this.translate(screen.offsetX() , screen.offsetY());
+			this.translate(screen.offsetX(), screen.offsetY());
 		}
 	}
 
@@ -62,6 +62,8 @@ public class Main extends Properties implements Rectangle {
 		this.rectBuilder = new RectBuilder(this);
 		this.ellipseBuilder = new EllipseBuilder(this);
 		this.lineBuilder = new LineBuilder(this);
+		this.screen = new MenuScreen(this);
+		//Create menu
 		this.screen = new MenuScreen(this);
 	}
 

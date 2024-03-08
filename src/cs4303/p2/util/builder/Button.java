@@ -9,7 +9,7 @@ import processing.event.MouseEvent;
 /**
  * A rectangular button
  */
-class Button implements Rectangle {
+public class Button implements Rectangle {
 
 	/**
 	 * PApplet instance
@@ -64,6 +64,18 @@ class Button implements Rectangle {
 	 */
 	public Button(Main app, String text, Rectangle rectangle) {
 		this(app, text, rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
+	}
+
+	/**
+	 * Copy this button to a rectangle's position
+	 *
+	 * @param rectangle rectangle to copy
+	 *
+	 * @return this
+	 */
+	public Button copy(Rectangle rectangle) {
+		return this.at(rectangle.minX(), rectangle.minY())
+			.size(rectangle.width(), rectangle.height());
 	}
 
 	/**
