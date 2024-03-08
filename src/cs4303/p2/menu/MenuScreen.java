@@ -25,7 +25,7 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if (event.getKey() == 'a') {
+		if (event.getKey() == ' ') {
 			this.main.setScreen(new GameScreen(this.main));
 		}
 	}

@@ -3,6 +3,7 @@ package cs4303.p2.game;
 import cs4303.p2.Main;
 import cs4303.p2.game.level.AbstractRoom;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
 import cs4303.p2.util.screen.Screen;
@@ -22,7 +23,7 @@ public class GameScreen implements Screen {
 	private Keybind right = new KeyKeybind(68, 0); // d
 	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // +
 	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // -
-	private float scale = 2;
+	private float scale = 1;
 
 	public GameScreen(Main main) {
 		this.main = main;
@@ -56,17 +57,17 @@ public class GameScreen implements Screen {
 			this.zoomIn();
 		} else if (this.zoomOut.test(event)) {
 			this.zoomOut();
+		} else if (event.getKey() == ' ') {
+			this.main.setScreen(new MenuScreen(this.main));
 		}
 	}
 
 	private void zoomIn() {
-		this.scale += 0.1f;
+		this.scale *= 1.1f;
 	}
 
 	private void zoomOut() {
-		if(this.scale > 0.1) {
-			this.scale -= 0.1f;
-		}
+		this.scale /= 1.1f;
 	}
 
 	@Override
