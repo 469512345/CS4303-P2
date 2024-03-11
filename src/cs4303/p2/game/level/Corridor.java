@@ -66,6 +66,9 @@ public class Corridor {
 
 		float halfWidth = this.width / 2f;
 
+		this.room1.corridors.add(this);
+		this.room2.corridors.add(this);
+
 		Random random = main.random;
 
 		if (this.axis == Axis.VERTICAL) {

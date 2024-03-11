@@ -2,6 +2,7 @@ package cs4303.p2.game;
 
 import cs4303.p2.Main;
 import cs4303.p2.game.level.AbstractRoom;
+import cs4303.p2.game.level.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.keybind.KeyKeybind;
@@ -13,6 +14,8 @@ import processing.event.KeyEvent;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Screen shown to the user when playing the game
@@ -72,7 +75,13 @@ public class GameScreen implements Screen {
 	public GameScreen(Main main) {
 		this.main = main;
 		this.level = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
-		this.player = new Player(this, new PVector(main.width / 2f, main.height / 2f));
+		List<LeafRoom> rooms = new ArrayList<>();
+		this.level.appendRooms(rooms);
+		rooms = rooms.stream()
+			.filter(room -> room.corridors.size() == 1)
+			.toList();
+		LeafRoom startingRoom = rooms.get(main.random.nextInt(rooms.size()));
+		this.player = new Player(this, new PVector(startingRoom.centreX(), startingRoom.centreY()));
 	}
 
 	@Override

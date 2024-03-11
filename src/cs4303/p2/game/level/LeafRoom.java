@@ -3,12 +3,16 @@ package cs4303.p2.game.level;
 import cs4303.p2.Main;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A leaf node in a room tree
  */
 public final class LeafRoom extends AbstractRoom {
+
+	public final List<Corridor> corridors = new ArrayList<>();
 
 	/**
 	 * Create a room
