@@ -30,7 +30,7 @@ public class Player implements Circle {
 	}
 
 	public void draw() {
-		this.game.main()
+		this.game.main
 			.ellipse()
 			.copy(this)
 			.fill(Color.MAGENTA)

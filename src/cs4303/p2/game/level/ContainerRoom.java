@@ -7,19 +7,45 @@ import cs4303.p2.util.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
-import java.util.stream.Collectors;
 
+/**
+ * Room which is not a leaf node on the tree. This room will contain two child rooms
+ */
 public final class ContainerRoom extends AbstractRoom {
 
+	/**
+	 * The axis this room is split on
+	 */
 	@NotNull
 	public final Axis splitAxis;
+	/**
+	 * First child room
+	 */
 	@NotNull
 	public final AbstractRoom child1;
+	/**
+	 * Second child room
+	 */
 	@NotNull
 	public final AbstractRoom child2;
+	/**
+	 * Corridor connecting the child rooms
+	 */
 	@NotNull
 	public final Corridor corridor;
 
+	/**
+	 * Create a container room
+	 *
+	 * @param main      main instance
+	 * @param parent    parent room, or null if root node
+	 * @param levelInfo parameters describing level generation
+	 * @param minX      minimum x coordinate of room's bounds
+	 * @param minY      minimum y coordinate of room's bounds
+	 * @param maxX      maximum x coordinate of room's bounds
+	 * @param maxY      maximum y coordinate of room's bounds
+	 * @param splitAxis axis in which the room should split
+	 */
 	public ContainerRoom(
 		@NotNull Main main,
 		@Nullable ContainerRoom parent,
@@ -76,6 +102,7 @@ public final class ContainerRoom extends AbstractRoom {
 				this.maxY
 			);
 		}
+		//Find the leaf nodes to connect in the two child rooms
 		LeafRoom child1Leaf = this.child1.findRoom(this.splitAxis.other(), AxisDirection.MAX);
 		LeafRoom child2Leaf = this.child2.findRoom(this.splitAxis.other(), AxisDirection.MIN);
 
@@ -89,6 +116,14 @@ public final class ContainerRoom extends AbstractRoom {
 		corridor.draw();
 	}
 
+	/**
+	 * Find the room with the most extreme coordinate in a direction along an axis
+	 *
+	 * @param axis      axis of coordinates
+	 * @param direction which side of the room should be compared
+	 *
+	 * @return room with the most extreme coordinate in the direction of the axis
+	 */
 	@Override
 	public LeafRoom findRoom(Axis axis, AxisDirection direction) {
 		ArrayList<LeafRoom> children = new ArrayList<>();
@@ -106,6 +141,11 @@ public final class ContainerRoom extends AbstractRoom {
 		return max;
 	}
 
+	/**
+	 * Append any leaf nodes contained within this region to a collection
+	 *
+	 * @param result collection to append to
+	 */
 	@Override
 	public void appendRooms(Collection<LeafRoom> result) {
 		this.child1.appendRooms(result);

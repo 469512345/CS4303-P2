@@ -4,7 +4,10 @@ import processing.core.PApplet;
 
 import java.awt.Color;
 
-public class Properties extends PApplet {
+/**
+ * Properties for the application
+ */
+public abstract class Properties extends PApplet {
 
 	//BUTTON properties
 	/**

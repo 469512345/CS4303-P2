@@ -159,7 +159,7 @@ public class Main extends Properties implements Rectangle {
 	 * @return textBuilder builder instance
 	 */
 	public TextBuilder text(String text) {
-		return this.textBuilder.text(text);
+		return this.textBuilder.clear().text(text);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class Main extends Properties implements Rectangle {
 	 * @return ellipseBuilder instance
 	 */
 	public EllipseBuilder ellipse() {
-		return this.ellipseBuilder;
+		return this.ellipseBuilder.clear();
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class Main extends Properties implements Rectangle {
 	 * @return rectBuilder instance
 	 */
 	public RectBuilder rect() {
-		return this.rectBuilder;
+		return this.rectBuilder.clear();
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Main extends Properties implements Rectangle {
 	 * @return lineBuilder instance
 	 */
 	public LineBuilder line() {
-		return this.lineBuilder;
+		return this.lineBuilder.clear();
 	}
 
 	@Override

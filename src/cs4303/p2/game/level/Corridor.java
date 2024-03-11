@@ -10,16 +10,51 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * A corridor between two rooms. This will aim to be straight if possible, but will otherwise consist of 3 segments.
+ */
 public class Corridor {
 
+	/**
+	 * Main instance
+	 */
 	private final Main main;
+	/**
+	 * First room
+	 */
 	private final LeafRoom room1;
+	/**
+	 * Second room
+	 */
 	private final LeafRoom room2;
+	/**
+	 * Axis of the corridor
+	 */
 	private final Axis axis;
+	/**
+	 * Width of the corridor
+	 */
 	private final float width;
+	/**
+	 * Nodes of the corridor. If the corridor is straight then this will only be the start and end point, but if the
+	 * corridor has bends there will be point at each 90-degree bend.
+	 */
 	private final ArrayList<PVector> points;
+	/**
+	 * Rectangle segments that make up this corridor. These are calculated from the points upon construction to avoid
+	 * recomputing each frame
+	 */
 	private final ArrayList<Rectangle> segments;
 
+	/**
+	 * Create a new corridor
+	 *
+	 * @param main  main instance
+	 * @param room1 first room
+	 * @param room2 second room
+	 * @param axis  axis of the corridor
+	 * @param width width of the corridor
+	 */
 	public Corridor(Main main, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
 		this.main = main;
 		this.room1 = room1;
@@ -112,6 +147,9 @@ public class Corridor {
 		}
 	}
 
+	/**
+	 * Draw to screen
+	 */
 	void draw() {
 		RectBuilder rect = main.rect()
 			.fill(Color.WHITE);
@@ -122,6 +160,15 @@ public class Corridor {
 		}
 	}
 
+	/**
+	 * Get a random value based on a gaussian distribution
+	 *
+	 * @param random random instance
+	 * @param min    min value
+	 * @param max    max value
+	 *
+	 * @return random value in range
+	 */
 	private static float random(Random random, float min, float max) {
 		float mean = (min + max) / 2f;
 		float stdDev = (max - min) / 4f;
@@ -133,6 +180,15 @@ public class Corridor {
 		return result;
 	}
 
+	/**
+	 * Convert a line, with a square margin in all directions, into a rectangle segment
+	 *
+	 * @param p1     point 1
+	 * @param p2     point 2
+	 * @param margin margin around the line in all directions (square-cap, not rounded)
+	 *
+	 * @return rectangle segment
+	 */
 	private static Rectangle lineToRect(PVector p1, PVector p2, float margin) {
 		float minX = Float.min(p1.x, p2.x);
 		float minY = Float.min(p1.y, p2.y);

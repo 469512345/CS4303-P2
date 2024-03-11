@@ -5,7 +5,6 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.util.builder.Button;
 import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.screen.Screen;
-import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 import java.awt.Color;
@@ -18,11 +17,6 @@ public class MenuScreen implements Screen {
 	public MenuScreen(Main main) {
 		this.main = main;
 		this.playButton = new Button(main, "Play", main.rect());
-	}
-
-	@Override
-	public Main main() {
-		return this.main;
 	}
 
 	@Override

@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.StringJoiner;
 
+/**
+ * Abstract base class for a Room in the Partition Tree
+ */
 public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom, ContainerRoom {
 
 	@NotNull
@@ -22,6 +25,17 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	public final float maxX;
 	public final float maxY;
 
+	/**
+	 * Create a room
+	 *
+	 * @param main      main instance
+	 * @param parent    parent room, or null if root node
+	 * @param levelInfo parameters describing level generation
+	 * @param minX      minimum x coordinate of room's bounds
+	 * @param minY      minimum y coordinate of room's bounds
+	 * @param maxX      maximum x coordinate of room's bounds
+	 * @param maxY      maximum y coordinate of room's bounds
+	 */
 	protected AbstractRoom(
 		@NotNull Main main,
 		@Nullable ContainerRoom parent,
@@ -66,6 +80,19 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		return this.maxY - this.minY;
 	}
 
+	/**
+	 * Create a room
+	 *
+	 * @param main      main instance
+	 * @param parent    parent room, or null if creating the root node
+	 * @param levelInfo parameters describing level generation
+	 * @param minX      minimum x coordinate of room's bounds
+	 * @param minY      minimum y coordinate of room's bounds
+	 * @param maxX      maximum x coordinate of room's bounds
+	 * @param maxY      maximum y coordinate of room's bounds
+	 *
+	 * @return created room
+	 */
 	public static AbstractRoom createRoom(
 		@NotNull Main main,
 		@Nullable ContainerRoom parent,
@@ -83,7 +110,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		boolean verticalSplitAllowed = width > 2 * levelInfo.minRoomWidth();
 		boolean horizontalSplitAllowed = height > 2 * levelInfo.minRoomHeight();
 
-		boolean mustVerticalSplit = width >  levelInfo.maxRoomWidth();
+		boolean mustVerticalSplit = width > levelInfo.maxRoomWidth();
 		boolean mustHorizontalSplit = height > levelInfo.maxRoomHeight();
 
 		boolean passRandomChance = random.nextFloat(0, 1) < levelInfo.splitChance();
@@ -123,6 +150,15 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		return new ContainerRoom(main, parent, levelInfo, minX, minY, maxX, maxY, axis);
 	}
 
+	/**
+	 * Compare this room's coordinate to another room, along a given axis and direction along the axis
+	 *
+	 * @param other         room to compare against this room
+	 * @param axis          axis for comparison
+	 * @param axisDirection which side of the room to compare
+	 *
+	 * @return int < 0 for lower, int > 1 for greater, 0 for equal
+	 */
 	public int compareTo(AbstractRoom other, Axis axis, AxisDirection axisDirection) {
 		if (axis == Axis.HORIZONTAL) {
 			if (axisDirection == AxisDirection.MIN) {
@@ -139,13 +175,22 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		}
 	}
 
+	/**
+	 * Create the root room
+	 *
+	 * @param main      main instance
+	 * @param levelInfo parameters describing level generation
+	 *
+	 * @return created room instance
+	 */
 	public static AbstractRoom createRoot(Main main, LevelInfo levelInfo) {
 		return createRoom(main, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
 	}
 
 	@Override
 	public String toString() {
-		return new StringJoiner(", ",
+		return new StringJoiner(
+			", ",
 			this.getClass()
 				.getSimpleName() + "[",
 			"]"

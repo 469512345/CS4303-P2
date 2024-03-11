@@ -13,40 +13,73 @@ import processing.event.KeyEvent;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Set;
 
+/**
+ * Screen shown to the user when playing the game
+ */
 public class GameScreen implements Screen {
 
-	private final Main main;
-	private final AbstractRoom containerRoom;
+	/**
+	 * Main instance
+	 */
+	protected final Main main;
+	/**
+	 * Root of the room tree
+	 */
+	private final AbstractRoom level;
+	/**
+	 * Player instance
+	 */
 	private final Player player;
+	/**
+	 * Keybind for move up
+	 */
 	private Keybind up = new KeyKeybind(87, 0); // w
+	/**
+	 * Keybind for move down
+	 */
 	private Keybind down = new KeyKeybind(83, 0); // s
+	/**
+	 * Keybind for move left
+	 */
 	private Keybind left = new KeyKeybind(65, 0); // a
+	/**
+	 * Keybind for move right
+	 */
 	private Keybind right = new KeyKeybind(68, 0); // d
+	/**
+	 * Keybind for fire
+	 */
 	private Keybind fire = new MouseKeybind(MouseEvent.BUTTON1, 0); // left click
+	/**
+	 * Keybind for zoom in
+	 */
 	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // CTRL + +
+	/**
+	 * Keybind for zoom out
+	 */
 	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // CTRL + -
-	private float scale = 1;
-	private final Set<Integer> keysDown = new HashSet<>();
+	/**
+	 * The current zoom level
+	 */
+	private float scale = 2;
 
+	/**
+	 * Create the game instance
+	 *
+	 * @param main main instance
+	 */
 	public GameScreen(Main main) {
 		this.main = main;
-		this.containerRoom = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
+		this.level = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
 		this.player = new Player(this, new PVector(main.width / 2f, main.height / 2f));
-	}
-
-	@Override
-	public Main main() {
-		return this.main;
 	}
 
 	@Override
 	public void draw() {
 		this.update();
 		main.background(Color.BLACK.getRGB());
-		this.containerRoom.draw();
+		this.level.draw();
 		this.player.draw();
 	}
 
