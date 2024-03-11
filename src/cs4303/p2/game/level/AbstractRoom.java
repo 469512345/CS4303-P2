@@ -98,11 +98,11 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	public abstract void appendRooms(Collection<LeafRoom> result);
 
 	/**
-	 * Append any walls contained within this region to a collection
+	 * Append any horizontalWalls contained within this region to a collection
 	 *
 	 * @param result collection to append to
 	 */
-	public abstract void appendWalls(Collection<Wall> result);
+	public abstract void appendWalls(Collection<HorizontalWall> horizontalWalls, Collection<VerticalWall> verticalWalls);
 
 	@Override
 	public float minX() {

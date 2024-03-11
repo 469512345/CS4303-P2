@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import processing.core.PVector;
+
 /**
  * This interface represents a collidable object which can be described as a circle
  */
@@ -43,9 +45,29 @@ public interface Circle extends Collidable {
 	}
 
 	@Override
+	default boolean intersects(VerticalLine verticalLine) {
+		return this.containsPoint(verticalLine.closestPoint(this.centreX(), this.centreY()));
+	}
+
+	@Override
+	default boolean intersects(HorizontalLine horizontalLine) {
+		return this.containsPoint(horizontalLine.closestPoint(this.centreX(), this.centreY()));
+	}
+
+	@Override
 	default boolean containsPoint(float x, float y) {
 		float diffX = this.centreX() - x;
 		float diffY = this.centreY() - y;
 		return ((diffX * diffX) + (diffY * diffY)) <= (this.radius() * this.radius());
+	}
+
+	@Override
+	default PVector closestPoint(float x, float y) {
+		if (this.containsPoint(x, y)) {
+			return new PVector(x, y);
+		}
+		PVector vector = new PVector(x - this.centreX(), y - this.centreY());
+		vector.setMag(this.radius());
+		return vector.add(this.centreX(), this.centreY());
 	}
 }

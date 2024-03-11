@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import processing.core.PVector;
+
 /**
  * This interface represents a collidable object that can be represented as an axis-aligned rectangle
  */
@@ -70,6 +72,14 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
+	default boolean intersects(Circle circle) {
+		return Collidable.circleIntersectsRect(
+			circle.centreX(), circle.centreY(), circle.radius(),
+			this.minX(), this.minY(), this.width(), this.height()
+		);
+	}
+
+	@Override
 	default boolean intersects(Rectangle other) {
 		return Collidable.rectIntersectsRect(
 			this.minX(), this.minY(), this.width(), this.height(),
@@ -78,23 +88,37 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Circle circle) {
-		return Collidable.circleIntersectsRect(
-			circle.centreX(), circle.centreY(), circle.radius(),
-			this.minX(), this.minY(), this.width(), this.height()
-		);
+	default boolean intersects(VerticalLine verticalLine) {
+		return verticalLine.intersects(this);
 	}
 
-	/**
-	 * Whether this object contains a point
-	 *
-	 * @param x x coordinate of point
-	 * @param y y coordinate of point
-	 *
-	 * @return true if this object contains the point inside, or on the line
-	 */
+	@Override
+	default boolean intersects(HorizontalLine horizontalLine) {
+		return horizontalLine.intersects(this);
+	}
+
 	@Override
 	default boolean containsPoint(float x, float y) {
 		return x >= this.minX() && y >= this.minY() && x <= this.maxX() && y <= this.maxY();
+	}
+
+	default Rectangle intersection(Rectangle rectangle) {
+		if(!this.intersects(rectangle)) {
+			return null;
+		}
+		return null; //TODO implement this
+	}
+
+	@Override
+	default PVector closestPoint(float x, float y) {
+		if (this.containsPoint(x, y)) {
+			return new PVector(x, y);
+		}
+		// Find the nearest point on the
+		// rectangle to the centre of
+		// the circle
+		float Xn = Math.max(this.minX(), Math.min(x, this.maxX()));
+		float Yn = Math.max(this.minY(), Math.min(y, this.maxY()));
+		return new PVector(Xn, Yn);
 	}
 }

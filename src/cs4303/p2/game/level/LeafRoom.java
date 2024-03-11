@@ -61,8 +61,8 @@ public final class LeafRoom extends AbstractRoom {
 	}
 
 	@Override
-	public void appendWalls(Collection<Wall> result) {
-		appendWalls(this, result);
+	public void appendWalls(Collection<HorizontalWall> horizontalWalls, Collection<VerticalWall> verticalWalls) {
+		appendWalls(this, horizontalWalls, verticalWalls);
 		for (Corridor corridor : this.corridors) {
 			//Only consider corridors where this is room1
 			//This will prevent corridors being counted in duplicate
@@ -70,26 +70,30 @@ public final class LeafRoom extends AbstractRoom {
 				continue;
 			}
 			for (Rectangle segment : corridor.segments) {
-				appendWalls(segment, result);
+				appendWalls(segment, horizontalWalls, verticalWalls);
 			}
 		}
 	}
 
 	/**
-	 * Determine the walls of a rectangle and add them to a collection
+	 * Determine the horizontalWalls of a rectangle and add them to a collection
 	 *
-	 * @param rectangle rectangle to determine
-	 * @param result    collection to append to
+	 * @param rectangle       rectangle to determine
+	 * @param horizontalWalls collection to append to
 	 */
-	private static void appendWalls(Rectangle rectangle, Collection<Wall> result) {
+	private static void appendWalls(
+		Rectangle rectangle,
+		Collection<HorizontalWall> horizontalWalls,
+		Collection<VerticalWall> verticalWalls
+	) {
 		float minX = rectangle.minX();
 		float minY = rectangle.minY();
 		float maxX = rectangle.maxX();
 		float maxY = rectangle.maxY();
 
-		result.add(new Wall(minX, minY, minX, maxY, Axis.VERTICAL));
-		result.add(new Wall(minX, minY, maxX, minY, Axis.HORIZONTAL));
-		result.add(new Wall(minX, maxY, maxX, maxY, Axis.HORIZONTAL));
-		result.add(new Wall(maxX, minY, maxX, maxY, Axis.VERTICAL));
+		horizontalWalls.add(new HorizontalWall(minX, maxX, minY));
+		horizontalWalls.add(new HorizontalWall(minX, maxX, maxY));
+		verticalWalls.add(new VerticalWall(minX, minY, maxY));
+		verticalWalls.add(new VerticalWall(maxX, minY, maxY));
 	}
 }

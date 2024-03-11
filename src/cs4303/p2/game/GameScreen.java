@@ -2,9 +2,10 @@ package cs4303.p2.game;
 
 import cs4303.p2.Main;
 import cs4303.p2.game.level.AbstractRoom;
+import cs4303.p2.game.level.HorizontalWall;
 import cs4303.p2.game.level.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.level.Wall;
+import cs4303.p2.game.level.VerticalWall;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.keybind.KeyKeybind;
@@ -33,9 +34,13 @@ public class GameScreen implements Screen {
 	 */
 	private final AbstractRoom level;
 	/**
-	 * Walls
+	 * Horizontal walls
 	 */
-	public final List<Wall> walls = new LinkedList<>();
+	public final List<HorizontalWall> horizontalWalls = new LinkedList<>();
+	/**
+	 * Vertical walls
+	 */
+	public final List<VerticalWall> verticalWalls = new LinkedList<>();
 	/**
 	 * Rooms
 	 */
@@ -85,7 +90,7 @@ public class GameScreen implements Screen {
 	public GameScreen(Main main) {
 		this.main = main;
 		this.level = AbstractRoom.createRoot(this.main, this.generateLevelInfo(1));
-		this.level.appendWalls(this.walls);
+		this.level.appendWalls(this.horizontalWalls, this.verticalWalls);
 
 		this.level.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
@@ -104,10 +109,15 @@ public class GameScreen implements Screen {
 		LineBuilder line = this.main.line()
 			.stroke(Color.GREEN)
 			.strokeWeight(1);
-		for (Wall wall : this.walls) {
+		for (HorizontalWall horizontalWall : this.horizontalWalls) {
 			line
-				.from(wall.minX(), wall.minY())
-				.to(wall.maxX(), wall.maxY())
+				.from(horizontalWall.minX(), horizontalWall.y())
+				.to(horizontalWall.maxX(), horizontalWall.y())
+				.draw();
+		}
+		for (VerticalWall verticalWall : this.verticalWalls) {
+			line.from(verticalWall.x(), verticalWall.minY())
+				.to(verticalWall.x(), verticalWall.maxY())
 				.draw();
 		}
 	}

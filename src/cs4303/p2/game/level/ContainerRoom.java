@@ -140,9 +140,9 @@ public final class ContainerRoom extends AbstractRoom {
 	}
 
 	@Override
-	public void appendWalls(Collection<Wall> result) {
-		this.child1.appendWalls(result);
-		this.child2.appendWalls(result);
+	public void appendWalls(Collection<HorizontalWall> horizontalWalls, Collection<VerticalWall> verticalWalls) {
+		this.child1.appendWalls(horizontalWalls, verticalWalls);
+		this.child2.appendWalls(horizontalWalls, verticalWalls);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import processing.core.PVector;
+
 /**
  * Interface for something that can be collided into.
  * <p>
@@ -26,6 +28,24 @@ public interface Collidable {
 	boolean intersects(Rectangle rectangle);
 
 	/**
+	 * Whether the collidable object intersects a vertical line
+	 *
+	 * @param verticalLine line to test
+	 *
+	 * @return true if objects intersect, false otherwise
+	 */
+	boolean intersects(VerticalLine verticalLine);
+
+	/**
+	 * Whether the collidable object intersects a horizontal line
+	 *
+	 * @param horizontalLine line to test
+	 *
+	 * @return true if objects intersect, false otherwise
+	 */
+	boolean intersects(HorizontalLine horizontalLine);
+
+	/**
 	 * Whether this object contains a point
 	 *
 	 * @param x x coordinate of point
@@ -34,6 +54,87 @@ public interface Collidable {
 	 * @return true if this object contains the point inside, or on the line
 	 */
 	boolean containsPoint(float x, float y);
+
+	/**
+	 * Whether this object contains a point
+	 *
+	 * @param point point to test
+	 *
+	 * @return true if this object contains the point inside, or on the line
+	 */
+	default boolean containsPoint(PVector point) {
+		return this.containsPoint(point.x, point.y);
+	}
+
+	/**
+	 * Calculate the closest point on this shape to a given coordinate
+	 *
+	 * @param x x coordinate
+	 * @param y y coordinate
+	 *
+	 * @return position vector of cloest point on shape
+	 */
+	PVector closestPoint(float x, float y);
+
+	/**
+	 * Calculate the closest point on this shape to a given coordinate
+	 *
+	 * @param point point to test
+	 *
+	 * @return position vector of cloest point on shape
+	 */
+	default PVector closestPoint(PVector point) {
+		return this.closestPoint(point.x, point.y);
+	}
+
+	/**
+	 * Calculate the distance from the closest point on this shape to a given point
+	 *
+	 * @param x x coordinate of point
+	 * @param y y coordinate of point
+	 *
+	 * @return distance between the given point, and the closest point on this shape
+	 */
+	default float closestDistanceFrom(float x, float y) {
+		return this.closestPoint(x, y).sub(x, y)
+			.mag();
+	}
+
+	/**
+	 * Calculate the distance from the closest point on this shape to a given point
+	 *
+	 * @param point point
+	 *
+	 * @return distance between the given point, and the closest point on this shape
+	 */
+	default float closestDistanceFrom(PVector point) {
+		return this.closestPoint(point).sub(point)
+			.mag();
+	}
+
+	/**
+	 * Calculate the distance squared from the closest point on this shape to a given point
+	 *
+	 * @param x x coordinate of point
+	 * @param y y coordinate of point
+	 *
+	 * @return distance squared between the given point, and the closest point on this shape
+	 */
+	default float closestDistanceSqFrom(float x, float y) {
+		return this.closestPoint(x, y).sub(x, y).magSq();
+	}
+
+	/**
+	 * Calculate the distance squared from the closest point on this shape to a given point
+	 *
+	 * @param point point
+	 *
+	 * @return distance squared the given point, and the closest point on this shape
+	 */
+	default float closestDistanceSqFrom(PVector point) {
+		return this.closestPoint(point).sub(point)
+			.magSq();
+	}
 
 	/**
 	 * Check if two rectangles intersect

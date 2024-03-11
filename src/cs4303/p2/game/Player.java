@@ -1,6 +1,7 @@
 package cs4303.p2.game;
 
-import cs4303.p2.game.level.Wall;
+import cs4303.p2.game.level.HorizontalWall;
+import cs4303.p2.game.level.VerticalWall;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PVector;
 
@@ -120,12 +121,26 @@ public class Player implements Circle {
 		boolean breakX = false;
 		boolean breakY = false;
 
-		for (Wall wall : this.game.walls) {
-			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
+		for (HorizontalWall horizontalWall : this.game.horizontalWalls) {
+			if (!breakX && horizontalWall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
 				newX = this.position.x;
 				breakX = true;
 			}
-			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
+			if (!breakY && horizontalWall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
+				newY = this.position.y;
+				breakY = true;
+			}
+			if (breakX && breakY) {
+				break;
+			}
+		}
+
+		for (VerticalWall verticalWall : this.game.verticalWalls) {
+			if (!breakX && verticalWall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
+				newX = this.position.x;
+				breakX = true;
+			}
+			if (!breakY && verticalWall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
 				newY = this.position.y;
 				breakY = true;
 			}
