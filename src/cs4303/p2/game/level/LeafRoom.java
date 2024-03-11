@@ -1,6 +1,7 @@
 package cs4303.p2.game.level;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.collisions.Rectangle;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import java.util.List;
  */
 public final class LeafRoom extends AbstractRoom {
 
+	/**
+	 * Corridors leading into this room
+	 */
 	public final List<Corridor> corridors = new ArrayList<>();
 
 	/**
@@ -54,5 +58,38 @@ public final class LeafRoom extends AbstractRoom {
 	@Override
 	public void appendRooms(Collection<LeafRoom> result) {
 		result.add(this);
+	}
+
+	@Override
+	public void appendWalls(Collection<Wall> result) {
+		appendWalls(this, result);
+		for (Corridor corridor : this.corridors) {
+			//Only consider corridors where this is room1
+			//This will prevent corridors being counted in duplicate
+			if (corridor.room1 != this) {
+				continue;
+			}
+			for (Rectangle segment : corridor.segments) {
+				appendWalls(segment, result);
+			}
+		}
+	}
+
+	/**
+	 * Determine the walls of a rectangle and add them to a collection
+	 *
+	 * @param rectangle rectangle to determine
+	 * @param result    collection to append to
+	 */
+	private static void appendWalls(Rectangle rectangle, Collection<Wall> result) {
+		float minX = rectangle.minX();
+		float minY = rectangle.minY();
+		float maxX = rectangle.maxX();
+		float maxY = rectangle.maxY();
+
+		result.add(new Wall(minX, minY, minX, maxY, Axis.VERTICAL));
+		result.add(new Wall(minX, minY, maxX, minY, Axis.HORIZONTAL));
+		result.add(new Wall(minX, maxY, maxX, maxY, Axis.HORIZONTAL));
+		result.add(new Wall(maxX, minY, maxX, maxY, Axis.VERTICAL));
 	}
 }

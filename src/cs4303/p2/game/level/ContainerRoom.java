@@ -116,14 +116,6 @@ public final class ContainerRoom extends AbstractRoom {
 		corridor.draw();
 	}
 
-	/**
-	 * Find the room with the most extreme coordinate in a direction along an axis
-	 *
-	 * @param axis      axis of coordinates
-	 * @param direction which side of the room should be compared
-	 *
-	 * @return room with the most extreme coordinate in the direction of the axis
-	 */
 	@Override
 	public LeafRoom findRoom(Axis axis, AxisDirection direction) {
 		ArrayList<LeafRoom> children = new ArrayList<>();
@@ -141,15 +133,16 @@ public final class ContainerRoom extends AbstractRoom {
 		return max;
 	}
 
-	/**
-	 * Append any leaf nodes contained within this region to a collection
-	 *
-	 * @param result collection to append to
-	 */
 	@Override
 	public void appendRooms(Collection<LeafRoom> result) {
 		this.child1.appendRooms(result);
 		this.child2.appendRooms(result);
+	}
+
+	@Override
+	public void appendWalls(Collection<Wall> result) {
+		this.child1.appendWalls(result);
+		this.child2.appendWalls(result);
 	}
 
 	/**

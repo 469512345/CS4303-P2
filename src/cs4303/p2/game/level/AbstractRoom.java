@@ -54,11 +54,34 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		this.maxY = maxY;
 	}
 
+	/**
+	 * Draw the room
+	 */
 	public abstract void draw();
 
+	/**
+	 * Find the room with the most extreme coordinate in a direction along an axis
+	 *
+	 * @param axis      axis of coordinates
+	 * @param direction which side of the room should be compared
+	 *
+	 * @return room with the most extreme coordinate in the direction of the axis
+	 */
 	public abstract LeafRoom findRoom(Axis axis, AxisDirection direction);
 
+	/**
+	 * Append any leaf nodes contained within this region to a collection
+	 *
+	 * @param result collection to append to
+	 */
 	public abstract void appendRooms(Collection<LeafRoom> result);
+
+	/**
+	 * Append any walls contained within this region to a collection
+	 *
+	 * @param result collection to append to
+	 */
+	public abstract void appendWalls(Collection<Wall> result);
 
 	@Override
 	public float minX() {

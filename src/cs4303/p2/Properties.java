@@ -19,6 +19,10 @@ public abstract class Properties extends PApplet {
 	 */
 	public final Color BUTTON_TEXT_COLOR = Color.BLACK;
 	/**
+	 * Colour of highlight when hovering over button
+	 */
+	public final Color BUTTON_HIGHLIGHT_COLOR = Color.WHITE;
+	/**
 	 * Size of text in a button
 	 */
 	public final int BUTTON_TEXT_SIZE = 50;

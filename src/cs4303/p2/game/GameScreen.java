@@ -4,6 +4,7 @@ import cs4303.p2.Main;
 import cs4303.p2.game.level.AbstractRoom;
 import cs4303.p2.game.level.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.Wall;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
@@ -14,7 +15,7 @@ import processing.event.KeyEvent;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,6 +31,14 @@ public class GameScreen implements Screen {
 	 * Root of the room tree
 	 */
 	private final AbstractRoom level;
+	/**
+	 * Walls
+	 */
+	public final List<Wall> walls = new LinkedList<>();
+	/**
+	 * Rooms
+	 */
+	private final List<LeafRoom> rooms = new LinkedList<>();
 	/**
 	 * Player instance
 	 */
@@ -75,12 +84,15 @@ public class GameScreen implements Screen {
 	public GameScreen(Main main) {
 		this.main = main;
 		this.level = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
-		List<LeafRoom> rooms = new ArrayList<>();
-		this.level.appendRooms(rooms);
-		rooms = rooms.stream()
-			.filter(room -> room.corridors.size() == 1)
-			.toList();
-		LeafRoom startingRoom = rooms.get(main.random.nextInt(rooms.size()));
+		this.level.appendWalls(this.walls);
+
+		this.level.appendRooms(this.rooms);
+		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
+		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1);
+		System.out.println(singlyConnectedRooms);
+		LeafRoom startingRoom = singlyConnectedRooms.get(main.random.nextInt(singlyConnectedRooms.size()));
+		System.out.println(startingRoom);
+
 		this.player = new Player(this, new PVector(startingRoom.centreX(), startingRoom.centreY()));
 	}
 
@@ -90,6 +102,14 @@ public class GameScreen implements Screen {
 		main.background(Color.BLACK.getRGB());
 		this.level.draw();
 		this.player.draw();
+		for (Wall wall : this.walls) {
+			this.main.line()
+				.from(wall.p1X(), wall.p1Y())
+				.to(wall.p2X(), wall.p2Y())
+				.stroke(Color.GREEN)
+				.strokeWeight(1)
+				.draw();
+		}
 	}
 
 	public void update() {
@@ -169,10 +189,10 @@ public class GameScreen implements Screen {
 			minHeight,
 			3 * minWidth,
 			3 * minHeight,
-			11,
+			16,
 			80,
 			0.8f,
-			20
+			30
 		);
 	}
 }

@@ -1,5 +1,6 @@
 package cs4303.p2.game;
 
+import cs4303.p2.game.level.Wall;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PVector;
 
@@ -13,6 +14,7 @@ public class Player implements Circle {
 	public static final int CAMERA_LAG_FRAMES = 15;
 	public static final float MOVEMENT_VELOCITY = 0.8f; // pixels / frame
 	public static final float PLAYER_RADIUS = 8f;
+	public static final float PLAYER_RADIUS_SQUARED = PLAYER_RADIUS * PLAYER_RADIUS;
 
 	private final GameScreen game;
 	private final PVector position;
@@ -63,7 +65,27 @@ public class Player implements Circle {
 		this.velocity.set(velocityX, velocityY)
 			//Set the magnitude if non-zero. stops left+up moving at sqrt(2) * speed
 			.setMag(MOVEMENT_VELOCITY);
-		this.position.add(this.velocity);
+		float newX = this.position.x + this.velocity.x;
+		float newY = this.position.y + this.velocity.y;
+
+		boolean breakX = false;
+		boolean breakY = false;
+
+		for (Wall wall : this.game.walls) {
+			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
+				newX = this.position.x;
+				breakX = true;
+			}
+			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
+				newY = this.position.y;
+				breakY = true;
+			}
+			if (breakX && breakY) {
+				break;
+			}
+		}
+
+		this.position.set(newX, newY);
 
 		//Add this new position to the history
 		this.positionHistory.add(this.position.copy());

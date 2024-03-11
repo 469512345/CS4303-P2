@@ -143,7 +143,7 @@ public class Button implements Rectangle {
 			.centredInRect(rect);
 		if (this.containsPoint(this.app.mouseX, this.app.mouseY)) {
 			rect.strokeWeight(2);
-			rect.stroke(this.app.BUTTON_TEXT_COLOR);
+			rect.stroke(this.app.BUTTON_HIGHLIGHT_COLOR);
 			this.app.cursor(PConstants.HAND);
 		} else {
 			rect.noStroke();

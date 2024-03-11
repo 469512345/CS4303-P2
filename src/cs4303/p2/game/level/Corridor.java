@@ -22,11 +22,11 @@ public class Corridor {
 	/**
 	 * First room
 	 */
-	private final LeafRoom room1;
+	public final LeafRoom room1;
 	/**
 	 * Second room
 	 */
-	private final LeafRoom room2;
+	public final LeafRoom room2;
 	/**
 	 * Axis of the corridor
 	 */
@@ -44,7 +44,7 @@ public class Corridor {
 	 * Rectangle segments that make up this corridor. These are calculated from the points upon construction to avoid
 	 * recomputing each frame
 	 */
-	private final ArrayList<Rectangle> segments;
+	public final ArrayList<Rectangle> segments;
 
 	/**
 	 * Create a new corridor
