@@ -14,15 +14,36 @@ import java.util.StringJoiner;
  */
 public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom, ContainerRoom {
 
+	/**
+	 * Main instance
+	 */
 	@NotNull
 	protected final Main main;
+	/**
+	 * Parent of this room, or null if this room is the root node
+	 */
 	@Nullable
 	public final ContainerRoom parent;
+	/**
+	 * Parameters for level generation
+	 */
 	@NotNull
 	public final LevelInfo levelInfo;
+	/**
+	 * Minimum x coordinate of room's bounds
+	 */
 	public final float minX;
+	/**
+	 * Minimum y coordinate of room's bounds
+	 */
 	public final float minY;
+	/**
+	 * Maximum x coordinate of room's bounds
+	 */
 	public final float maxX;
+	/**
+	 * Maximum y coordinate of room's bounds
+	 */
 	public final float maxY;
 
 	/**
@@ -218,10 +239,10 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 				.getSimpleName() + "[",
 			"]"
 		)
-			.add("minX=" + minX)
-			.add("minY=" + minY)
-			.add("maxX=" + maxX)
-			.add("maxY=" + maxY)
+			.add("minX=" + this.minX)
+			.add("minY=" + this.minY)
+			.add("maxX=" + this.maxX)
+			.add("maxY=" + this.maxY)
 			.toString();
 	}
 }

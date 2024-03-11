@@ -1,46 +1,49 @@
 package cs4303.p2.game.level;
 
 /**
- * A wall, which is just a simple 1d line
+ * A wall, which is just a simple 1d line. For ease, this will normally be aligned to the x or y axis.
  *
- * @param p1X x coordinate of point 1
- * @param p1Y y coordinate of point 1
- * @param p2X x coordinate of point 2
- * @param p2Y y coordinate of point 2
+ * @param minX x coordinate of point 1
+ * @param minY y coordinate of point 1
+ * @param maxX x coordinate of point 2
+ * @param maxY y coordinate of point 2
  */
 public record Wall(
-	float p1X,
-	float p1Y,
-	float p2X,
-	float p2Y,
+	float minX,
+	float minY,
+	float maxX,
+	float maxY,
 	Axis axis
 ) {
 
+	/**
+	 * Calculate the closest distance squared between a point and a wall
+	 *
+	 * @param x x coordinate of point
+	 * @param y y coordinate of point
+	 *
+	 * @return distance squared from the point to the closest point on the line
+	 */
 	public float closestDistanceSqFrom(float x, float y) {
-		float minX = Math.min(p1X, p2X);
-		float maxX = Math.max(p1X, p2X);
-		float minY = Math.min(p1Y, p2Y);
-		float maxY = Math.max(p1Y, p2Y);
-
 		float closestX;
 		float closestY;
 
 		if (this.axis == Axis.VERTICAL) {
-			closestX = minX;
+			closestX = this.minX;
 			//
-			if (y < minY) {
-				closestY = minY;
-			} else if (y > maxY) {
-				closestY = maxY;
+			if (y < this.minY) {
+				closestY = this.minY;
+			} else if (y > this.maxY) {
+				closestY = this.maxY;
 			} else {
 				closestY = y;
 			}
 		} else {
-			closestY = minY;
-			if (x < minX) {
-				closestX = minX;
-			} else if (x > maxX) {
-				closestX = maxX;
+			closestY = this.minY;
+			if (x < this.minX) {
+				closestX = this.minX;
+			} else if (x > this.maxX) {
+				closestX = this.maxX;
 			} else {
 				closestX = x;
 			}

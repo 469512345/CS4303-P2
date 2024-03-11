@@ -111,9 +111,9 @@ public final class ContainerRoom extends AbstractRoom {
 
 	@Override
 	public void draw() {
-		child1.draw();
-		child2.draw();
-		corridor.draw();
+		this.child1.draw();
+		this.child2.draw();
+		this.corridor.draw();
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public final class ContainerRoom extends AbstractRoom {
 	/**
 	 * Generate a random value between and min and max value.
 	 * <p>
-	 * This uses a guassian distribution (see {@link Random#nextGaussian(double, double)}, where the mean is the
+	 * This uses a gaussian distribution (see {@link Random#nextGaussian(double, double)}), where the mean is the
 	 * midpoint of the numbers and the standard deviation is 1/8th of the range. This means the numbers will be heavily
 	 * weighted towards the mean, but with possibility of more extreme values.
 	 *

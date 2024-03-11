@@ -9,11 +9,24 @@ import processing.event.MouseEvent;
 
 import java.awt.Color;
 
+/**
+ * Menu screen, when the game opens
+ */
 public class MenuScreen implements Screen {
 
+	/**
+	 * Main instance
+	 */
 	private final Main main;
+	/**
+	 * Play button on the screen
+	 */
 	private final Button playButton;
 
+	/**
+	 * Create a Menu screen
+	 * @param main main instance
+	 */
 	public MenuScreen(Main main) {
 		this.main = main;
 		this.playButton = new Button(main, "Play", main.rect());
@@ -21,19 +34,19 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void draw() {
-		main.background(0);
+		this.main.background(0);
 
-		RectBuilder rect = main.rect();
+		RectBuilder rect = this.main.rect();
 
-		float thirdWidth = main.width / 3f;
+		float thirdWidth = this.main.width / 3f;
 
-		rect.at(thirdWidth, main.height / 3f)
-			.size(thirdWidth, main.BUTTON_HEIGHT);
+		rect.at(thirdWidth, this.main.height / 3f)
+			.size(thirdWidth, this.main.BUTTON_HEIGHT);
 
 		this.playButton.copy(rect).draw();
 		rect.translate(0, -200);
 
-		main.text("Robotron 4303")
+		this.main.text("Robotron 4303")
 			.fill(Color.RED)
 			.centredInRect(rect)
 			.size(150)
@@ -42,7 +55,7 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		if(playButton.clicked(event)) {
+		if(this.playButton.clicked(event)) {
 			this.main.setScreen(new GameScreen(this.main));
 		}
 	}

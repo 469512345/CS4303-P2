@@ -38,9 +38,8 @@ public final class KeyKeybind implements Keybind {
 
 	@Override
 	public boolean test(Event event) {
-		if (event instanceof KeyEvent) {
+		if (event instanceof KeyEvent keyEvent) {
 			//Processing doesn't seem to allow Java 16+ pattern matching with instanceof, even though it runs java 17...
-			KeyEvent keyEvent = (KeyEvent) event;
 			return keyEvent.getKeyCode() == this.keyCode && keyEvent.getModifiers() == this.modifiers;
 		}
 		return false;

@@ -5,11 +5,11 @@ package cs4303.p2.game.level;
  */
 public enum Axis {
 	/**
-	 * Horizontal - the x axis
+	 * Horizontal - the x-axis
 	 */
 	HORIZONTAL,
 	/**
-	 * Vertical - the y axis
+	 * Vertical - the y-axis
 	 */
 	VERTICAL;
 

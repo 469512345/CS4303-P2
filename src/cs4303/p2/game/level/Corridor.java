@@ -154,7 +154,7 @@ public class Corridor {
 	 * Draw to screen
 	 */
 	void draw() {
-		RectBuilder rect = main.rect()
+		RectBuilder rect = this.main.rect()
 			.fill(Color.WHITE);
 
 		for (Rectangle segment : this.segments) {

@@ -38,8 +38,7 @@ public final class MouseKeybind implements Keybind {
 
 	@Override
 	public boolean test(Event event) {
-		if (event instanceof MouseEvent) {
-			MouseEvent mouseEvent = (MouseEvent) event;
+		if (event instanceof MouseEvent mouseEvent) {
 			return mouseEvent.getButton() == this.button && mouseEvent.getModifiers() == this.modifiers;
 		}
 		return false;

@@ -51,10 +51,20 @@ public interface Rectangle extends Collidable {
 		return this.minY() + this.height();
 	}
 
+	/**
+	 * Calculate the x coordinate of the centre of the rectangle
+	 *
+	 * @return centre x coordinate
+	 */
 	default float centreX() {
 		return this.minX() + (this.width() / 2);
 	}
 
+	/**
+	 * Calculate the y coordinate of the centre of the rectangle
+	 *
+	 * @return centre y coordinate
+	 */
 	default float centreY() {
 		return this.minY() + (this.height() / 2);
 	}

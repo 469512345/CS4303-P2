@@ -6,6 +6,7 @@ import cs4303.p2.game.level.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.game.level.Wall;
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
 import cs4303.p2.util.keybind.MouseKeybind;
@@ -83,15 +84,13 @@ public class GameScreen implements Screen {
 	 */
 	public GameScreen(Main main) {
 		this.main = main;
-		this.level = AbstractRoom.createRoot(this.main, generateLevelInfo(1));
+		this.level = AbstractRoom.createRoot(this.main, this.generateLevelInfo(1));
 		this.level.appendWalls(this.walls);
 
 		this.level.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
 		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1);
-		System.out.println(singlyConnectedRooms);
 		LeafRoom startingRoom = singlyConnectedRooms.get(main.random.nextInt(singlyConnectedRooms.size()));
-		System.out.println(startingRoom);
 
 		this.player = new Player(this, new PVector(startingRoom.centreX(), startingRoom.centreY()));
 	}
@@ -99,19 +98,23 @@ public class GameScreen implements Screen {
 	@Override
 	public void draw() {
 		this.update();
-		main.background(Color.BLACK.getRGB());
+		this.main.background(Color.BLACK.getRGB());
 		this.level.draw();
 		this.player.draw();
+		LineBuilder line = this.main.line()
+			.stroke(Color.GREEN)
+			.strokeWeight(1);
 		for (Wall wall : this.walls) {
-			this.main.line()
-				.from(wall.p1X(), wall.p1Y())
-				.to(wall.p2X(), wall.p2Y())
-				.stroke(Color.GREEN)
-				.strokeWeight(1)
+			line
+				.from(wall.minX(), wall.minY())
+				.to(wall.maxX(), wall.maxY())
 				.draw();
 		}
 	}
 
+	/**
+	 * Update the physics of all objects
+	 */
 	public void update() {
 		this.player.update();
 	}
@@ -129,7 +132,7 @@ public class GameScreen implements Screen {
 		} else if (this.fire.test(event)) {
 			this.fire();
 		} else {
-			handleKeyUpDownEvent(event, true);
+			this.handleKeyUpDownEvent(event, true);
 		}
 	}
 
@@ -177,9 +180,16 @@ public class GameScreen implements Screen {
 		return this.scale;
 	}
 
+	/**
+	 * Generate level parameters for a level by number
+	 *
+	 * @param levelNumber level number
+	 *
+	 * @return level parameters
+	 */
 	public LevelInfo generateLevelInfo(int levelNumber) {
-		float width = main.width;
-		float height = main.height;
+		float width = this.main.width;
+		float height = this.main.height;
 		float minWidth = width / 10f;
 		float minHeight = height / 6f;
 		return new LevelInfo(

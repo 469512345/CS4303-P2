@@ -2,7 +2,6 @@ package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
 import cs4303.p2.util.collisions.Rectangle;
-import cs4303.p2.util.screen.Screen;
 import processing.core.PApplet;
 import processing.core.PVector;
 

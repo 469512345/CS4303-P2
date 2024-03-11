@@ -13,10 +13,20 @@ import processing.event.MouseEvent;
 
 import java.util.Random;
 
+/**
+ * Main class
+ */
 public class Main extends Properties implements Rectangle {
 
-	private Screen screen;
+	/**
+	 * Random instance
+	 */
 	public final Random random = new Random();
+
+	/**
+	 * Current screen
+	 */
+	private Screen screen;
 	/**
 	 * TextBuilder instance, cached to avoid multiple short-lived instances every frame
 	 */
@@ -34,6 +44,10 @@ public class Main extends Properties implements Rectangle {
 	 */
 	private LineBuilder lineBuilder;
 
+	/**
+	 * Change to a new screen
+	 * @param screen screen to change to
+	 */
 	public void setScreen(Screen screen) {
 		this.screen = screen;
 	}
@@ -43,8 +57,8 @@ public class Main extends Properties implements Rectangle {
 	 */
 	public void applyViewport() {
 		if (this.screen != null) {
-			this.scale(screen.scale());
-			this.translate(screen.offsetX(), screen.offsetY());
+			this.scale(this.screen.scale());
+			this.translate(this.screen.offsetX(), this.screen.offsetY());
 		}
 	}
 
@@ -105,49 +119,49 @@ public class Main extends Properties implements Rectangle {
 	@Override
 	public void mouseReleased(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseReleased(event);
+			this.screen.mouseReleased(event);
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseClicked(event);
+			this.screen.mouseClicked(event);
 		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseDragged(event);
+			this.screen.mouseDragged(event);
 		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseMoved(event);
+			this.screen.mouseMoved(event);
 		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseEntered(event);
+			this.screen.mouseEntered(event);
 		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseExited(event);
+			this.screen.mouseExited(event);
 		}
 	}
 
 	@Override
 	public void mouseWheel(MouseEvent event) {
 		if (this.screen != null) {
-			screen.mouseWheel(event);
+			this.screen.mouseWheel(event);
 		}
 	}
 
@@ -209,6 +223,10 @@ public class Main extends Properties implements Rectangle {
 		return this.height;
 	}
 
+	/**
+	 * Entry point for the program
+	 * @param args cli args
+	 */
 	public static void main(String[] args) {
 		PApplet.main(Main.class, args);
 	}
