@@ -35,6 +35,11 @@ public class Button implements Rectangle {
 	 * Height of rectangle
 	 */
 	private float height;
+	/**
+	 * Whether this button is part of the hud. Buttons on the HUD are not affected by any transformation matrices
+	 * currently on the screen
+	 */
+	private boolean hud;
 
 	/**
 	 * Create a button
@@ -130,15 +135,40 @@ public class Button implements Rectangle {
 	}
 
 	/**
+	 * Mark this button as part of the HUD, so it will be statically positioned on the screen and not affected by any
+	 * transformation matrices on the screen.
+	 *
+	 * @return this
+	 */
+	public Button asHud() {
+		return this.hud(true);
+	}
+
+	/**
+	 * Set whether this button is part of the HUD. Elements on the HUD will be statically positioned on the screen and
+	 * not affected by any transformation matrices on the screen.
+	 *
+	 * @param hud whether this button is part of the hud
+	 *
+	 * @return this
+	 */
+	public Button hud(boolean hud) {
+		this.hud = hud;
+		return this;
+	}
+
+	/**
 	 * Draw the button
 	 */
 	public void draw() {
 		RectBuilder rect = this.app.rect()
 			.copy(this)
+			.hud(this.hud)
 			.fill(this.app.BUTTON_COLOR)
 			.cornerRadius(5);
 		TextBuilder text = this.app.text(this.text)
 			.fill(this.app.BUTTON_TEXT_COLOR)
+			.hud(this.hud)
 			.size(this.app.BUTTON_TEXT_SIZE)
 			.centredInRect(rect);
 		if (this.containsPoint(this.app.mouseX, this.app.mouseY)) {

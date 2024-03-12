@@ -46,6 +46,10 @@ public final class LineBuilder {
 	 * @see PApplet#strokeCap(int)
 	 */
 	private int strokeCap;
+	/**
+	 * Whether this ellipse is hud, and won't be affected by any transformation matrices on the screen
+	 */
+	private boolean hud;
 
 	/**
 	 * Create a new TextBuilder bound to a game
@@ -68,6 +72,7 @@ public final class LineBuilder {
 		this.strokeColor = null;
 		this.strokeWeight = 0;
 		this.strokeCap = PConstants.SQUARE;
+		this.hud = false;
 		return this;
 	}
 
@@ -204,7 +209,7 @@ public final class LineBuilder {
 	}
 
 	/**
-	 * Position the text at a point in the screen
+	 * Set the start point of the line
 	 *
 	 * @param x x coordinate to start line from
 	 * @param y y coordinate to start line from
@@ -254,7 +259,7 @@ public final class LineBuilder {
 	}
 
 	/**
-	 * Position the text at a point in the screen
+	 * Set the end point of the line
 	 *
 	 * @param x x coordinate to end line at
 	 * @param y y coordinate to end line at
@@ -292,6 +297,31 @@ public final class LineBuilder {
 		return this;
 	}
 
+
+
+	/**
+	 * Mark this line as part of the HUD, so it will be statically positioned on the screen and not affected by any
+	 * transformation matrices on the screen.
+	 *
+	 * @return this
+	 */
+	public LineBuilder asHud() {
+		return this.hud(true);
+	}
+
+	/**
+	 * Set whether this line is part of the HUD. Elements on the HUD will be statically positioned on the screen and not
+	 * affected by any transformation matrices on the screen.
+	 *
+	 * @param hud whether this line is part of the hud
+	 *
+	 * @return this
+	 */
+	public LineBuilder hud(boolean hud) {
+		this.hud = hud;
+		return this;
+	}
+
 	/**
 	 * Draw the line based on the current internal configuration
 	 */
@@ -299,7 +329,9 @@ public final class LineBuilder {
 		this.app.push();
 		this.app.pushMatrix();
 
-		this.app.applyViewport();
+		if (!this.hud) {
+			this.app.applyViewport();
+		}
 
 		if (this.strokeColor != null) {
 			this.app.stroke(this.strokeColor);

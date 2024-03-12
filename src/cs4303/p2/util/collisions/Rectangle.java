@@ -133,20 +133,77 @@ public interface Rectangle extends Collidable {
 		);
 	}
 
+	/**
+	 * Get the top edge of this rectangle as a horizontal line
+	 *
+	 * @return top edge of this rectangle
+	 */
 	default HorizontalLine topEdge() {
-		return new HorizontalLine.HorizontalLineImpl(this.minX(), this.maxX(), this.minY());
+		return HorizontalLine.of(this.minX(), this.maxX(), this.minY());
 	}
 
+	/**
+	 * Get the bottom edge of this rectangle as a horizontal line
+	 *
+	 * @return bottom edge of this rectangle
+	 */
 	default HorizontalLine bottomEdge() {
-		return new HorizontalLine.HorizontalLineImpl(this.minX(), this.maxX(), this.maxY());
+		return HorizontalLine.of(this.minX(), this.maxX(), this.maxY());
 	}
 
+	/**
+	 * Get the left edge of this rectangle as a vertical line
+	 *
+	 * @return left edge of this rectangle
+	 */
 	default VerticalLine leftEdge() {
-		return new VerticalLine.VerticalLineImpl(this.minX(), this.minY(), this.maxY());
+		return VerticalLine.of(this.minX(), this.minY(), this.maxY());
 	}
 
+	/**
+	 * Get the right edge of this rectangle as a vertical line
+	 *
+	 * @return right edge of this rectangle
+	 */
 	default VerticalLine rightEdge() {
-		return new VerticalLine.VerticalLineImpl(this.maxX(), this.minY(), this.maxY());
+		return VerticalLine.of(this.maxX(), this.minY(), this.maxY());
+	}
+
+	/**
+	 * Create a rectangle from 2 points. This will determine the minimum x and y coordinate from the two points.
+	 *
+	 * @param x1 x coordinate of point1
+	 * @param y1 y coordinate of point1
+	 * @param x2 x coordinate of point2
+	 * @param y2 y coordinate of point2
+	 *
+	 * @return rectangle instance between the two points
+	 */
+	static Rectangle fromPoints(float x1, float y1, float x2, float y2) {
+		float minX = Math.min(x1, x2);
+		float maxX = Math.max(x1, x2);
+
+		float minY = Math.min(y1, y2);
+		float maxY = Math.max(y1, y2);
+
+		float width = maxX - minX;
+		float height = maxY - minY;
+
+		return new RectangleImpl(minX, minY, width, height);
+	}
+
+	/**
+	 * Create a rectangle with the given parameters
+	 *
+	 * @param minX   minimum x coordinate of the rectangle
+	 * @param minY   minimum y coordinate of the rectangle
+	 * @param width  width of the rectangle
+	 * @param height height of the rectangle
+	 *
+	 * @return rectangle instance with the given parameters
+	 */
+	static Rectangle of(float minX, float minY, float width, float height) {
+		return new RectangleImpl(minX, minY, width, height);
 	}
 
 	/**

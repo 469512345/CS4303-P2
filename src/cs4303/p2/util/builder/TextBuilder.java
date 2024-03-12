@@ -51,6 +51,10 @@ public final class TextBuilder {
 	 * Fill color (or null for no fill)
 	 */
 	private Integer fillColor;
+	/**
+	 * Whether this ellipse is hud, and won't be affected by any transformation matrices on the screen
+	 */
+	private boolean hud;
 
 	/**
 	 * Create a new TextBuilder bound to a game
@@ -74,6 +78,7 @@ public final class TextBuilder {
 		this.centringHeight = -1;
 		this.fillColor = null;
 		this.size = 0;
+		this.hud = false;
 		return this;
 	}
 
@@ -281,13 +286,38 @@ public final class TextBuilder {
 	}
 
 	/**
+	 * Mark this text as part of the HUD, so it will be statically positioned on the screen and not affected by any
+	 * transformation matrices on the screen.
+	 *
+	 * @return this
+	 */
+	public TextBuilder asHud() {
+		return this.hud(true);
+	}
+
+	/**
+	 * Set whether this text is part of the HUD. Elements on the HUD will be statically positioned on the screen and not
+	 * affected by any transformation matrices on the screen.
+	 *
+	 * @param hud whether this text is part of the hud
+	 *
+	 * @return this
+	 */
+	public TextBuilder hud(boolean hud) {
+		this.hud = hud;
+		return this;
+	}
+
+	/**
 	 * Draw the text based on the current internal configuration
 	 */
 	public void draw() {
 		this.app.push();
 		this.app.pushMatrix();
 
-		this.app.applyViewport();
+		if (!this.hud) {
+			this.app.applyViewport();
+		}
 
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);

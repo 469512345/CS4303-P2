@@ -77,6 +77,19 @@ public interface Circle extends Collidable {
 	}
 
 	/**
+	 * Create a new circle instance given its parameters
+	 *
+	 * @param centreX x coordinate of centre of circle
+	 * @param centreY y coordinate of centre of circle
+	 * @param radius  radius of circle
+	 *
+	 * @return circle with provided centre and radius
+	 */
+	static Circle of(float centreX, float centreY, float radius) {
+		return new CircleImpl(centreX, centreY, radius);
+	}
+
+	/**
 	 * Circle record implementation
 	 *
 	 * @param centreX x coordinate of centre of circle

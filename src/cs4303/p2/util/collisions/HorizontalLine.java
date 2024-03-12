@@ -92,7 +92,23 @@ public interface HorizontalLine extends Collidable {
 	}
 
 	/**
-	 * Horizontal line record implementaion
+	 * Create a new horizontal line with given parameters. This will ensure that the minimum of x1 and x2 becomes
+	 * {@link #minX()}, and similarly for {@link #maxX()}.
+	 *
+	 * @param x1 x coordinate of one end of the line
+	 * @param x2 x coordinate of the other end of the line
+	 * @param y  y coordinate of line
+	 *
+	 * @return horizontal line with given parameters
+	 */
+	static HorizontalLine of(float x1, float x2, float y) {
+		float minX = Math.min(x1, x2);
+		float maxX = Math.max(x1, x2);
+		return new HorizontalLineImpl(minX, maxX, y);
+	}
+
+	/**
+	 * Horizontal line record implementation
 	 *
 	 * @param minX minimum x coordinate
 	 * @param maxX maximum x coordinate

@@ -3,8 +3,6 @@ package cs4303.p2.game.level.corridor;
 import cs4303.p2.Main;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.room.LeafRoom;
-import cs4303.p2.util.builder.RectBuilder;
-import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -54,26 +52,11 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 	 */
 	@Override
 	public void draw() {
-		RectBuilder rect = this.main.rect()
-			.fill(Color.WHITE);
-
-		TextBuilder text = this.main.text(null)
-			.size(40)
-			.fill(Color.BLACK);
-
-		rect.copy(this)
+		this.main.rect()
+			.fill(Color.WHITE)
+			.copy(this)
 			.draw();
 
-		if (this.intersects(this.room1)) {
-			text.text("1")
-				.centredInRect(this.intersection(this.room1))
-				.draw();
-		}
-		if (this.intersects(this.room2)) {
-			text.text("2")
-				.centredInRect(this.intersection(this.room2))
-				.draw();
-		}
 	}
 
 	/**
@@ -85,12 +68,12 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 	@Override
 	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
 		if (this.axis == Axis.HORIZONTAL) {
-			VerticalLine leftWall = new VerticalLine.VerticalLineImpl(
+			VerticalLine leftWall = VerticalLine.of(
 				this.minX(),
 				this.room1.maxY,
 				this.room2.minY
 			);
-			VerticalLine rightWall = new VerticalLine.VerticalLineImpl(
+			VerticalLine rightWall = VerticalLine.of(
 				this.maxX(),
 				this.room1.maxY,
 				this.room2.minY
@@ -98,12 +81,12 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 			verticalWalls.add(leftWall);
 			verticalWalls.add(rightWall);
 		} else {
-			HorizontalLine topWall = new HorizontalLine.HorizontalLineImpl(
+			HorizontalLine topWall = HorizontalLine.of(
 				this.room1.maxX,
 				this.room2.minX,
 				this.minY()
 			);
-			HorizontalLine bottomWall = new HorizontalLine.HorizontalLineImpl(
+			HorizontalLine bottomWall = HorizontalLine.of(
 				this.room1.maxX,
 				this.room2.minX,
 				this.maxY()

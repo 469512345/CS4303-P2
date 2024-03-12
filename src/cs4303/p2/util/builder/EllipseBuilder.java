@@ -46,6 +46,10 @@ public final class EllipseBuilder {
 	 * Stroke (outline) width
 	 */
 	private float strokeWeight;
+	/**
+	 * Whether this ellipse is hud, and won't be affected by any transformation matrices on the screen
+	 */
+	private boolean hud;
 
 	/**
 	 * Create a new EllipseBuilder bound to a game
@@ -69,6 +73,7 @@ public final class EllipseBuilder {
 		this.fillColor = null;
 		this.strokeColor = null;
 		this.strokeWeight = 0;
+		this.hud = false;
 		return this;
 	}
 
@@ -274,13 +279,38 @@ public final class EllipseBuilder {
 	}
 
 	/**
+	 * Mark this ellipse as part of the HUD, so it will be statically positioned on the screen and not affected by any
+	 * transformation matrices on the screen.
+	 *
+	 * @return this
+	 */
+	public EllipseBuilder asHud() {
+		return this.hud(true);
+	}
+
+	/**
+	 * Set whether this ellipse is part of the HUD. Elements on the HUD will be statically positioned on the screen and
+	 * not affected by any transformation matrices on the screen.
+	 *
+	 * @param hud whether this ellipse is part of the hud
+	 *
+	 * @return this
+	 */
+	public EllipseBuilder hud(boolean hud) {
+		this.hud = hud;
+		return this;
+	}
+
+	/**
 	 * Draw the ellipse based on the current internal configuration
 	 */
 	public void draw() {
 		this.app.push();
 		this.app.pushMatrix();
 
-		this.app.applyViewport();
+		if (!this.hud) {
+			this.app.applyViewport();
+		}
 
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);

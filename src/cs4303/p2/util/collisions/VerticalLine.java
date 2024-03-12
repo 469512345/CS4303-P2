@@ -91,6 +91,22 @@ public interface VerticalLine extends Collidable {
 	}
 
 	/**
+	 * Create a vertical line with the given parameters
+	 *
+	 * @param x  x coordinate of the line
+	 * @param y1 y coordinate of one end of the line
+	 * @param y2 y coordinate of the other end of the line
+	 *
+	 * @return vertical line between the given points
+	 */
+	static VerticalLine of(float x, float y1, float y2) {
+		float minY = Math.min(y1, y2);
+		float maxY = Math.max(y1, y2);
+
+		return new VerticalLineImpl(x, minY, maxY);
+	}
+
+	/**
 	 * Vertical line record implementation
 	 *
 	 * @param x    x coordinate

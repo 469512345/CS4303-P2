@@ -605,7 +605,7 @@ public interface Collidable {
 		if (!(x1 < x2) || !(y1 < y2)) {
 			return null;
 		}
-		return new Rectangle.RectangleImpl(x1, y1, x2 - x1, y2 - y1);
+		return Rectangle.of(x1, y1, x2 - x1, y2 - y1);
 
 
 	}

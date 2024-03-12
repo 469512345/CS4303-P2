@@ -77,18 +77,15 @@ public final class LeafRoom extends AbstractRoom {
 		VerticalLine leftWall = this.leftEdge();
 		for (AbstractCorridor corridor : this.corridors) {
 			for (Rectangle segment : corridor.segments) {
-				System.out.println(segment);
-				System.out.println(bottomWall);
 				if (bottomWall != null && segment.intersects(bottomWall)) {
 					bottomWall = null;
 					Rectangle intersection = segment.intersection(this);
-					System.out.println(intersection);
-					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+					horizontalWalls.add(HorizontalLine.of(
 						this.minX,
 						intersection.minX(),
 						this.maxY
 					));
-					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+					horizontalWalls.add(HorizontalLine.of(
 						intersection.maxX(),
 						this.maxX,
 						this.maxY
@@ -97,18 +94,18 @@ public final class LeafRoom extends AbstractRoom {
 				if (rightWall != null && segment.intersects(rightWall)) {
 					rightWall = null;
 					Rectangle intersection = segment.intersection(this);
-					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, this.minY, intersection.minY()));
-					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, intersection.maxY(), this.maxY));
+					verticalWalls.add(VerticalLine.of(this.maxX, this.minY, intersection.minY()));
+					verticalWalls.add(VerticalLine.of(this.maxX, intersection.maxY(), this.maxY));
 				}
 				if (topWall != null && segment.intersects(topWall)) {
 					topWall = null;
 					Rectangle intersection = segment.intersection(this);
-					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+					horizontalWalls.add(HorizontalLine.of(
 						this.minX,
 						intersection.minX(),
 						this.minY
 					));
-					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+					horizontalWalls.add(HorizontalLine.of(
 						intersection.maxX(),
 						this.maxX,
 						this.minY
@@ -117,8 +114,8 @@ public final class LeafRoom extends AbstractRoom {
 				if (leftWall != null && segment.intersects(leftWall)) {
 					leftWall = null;
 					Rectangle intersection = segment.intersection(this);
-					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, this.minY, intersection.minY()));
-					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, intersection.maxY(), this.maxY));
+					verticalWalls.add(VerticalLine.of(this.minX, this.minY, intersection.minY()));
+					verticalWalls.add(VerticalLine.of(this.minX, intersection.maxY(), this.maxY));
 				}
 
 				//Only consider corridors where this is room1

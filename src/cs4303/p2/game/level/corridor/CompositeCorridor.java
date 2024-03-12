@@ -4,7 +4,6 @@ import cs4303.p2.Main;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.builder.RectBuilder;
-import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -23,13 +22,17 @@ public final class CompositeCorridor extends AbstractCorridor {
 	private final PVector point3;
 	private final PVector point4;
 
+	private final Rectangle segment1;
+	private final Rectangle segment2;
+	private final Rectangle segment3;
+
 	/**
 	 * Create a new corridor
 	 *
-	 * @param main   main instance
-	 * @param room1  first room
-	 * @param room2  second room
-	 * @param axis   axis of the corridor
+	 * @param main  main instance
+	 * @param room1 first room
+	 * @param room2 second room
+	 * @param axis  axis of the corridor
 	 * @param width width of the corridor
 	 */
 	public CompositeCorridor(
@@ -50,9 +53,13 @@ public final class CompositeCorridor extends AbstractCorridor {
 		this.points.add(point3);
 		this.points.add(point4);
 
-		this.segments.add(lineToRect(point1, point2, this.margin));
-		this.segments.add(lineToRect(point2, point3, this.margin));
-		this.segments.add(lineToRect(point3, point4, this.margin));
+		this.segment1 = lineToRect(point1, point2, this.margin);
+		this.segment2 = lineToRect(point2, point3, this.margin);
+		this.segment3 = lineToRect(point3, point4, this.margin);
+
+		this.segments.add(this.segment1);
+		this.segments.add(this.segment2);
+		this.segments.add(this.segment3);
 	}
 
 	/**
@@ -63,25 +70,12 @@ public final class CompositeCorridor extends AbstractCorridor {
 		RectBuilder rect = this.main.rect()
 			.fill(Color.WHITE);
 
-		TextBuilder text = this.main.text(null)
-			.size(40)
-			.fill(Color.BLACK);
-
-		for (Rectangle segment : this.segments) {
-			rect.copy(segment)
-				.draw();
-
-			if (segment.intersects(this.room1)) {
-				text.text("1")
-					.centredInRect(segment.intersection(this.room1))
-					.draw();
-			}
-			if (segment.intersects(this.room2)) {
-				text.text("2")
-					.centredInRect(segment.intersection(this.room2))
-					.draw();
-			}
-		}
+		rect.copy(this.segment1)
+			.draw();
+		rect.copy(this.segment2)
+			.draw();
+		rect.copy(this.segment3)
+			.draw();
 	}
 
 	/**
@@ -92,24 +86,95 @@ public final class CompositeCorridor extends AbstractCorridor {
 	 */
 	@Override
 	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
-		for (Rectangle segment : this.segments) {
-			HorizontalLine bottomWall = segment.bottomEdge();
-			VerticalLine rightWall = segment.rightEdge();
-			HorizontalLine topWall = segment.topEdge();
-			VerticalLine leftWall = segment.leftEdge();
+		if (this.axis == Axis.VERTICAL) {
+			float sign = Math.signum(this.point4.y - this.point1.y);
+			HorizontalLine seg1Top = HorizontalLine.of(
+				this.room1.maxX,
+				this.point2.x + sign * this.margin,
+				this.point2.y - this.margin
+			);
+			HorizontalLine seg1Bottom = HorizontalLine.of(
+				this.room1.maxX,
+				this.point2.x - sign * this.margin,
+				this.point2.y + this.margin
+			);
 
-			if (bottomWall != null) {
-				horizontalWalls.add(bottomWall);
-			}
-			if (rightWall != null) {
-				verticalWalls.add(rightWall);
-			}
-			if (topWall != null) {
-				horizontalWalls.add(topWall);
-			}
-			if (leftWall != null) {
-				verticalWalls.add(leftWall);
-			}
+			VerticalLine seg2Left = VerticalLine.of(
+				this.point2.x - this.margin,
+				this.point2.y + sign * this.margin,
+				this.point3.y + sign * this.margin
+			);
+			VerticalLine seg2Right = VerticalLine.of(
+				this.point2.x + this.margin,
+				this.point2.y - sign * this.margin,
+				this.point3.y - sign * this.margin
+			);
+
+			HorizontalLine seg3Top = HorizontalLine.of(
+				this.point3.x + sign * this.margin,
+				this.room2.minX,
+				this.point3.y - this.margin
+			);
+			HorizontalLine seg3Bottom = HorizontalLine.of(
+				this.point3.x - sign * this.margin,
+				this.room2.minX,
+				this.point3.y + this.margin
+			);
+
+			horizontalWalls.add(seg1Top);
+			horizontalWalls.add(seg1Bottom);
+
+			verticalWalls.add(seg2Left);
+			verticalWalls.add(seg2Right);
+
+			horizontalWalls.add(seg3Top);
+			horizontalWalls.add(seg3Bottom);
+		} else {
+			float sign = Math.signum(this.point4.x - this.point1.x);
+
+			VerticalLine seg1Left = VerticalLine.of(
+				this.point2.x - this.margin,
+				this.room1.maxY,
+				this.point2.y + sign * this.margin
+			);
+			VerticalLine seg1Right = VerticalLine.of(
+				this.point2.x + this.margin,
+				this.room1.maxY,
+				this.point2.y - sign * this.margin
+			);
+
+			HorizontalLine seg2Top = HorizontalLine.of(
+				this.point2.x + sign * this.margin,
+				this.point3.x + sign * this.margin,
+				this.point2.y - this.margin
+			);
+
+			HorizontalLine seg2Bottom = HorizontalLine.of(
+				this.point2.x - sign * this.margin,
+				this.point3.x - sign * this.margin,
+				this.point2.y + this.margin
+			);
+
+			VerticalLine seg3Left = VerticalLine.of(
+				this.point3.x - this.margin,
+				this.point3.y + sign * this.margin,
+				this.room2.minY
+			);
+			VerticalLine seg3Right = VerticalLine.of(
+				this.point3.x + this.margin,
+				this.point3.y - sign * this.margin,
+				this.room2.minY
+			);
+
+			verticalWalls.add(seg1Left);
+			verticalWalls.add(seg1Right);
+
+			horizontalWalls.add(seg2Top);
+			horizontalWalls.add(seg2Bottom);
+
+			verticalWalls.add(seg3Left);
+			verticalWalls.add(seg3Right);
+
 		}
 	}
 }

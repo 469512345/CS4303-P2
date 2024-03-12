@@ -67,6 +67,10 @@ public final class RectBuilder implements Rectangle {
 	 * @see PApplet#strokeWeight(float)
 	 */
 	private float strokeWeight;
+	/**
+	 * Whether this ellipse is hud, and won't be affected by any transformation matrices on the screen
+	 */
+	private boolean hud;
 
 	/**
 	 * Create a new RectBuilder bound to a game
@@ -105,6 +109,7 @@ public final class RectBuilder implements Rectangle {
 		this.fillColor = null;
 		this.strokeColor = null;
 		this.strokeWeight = 0;
+		this.hud = false;
 		return this;
 	}
 
@@ -290,13 +295,38 @@ public final class RectBuilder implements Rectangle {
 	}
 
 	/**
+	 * Mark this rectangle as part of the HUD, so it will be statically positioned on the screen and not affected by any
+	 * transformation matrices on the screen.
+	 *
+	 * @return this
+	 */
+	public RectBuilder asHud() {
+		return this.hud(true);
+	}
+
+	/**
+	 * Set whether this rectangle is part of the HUD. Elements on the HUD will be statically positioned on the screen and not
+	 * affected by any transformation matrices on the screen.
+	 *
+	 * @param hud whether this rectangle is part of the hud
+	 *
+	 * @return this
+	 */
+	public RectBuilder hud(boolean hud) {
+		this.hud = hud;
+		return this;
+	}
+
+	/**
 	 * Draw the rectangle based on the current internal configuration
 	 */
 	public void draw() {
 		this.app.push();
 		this.app.pushMatrix();
 
-		this.app.applyViewport();
+		if (!this.hud) {
+			this.app.applyViewport();
+		}
 
 		if (this.fillColor != null) {
 			this.app.fill(this.fillColor);
@@ -352,7 +382,7 @@ public final class RectBuilder implements Rectangle {
 	 * @return immutable rectangle from current rect builder state
 	 */
 	public Rectangle capture() {
-		return new RectangleImpl(this.positionX, this.positionY, this.width, this.height);
+		return Rectangle.of(this.positionX, this.positionY, this.width, this.height);
 	}
 
 }

@@ -130,7 +130,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 		float width = maxX - minX + 2 * margin;
 		float height = maxY - minY + 2 * margin;
 
-		return new Rectangle.RectangleImpl(minX - margin, minY - margin, width, height);
+		return Rectangle.of(minX - margin, minY - margin, width, height);
 	}
 
 	/**
