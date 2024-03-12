@@ -72,39 +72,56 @@ public final class LeafRoom extends AbstractRoom {
 		HorizontalLine topWall = this.topEdge();
 		VerticalLine leftWall = this.leftEdge();
 		for (Corridor corridor : this.corridors) {
-			Rectangle firstSegment = corridor.segments.get(0);
-			Rectangle lastSegment = corridor.segments.get(corridor.segments.size() - 1);
-			if (bottomWall != null && firstSegment.intersects(bottomWall)) {
-				bottomWall = null;
-				Rectangle intersection = firstSegment.intersection(this);
-				horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(this.minX, intersection.minX(), this.maxY));
-				horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(intersection.maxX(), this.minX, this.maxY));
-			}
-			if (rightWall != null && firstSegment.intersects(rightWall)) {
-				rightWall = null;
-				Rectangle intersection = firstSegment.intersection(this);
-				verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, this.minY, intersection.minY()));
-				verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, intersection.maxY(), this.maxY));
-			}
-			if (topWall != null && lastSegment.intersects(topWall)) {
-				topWall = null;
-				Rectangle intersection = lastSegment.intersection(this);
-				horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(this.minX, intersection.minX(), this.minY));
-				horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(intersection.maxX(), this.minX, this.minY));
-			}
-			if (leftWall != null && lastSegment.intersects(leftWall)) {
-				leftWall = null;
-				Rectangle intersection = lastSegment.intersection(this);
-				verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, this.minY, intersection.minY()));
-				verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, intersection.maxY(), this.maxY));
-			}
-
-			//Only consider corridors where this is room1
-			//This will prevent corridors being counted in duplicate
-			if (corridor.room1 != this) {
-				continue;
-			}
 			for (Rectangle segment : corridor.segments) {
+				System.out.println(segment);
+				System.out.println(bottomWall);
+				if (bottomWall != null && segment.intersects(bottomWall)) {
+					bottomWall = null;
+					Rectangle intersection = segment.intersection(this);
+					System.out.println(intersection);
+					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+						this.minX,
+						intersection.minX(),
+						this.maxY
+					));
+					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+						intersection.maxX(),
+						this.maxX,
+						this.maxY
+					));
+				}
+				if (rightWall != null && segment.intersects(rightWall)) {
+					rightWall = null;
+					Rectangle intersection = segment.intersection(this);
+					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, this.minY, intersection.minY()));
+					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.maxX, intersection.maxY(), this.maxY));
+				}
+				if (topWall != null && segment.intersects(topWall)) {
+					topWall = null;
+					Rectangle intersection = segment.intersection(this);
+					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+						this.minX,
+						intersection.minX(),
+						this.minY
+					));
+					horizontalWalls.add(new HorizontalLine.HorizontalLineImpl(
+						intersection.maxX(),
+						this.maxX,
+						this.minY
+					));
+				}
+				if (leftWall != null && segment.intersects(leftWall)) {
+					leftWall = null;
+					Rectangle intersection = segment.intersection(this);
+					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, this.minY, intersection.minY()));
+					verticalWalls.add(new VerticalLine.VerticalLineImpl(this.minX, intersection.maxY(), this.maxY));
+				}
+
+				//Only consider corridors where this is room1
+				//This will prevent corridors being counted in duplicate
+				if (corridor.room1 != this) {
+					continue;
+				}
 				appendWalls(segment, horizontalWalls, verticalWalls);
 			}
 		}

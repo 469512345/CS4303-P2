@@ -234,8 +234,8 @@ public interface Collidable {
 	) {
 		float rMaxX = rMinX + rWidth;
 		float rMaxY = rMinY + rHeight;
-		return rMinY > hlY &&
-			rMaxY < hlY &&
+		return hlY > rMinY &&
+			hlY < rMaxY &&
 			hlMaxX > rMinX &&
 			hlMinX < rMaxX;
 	}
@@ -259,8 +259,8 @@ public interface Collidable {
 	) {
 		float rMaxX = rMinX + rWidth;
 		float rMaxY = rMinY + rHeight;
-		return rMinX > vlX &&
-			rMaxX < vlX &&
+		return vlX > rMinX &&
+			vlX < rMaxX &&
 			vlMaxY > rMinY &&
 			vlMinY < rMaxY;
 	}
