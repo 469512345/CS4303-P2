@@ -119,10 +119,9 @@ public final class LeafRoom extends AbstractRoom {
 
 				//Only consider corridors where this is room1
 				//This will prevent corridors being counted in duplicate
-				if (corridor.room1 != this) {
-					continue;
+				if (corridor.room1 == this) {
+					corridor.appendWalls(horizontalWalls, verticalWalls);
 				}
-				appendWalls(segment, horizontalWalls, verticalWalls);
 			}
 		}
 		if (bottomWall != null) {
@@ -137,22 +136,5 @@ public final class LeafRoom extends AbstractRoom {
 		if (leftWall != null) {
 			verticalWalls.add(leftWall);
 		}
-	}
-
-	/**
-	 * Determine the horizontalWalls of a rectangle and add them to a collection
-	 *
-	 * @param rectangle       rectangle to determine
-	 * @param horizontalWalls collection to append to
-	 */
-	private static void appendWalls(
-		Rectangle rectangle,
-		Collection<HorizontalLine> horizontalWalls,
-		Collection<VerticalLine> verticalWalls
-	) {
-		horizontalWalls.add(rectangle.topEdge());
-		horizontalWalls.add(rectangle.bottomEdge());
-		verticalWalls.add(rectangle.leftEdge());
-		verticalWalls.add(rectangle.rightEdge());
 	}
 }

@@ -2,11 +2,15 @@ package cs4303.p2.game.level;
 
 import cs4303.p2.Main;
 import cs4303.p2.util.builder.RectBuilder;
+import cs4303.p2.util.builder.TextBuilder;
+import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
+import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 /**
@@ -156,9 +160,52 @@ public class Corridor {
 		RectBuilder rect = this.main.rect()
 			.fill(Color.WHITE);
 
+		TextBuilder text = this.main.text(null)
+			.size(40)
+			.fill(Color.BLACK);
+
 		for (Rectangle segment : this.segments) {
 			rect.copy(segment)
 				.draw();
+
+			if (segment.intersects(this.room1)) {
+				text.text("1")
+					.centredInRect(segment.intersection(this.room1))
+					.draw();
+			}
+			if (segment.intersects(this.room2)) {
+				text.text("2")
+					.centredInRect(segment.intersection(this.room2))
+					.draw();
+			}
+		}
+	}
+
+	/**
+	 * Calculate the walls of this corridor and append them to the list of walls
+	 *
+	 * @param horizontalWalls collection of horizontal walls to append to
+	 * @param verticalWalls   collection of vertical walls to append to
+	 */
+	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
+		for (Rectangle segment : this.segments) {
+			HorizontalLine bottomWall = segment.bottomEdge();
+			VerticalLine rightWall = segment.rightEdge();
+			HorizontalLine topWall = segment.topEdge();
+			VerticalLine leftWall = segment.leftEdge();
+
+			if (bottomWall != null) {
+				horizontalWalls.add(bottomWall);
+			}
+			if (rightWall != null) {
+				verticalWalls.add(rightWall);
+			}
+			if (topWall != null) {
+				horizontalWalls.add(topWall);
+			}
+			if (leftWall != null) {
+				verticalWalls.add(leftWall);
+			}
 		}
 	}
 
@@ -202,5 +249,23 @@ public class Corridor {
 		float height = maxY - minY + 2 * margin;
 
 		return new Rectangle.RectangleImpl(minX - margin, minY - margin, width, height);
+	}
+
+	/**
+	 * Determine the horizontalWalls of a rectangle and add them to a collection
+	 *
+	 * @param rectangle       rectangle to determine
+	 * @param horizontalWalls collection to append horizontal walls to
+	 * @param verticalWalls   collection to append vertical walls to
+	 */
+	private static void appendWalls(
+		Rectangle rectangle,
+		Collection<HorizontalLine> horizontalWalls,
+		Collection<VerticalLine> verticalWalls
+	) {
+		horizontalWalls.add(rectangle.topEdge());
+		horizontalWalls.add(rectangle.bottomEdge());
+		verticalWalls.add(rectangle.leftEdge());
+		verticalWalls.add(rectangle.rightEdge());
 	}
 }
