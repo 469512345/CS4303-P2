@@ -1,6 +1,10 @@
-package cs4303.p2.game.level;
+package cs4303.p2.game.level.room;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.level.Axis;
+import cs4303.p2.game.level.AxisDirection;
+import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.corridor.AbstractCorridor;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -18,7 +22,7 @@ public final class LeafRoom extends AbstractRoom {
 	/**
 	 * Corridors leading into this room
 	 */
-	public final List<Corridor> corridors = new ArrayList<>();
+	public final List<AbstractCorridor> corridors = new ArrayList<>();
 
 	/**
 	 * Create a room
@@ -71,7 +75,7 @@ public final class LeafRoom extends AbstractRoom {
 		VerticalLine rightWall = this.rightEdge();
 		HorizontalLine topWall = this.topEdge();
 		VerticalLine leftWall = this.leftEdge();
-		for (Corridor corridor : this.corridors) {
+		for (AbstractCorridor corridor : this.corridors) {
 			for (Rectangle segment : corridor.segments) {
 				System.out.println(segment);
 				System.out.println(bottomWall);

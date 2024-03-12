@@ -1,8 +1,8 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
-import cs4303.p2.game.level.AbstractRoom;
-import cs4303.p2.game.level.LeafRoom;
+import cs4303.p2.game.level.room.AbstractRoom;
+import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.builder.LineBuilder;

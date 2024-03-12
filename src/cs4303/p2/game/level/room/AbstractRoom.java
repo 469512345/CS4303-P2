@@ -1,6 +1,9 @@
-package cs4303.p2.game.level;
+package cs4303.p2.game.level.room;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.level.Axis;
+import cs4303.p2.game.level.AxisDirection;
+import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.HorizontalLine;

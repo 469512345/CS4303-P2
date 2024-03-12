@@ -1,6 +1,10 @@
-package cs4303.p2.game.level;
+package cs4303.p2.game.level.room;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.level.Axis;
+import cs4303.p2.game.level.AxisDirection;
+import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.corridor.AbstractCorridor;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -31,10 +35,10 @@ public final class ContainerRoom extends AbstractRoom {
 	@NotNull
 	public final AbstractRoom child2;
 	/**
-	 * Corridor connecting the child rooms
+	 * AbstractCorridor connecting the child rooms
 	 */
 	@NotNull
-	public final Corridor corridor;
+	public final AbstractCorridor corridor;
 
 	/**
 	 * Create a container room
@@ -108,7 +112,13 @@ public final class ContainerRoom extends AbstractRoom {
 		LeafRoom child1Leaf = this.child1.findRoom(this.splitAxis.other(), AxisDirection.MAX);
 		LeafRoom child2Leaf = this.child2.findRoom(this.splitAxis.other(), AxisDirection.MIN);
 
-		this.corridor = new Corridor(main, child1Leaf, child2Leaf, this.splitAxis, levelInfo.corridorWidth());
+		this.corridor = AbstractCorridor.createCorridor(
+			main,
+			child1Leaf,
+			child2Leaf,
+			this.splitAxis,
+			levelInfo.corridorWidth()
+		);
 	}
 
 	@Override
