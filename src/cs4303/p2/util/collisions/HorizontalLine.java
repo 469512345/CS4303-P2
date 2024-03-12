@@ -31,30 +31,34 @@ public interface HorizontalLine extends Collidable {
 
 	@Override
 	default boolean intersects(Circle circle) {
-		return circle.intersects(this);
+		return Collidable.circleIntersectsHorizontalLine(
+			circle.centreX(), circle.centreY(), circle.radius(),
+			this.minX(), this.maxX(), this.y()
+		);
 	}
 
 	@Override
 	default boolean intersects(Rectangle rectangle) {
-		return rectangle.minY() > this.y() &&
-			rectangle.maxY() < this.y() &&
-			this.maxX() > rectangle.minX() &&
-			this.minX() < rectangle.maxX();
+		return Collidable.rectIntersectsHorizontalLine(
+			rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height(),
+			this.minX(), this.maxX(), this.y()
+		);
 	}
 
 	@Override
 	default boolean intersects(VerticalLine verticalLine) {
-		return verticalLine.x() > this.minX() &&
-			verticalLine.x() < this.maxX() &&
-			this.y() > verticalLine.minY() &&
-			this.y() < verticalLine.maxY();
+		return Collidable.horizontalLineIntersectsVerticalLine(
+			this.minX(), this.maxX(), this.y(),
+			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
+		);
 	}
 
 	@Override
 	default boolean intersects(HorizontalLine horizontalLine) {
-		return this.y() == horizontalLine.y() &&
-			this.minX() < horizontalLine.maxX() &&
-			this.maxX() > horizontalLine.minX();
+		return Collidable.horizontalLineIntersectsHorizontalLine(
+			this.minX(), this.maxX(), this.y(),
+			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
+		);
 	}
 
 	/**
@@ -65,29 +69,25 @@ public interface HorizontalLine extends Collidable {
 	 * @return Point of intersection between this line and the vertical line, or null if none exists
 	 */
 	default @Nullable PVector intersection(VerticalLine verticalLine) {
-		if (!this.intersects(verticalLine)) {
-			return null;
-		}
-		return new PVector(verticalLine.x(), this.y());
+		return Collidable.horizontalLineIntersectionWithVerticalLine(
+			this.minX(), this.maxX(), this.y(),
+			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
+		);
 	}
 
 	@Override
 	default PVector closestPoint(float x, float y) {
-		float closestX;
-		float closestY = this.y();
-		if (x < this.minX()) {
-			closestX = this.minX();
-		} else if (x > this.maxX()) {
-			closestX = this.maxX();
-		} else {
-			closestX = x;
-		}
-
-		return new PVector(closestX, closestY);
+		return Collidable.horizontalLineClosestPoint(
+			this.minX(), this.maxX(), this.y(),
+			x, y
+		);
 	}
 
 	@Override
 	default boolean containsPoint(float x, float y) {
-		throw new UnsupportedOperationException("Lines do not contain an area");
+		return Collidable.horizontalLineContainsPoint(
+			this.minX(), this.maxX(), this.y(),
+			x, y
+		);
 	}
 }

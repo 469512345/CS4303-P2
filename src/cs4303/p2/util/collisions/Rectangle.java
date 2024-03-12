@@ -89,36 +89,33 @@ public interface Rectangle extends Collidable {
 
 	@Override
 	default boolean intersects(VerticalLine verticalLine) {
-		return verticalLine.intersects(this);
+		return Collidable.rectIntersectsVerticalLine(
+			this.minX(), this.minY(), this.width(), this.height(),
+			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
+		);
 	}
 
 	@Override
 	default boolean intersects(HorizontalLine horizontalLine) {
-		return horizontalLine.intersects(this);
+		return Collidable.rectIntersectsHorizontalLine(
+			this.minX(), this.minY(), this.width(), this.height(),
+			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
+		);
 	}
 
 	@Override
 	default boolean containsPoint(float x, float y) {
-		return x >= this.minX() && y >= this.minY() && x <= this.maxX() && y <= this.maxY();
-	}
-
-	default Rectangle intersection(Rectangle rectangle) {
-		if(!this.intersects(rectangle)) {
-			return null;
-		}
-		return null; //TODO implement this
+		return Collidable.rectContainsPoint(
+			this.minX(), this.minY(), this.width(), this.height(),
+			x, y
+		);
 	}
 
 	@Override
 	default PVector closestPoint(float x, float y) {
-		if (this.containsPoint(x, y)) {
-			return new PVector(x, y);
-		}
-		// Find the nearest point on the
-		// rectangle to the centre of
-		// the circle
-		float Xn = Math.max(this.minX(), Math.min(x, this.maxX()));
-		float Yn = Math.max(this.minY(), Math.min(y, this.maxY()));
-		return new PVector(Xn, Yn);
+		return Collidable.rectClosestPoint(
+			this.minX(), this.minY(), this.width(), this.height(),
+			x, y
+		);
 	}
 }

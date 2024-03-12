@@ -46,28 +46,33 @@ public interface Circle extends Collidable {
 
 	@Override
 	default boolean intersects(VerticalLine verticalLine) {
-		return this.containsPoint(verticalLine.closestPoint(this.centreX(), this.centreY()));
+		return Collidable.circleIntersectsVerticalLine(
+			this.centreX(), this.centreY(), this.radius(),
+			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
+		);
 	}
 
 	@Override
 	default boolean intersects(HorizontalLine horizontalLine) {
-		return this.containsPoint(horizontalLine.closestPoint(this.centreX(), this.centreY()));
+		return Collidable.circleIntersectsHorizontalLine(
+			this.centreX(), this.centreY(), this.radius(),
+			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
+		);
 	}
 
 	@Override
 	default boolean containsPoint(float x, float y) {
-		float diffX = this.centreX() - x;
-		float diffY = this.centreY() - y;
-		return ((diffX * diffX) + (diffY * diffY)) <= (this.radius() * this.radius());
+		return Collidable.circleContainsPoint(
+			this.centreX(), this.centreY(), this.radius(),
+			x, y
+		);
 	}
 
 	@Override
 	default PVector closestPoint(float x, float y) {
-		if (this.containsPoint(x, y)) {
-			return new PVector(x, y);
-		}
-		PVector vector = new PVector(x - this.centreX(), y - this.centreY());
-		vector.setMag(this.radius());
-		return vector.add(this.centreX(), this.centreY());
+		return Collidable.circleClosestPoint(
+			this.centreX(), this.centreY(), this.radius(),
+			x, y
+		);
 	}
 }
