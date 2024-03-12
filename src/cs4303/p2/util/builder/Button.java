@@ -140,7 +140,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public Button asHud() {
+	public Button asHUD() {
 		return this.hud(true);
 	}
 

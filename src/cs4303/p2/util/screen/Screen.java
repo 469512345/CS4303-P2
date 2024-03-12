@@ -123,7 +123,7 @@ public interface Screen {
 	}
 
 	/**
-	 * Provide an offset to the viewport in the x axis
+	 * Provide an offset to the viewport in the x-axis
 	 *
 	 * @return x offset applied to viewport after any {@link #scale()} is applied
 	 */
@@ -132,7 +132,7 @@ public interface Screen {
 	}
 
 	/**
-	 * Provide an offset to the viewport in the y axis
+	 * Provide an offset to the viewport in the y-axis
 	 *
 	 * @return y offset applied to viewport after any {@link #scale()} is applied
 	 */

@@ -25,6 +25,7 @@ public class MenuScreen implements Screen {
 
 	/**
 	 * Create a Menu screen
+	 *
 	 * @param main main instance
 	 */
 	public MenuScreen(Main main) {
@@ -34,7 +35,7 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void draw() {
-		this.main.background(0);
+		this.main.background(this.main.MENU_BACKGROUND_COLOR.getRGB());
 
 		RectBuilder rect = this.main.rect();
 
@@ -43,19 +44,20 @@ public class MenuScreen implements Screen {
 		rect.at(thirdWidth, this.main.height / 3f)
 			.size(thirdWidth, this.main.BUTTON_HEIGHT);
 
-		this.playButton.copy(rect).draw();
+		this.playButton.copy(rect)
+			.draw();
 		rect.translate(0, -200);
 
 		this.main.text("Robotron 4303")
-			.fill(Color.RED)
+			.fill(this.main.MENU_TITLE_TEXT_COLOR)
+			.size(this.main.MENU_TITLE_TEXT_SIZE)
 			.centredInRect(rect)
-			.size(150)
 			.draw();
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		if(this.playButton.clicked(event)) {
+		if (this.playButton.clicked(event)) {
 			this.main.setScreen(new GameScreen(this.main));
 		}
 	}

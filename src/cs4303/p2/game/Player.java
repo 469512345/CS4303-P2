@@ -2,11 +2,8 @@ package cs4303.p2.game;
 
 import cs4303.p2.util.collisions.Circle;
 import cs4303.p2.util.collisions.Collidable;
-import cs4303.p2.util.collisions.HorizontalLine;
-import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
-import java.awt.Color;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,23 +11,6 @@ import java.util.Queue;
  * Player instance
  */
 public class Player implements Circle {
-
-	/**
-	 * How many frames ago the camera will show the player's position
-	 */
-	public static final int CAMERA_LAG_FRAMES = 15;
-	/**
-	 * Magnitude of velocity of movement
-	 */
-	public static final float MOVEMENT_VELOCITY = 0.8f; // pixels / frame
-	/**
-	 * Player radius
-	 */
-	public static final float PLAYER_RADIUS = 8f;
-	/**
-	 * Player radius squared
-	 */
-	public static final float PLAYER_RADIUS_SQUARED = PLAYER_RADIUS * PLAYER_RADIUS;
 
 	/**
 	 * Game instance
@@ -83,7 +63,7 @@ public class Player implements Circle {
 		this.game.main
 			.ellipse()
 			.copy(this)
-			.fill(Color.MAGENTA)
+			.fill(this.game.main.PLAYER_COLOR)
 			.draw();
 	}
 
@@ -91,7 +71,7 @@ public class Player implements Circle {
 	 * Update the player's position based on movement
 	 */
 	public void update() {
-		if (this.positionHistory.size() > CAMERA_LAG_FRAMES) {
+		if (this.positionHistory.size() > this.game.main.CAMERA_LAG_FRAMES) {
 			this.positionHistory.poll();
 		}
 		//Initial velocity of 0
@@ -115,7 +95,7 @@ public class Player implements Circle {
 		//Set the velocity
 		this.velocity.set(velocityX, velocityY)
 			//Set the magnitude if non-zero. stops left+up moving at sqrt(2) * speed
-			.setMag(MOVEMENT_VELOCITY);
+			.setMag(this.game.main.PLAYER_MOVEMENT_VELOCITY);
 		float newX = this.position.x + this.velocity.x;
 		float newY = this.position.y + this.velocity.y;
 
@@ -123,11 +103,11 @@ public class Player implements Circle {
 		boolean breakY = false;
 
 		for (Collidable wall : this.game.walls) {
-			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
+			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < this.game.main.PLAYER_RADIUS_SQUARED) {
 				newX = this.position.x;
 				breakX = true;
 			}
-			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
+			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < this.game.main.PLAYER_RADIUS_SQUARED) {
 				newY = this.position.y;
 				breakY = true;
 			}
@@ -163,6 +143,6 @@ public class Player implements Circle {
 
 	@Override
 	public float radius() {
-		return PLAYER_RADIUS;
+		return this.game.main.PLAYER_RADIUS;
 	}
 }

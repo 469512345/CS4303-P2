@@ -284,7 +284,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	public EllipseBuilder asHud() {
+	public EllipseBuilder asHUD() {
 		return this.hud(true);
 	}
 

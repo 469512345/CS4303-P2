@@ -300,7 +300,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder asHud() {
+	public RectBuilder asHUD() {
 		return this.hud(true);
 	}
 

@@ -14,7 +14,8 @@ import processing.event.MouseEvent;
 import java.util.Random;
 
 /**
- * Main class
+ * Main class. This extends the Properties class, so it can inherit all of the definitions in this file, without
+ * resulting in cluttering the main file.
  */
 public class Main extends Properties implements Rectangle {
 
@@ -46,6 +47,7 @@ public class Main extends Properties implements Rectangle {
 
 	/**
 	 * Change to a new screen
+	 *
 	 * @param screen screen to change to
 	 */
 	public void setScreen(Screen screen) {
@@ -173,7 +175,8 @@ public class Main extends Properties implements Rectangle {
 	 * @return textBuilder builder instance
 	 */
 	public TextBuilder text(String text) {
-		return this.textBuilder.clear().text(text);
+		return this.textBuilder.clear()
+			.text(text);
 	}
 
 	/**
@@ -225,6 +228,7 @@ public class Main extends Properties implements Rectangle {
 
 	/**
 	 * Entry point for the program
+	 *
 	 * @param args cli args
 	 */
 	public static void main(String[] args) {

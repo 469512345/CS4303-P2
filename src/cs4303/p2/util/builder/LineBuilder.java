@@ -305,7 +305,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	public LineBuilder asHud() {
+	public LineBuilder asHUD() {
 		return this.hud(true);
 	}
 

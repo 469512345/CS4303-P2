@@ -1,23 +1,19 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.game.level.room.AbstractRoom;
 import cs4303.p2.game.level.room.LeafRoom;
-import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.builder.LineBuilder;
+import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.collisions.Collidable;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.VerticalLine;
-import cs4303.p2.util.keybind.KeyKeybind;
-import cs4303.p2.util.keybind.Keybind;
-import cs4303.p2.util.keybind.MouseKeybind;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 
-import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,47 +38,30 @@ public class GameScreen implements Screen {
 	 * Vertical walls
 	 */
 	public final List<VerticalLine> verticalWalls = new LinkedList<>();
+	/**
+	 * All of the walls on the level
+	 */
 	public final List<Collidable> walls = new LinkedList<>();
 	/**
 	 * Rooms
 	 */
 	private final List<LeafRoom> rooms = new LinkedList<>();
 	/**
+	 * The room that the player starts in
+	 */
+	private final LeafRoom startingRoom;
+	/**
 	 * Player instance
 	 */
 	private final Player player;
 	/**
-	 * Keybind for move up
-	 */
-	private Keybind up = new KeyKeybind(87, 0); // w
-	/**
-	 * Keybind for move down
-	 */
-	private Keybind down = new KeyKeybind(83, 0); // s
-	/**
-	 * Keybind for move left
-	 */
-	private Keybind left = new KeyKeybind(65, 0); // a
-	/**
-	 * Keybind for move right
-	 */
-	private Keybind right = new KeyKeybind(68, 0); // d
-	/**
-	 * Keybind for fire
-	 */
-	private Keybind fire = new MouseKeybind(MouseEvent.BUTTON1, 0); // left click
-	/**
-	 * Keybind for zoom in
-	 */
-	private Keybind zoomIn = new KeyKeybind(61, KeyEvent.CTRL); // CTRL + +
-	/**
-	 * Keybind for zoom out
-	 */
-	private Keybind zoomOut = new KeyKeybind(45, KeyEvent.CTRL); // CTRL + -
-	/**
 	 * The current zoom level
 	 */
-	private float scale = 2;
+	private float scale;
+
+	private int score = 0;
+	private int lives;
+	private int wave = 0;
 
 	/**
 	 * Create the game instance
@@ -98,21 +77,31 @@ public class GameScreen implements Screen {
 
 		this.level.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
-		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1);
-		LeafRoom startingRoom = singlyConnectedRooms.get(main.random.nextInt(singlyConnectedRooms.size()));
+		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1); //The starting room must only have 1 corridor
+		this.startingRoom = singlyConnectedRooms.get(main.random.nextInt(singlyConnectedRooms.size()));
 
-		this.player = new Player(this, new PVector(startingRoom.centreX(), startingRoom.centreY()));
+		this.player = new Player(this, new PVector(this.startingRoom.centreX(), this.startingRoom.centreY()));
+		this.lives = this.main.STARTING_LIVES;
+		this.scale = this.main.INITIAL_ZOOM;
 	}
 
 	@Override
 	public void draw() {
 		this.update();
-		this.main.background(Color.BLACK.getRGB());
+		this.main.background(this.main.GAME_BACKGROUND_COLOR.getRGB());
 		this.level.draw();
+		this.drawWalls();
 		this.player.draw();
+		this.drawHUD();
+	}
+
+	/**
+	 * Draw the walls
+	 */
+	private void drawWalls() {
 		LineBuilder line = this.main.line()
-			.stroke(Color.GREEN)
-			.strokeWeight(1);
+			.stroke(this.main.WALL_COLOR)
+			.strokeWeight(this.main.WALL_STROKE_WIDTH);
 		for (HorizontalLine horizontalWall : this.horizontalWalls) {
 			line
 				.from(horizontalWall.minX(), horizontalWall.y())
@@ -124,6 +113,26 @@ public class GameScreen implements Screen {
 				.to(verticalWall.x(), verticalWall.maxY())
 				.draw();
 		}
+	}
+
+	/**
+	 * Draw the HUD
+	 */
+	private void drawHUD() {
+		TextBuilder text = this.main.text("Score: " + this.score)
+			.fill(this.main.HUD_TEXT_COLOR)
+			.asHUD();
+		text.centredHorizontally(0, this.main.HUD_TEXT_HEIGHT, this.main.width)
+			.size(this.main.HUD_SCORE_TEXT_SIZE)
+			.draw();
+		float halfWidth = this.main.width / 2f;
+		text.text("Wave: " + this.wave)
+			.centredHorizontally(0, this.main.HUD_TEXT_HEIGHT, halfWidth)
+			.size(this.main.HUD_OTHER_TEXT_SIZE)
+			.draw();
+		text.text("Lives: " + this.lives)
+			.centredHorizontally(halfWidth, this.main.HUD_TEXT_HEIGHT, halfWidth)
+			.draw();
 	}
 
 	/**
@@ -139,11 +148,11 @@ public class GameScreen implements Screen {
 			this.main.setScreen(new MenuScreen(this.main));
 			return;
 		}
-		if (this.zoomIn.test(event)) {
+		if (this.main.KEYBIND_ZOOM_IN.test(event)) {
 			this.zoomIn();
-		} else if (this.zoomOut.test(event)) {
+		} else if (this.main.KEYBIND_ZOOM_OUT.test(event)) {
 			this.zoomOut();
-		} else if (this.fire.test(event)) {
+		} else if (this.main.KEYBIND_FIRE.test(event)) {
 			this.fire();
 		} else {
 			this.handleKeyUpDownEvent(event, true);
@@ -155,40 +164,70 @@ public class GameScreen implements Screen {
 		this.handleKeyUpDownEvent(event, false);
 	}
 
+	/**
+	 * Handle a key up or key down event, and update the player's movement accordingly
+	 *
+	 * @param event key event
+	 * @param value true if the key is being pressed, false otherwise
+	 */
 	private void handleKeyUpDownEvent(KeyEvent event, boolean value) {
-		if (this.up.test(event)) {
+		if (this.main.KEYBIND_MOVE_UP.test(event)) {
 			this.player.up = value;
-		} else if (this.down.test(event)) {
+		} else if (this.main.KEYBIND_MOVE_DOWN.test(event)) {
 			this.player.down = value;
-		} else if (this.left.test(event)) {
+		} else if (this.main.KEYBIND_MOVE_LEFT.test(event)) {
 			this.player.left = value;
-		} else if (this.right.test(event)) {
+		} else if (this.main.KEYBIND_MOVE_RIGHT.test(event)) {
 			this.player.right = value;
 		}
 	}
 
+	/**
+	 * Zoom the camera in
+	 */
 	private void zoomIn() {
-		this.scale *= 1.1f;
+		this.scale *= this.main.ZOOM_FACTOR;
 	}
 
+	/**
+	 * Zoom the camera out
+	 */
 	private void zoomOut() {
-		this.scale /= 1.1f;
+		this.scale /= this.main.ZOOM_FACTOR;
 	}
 
+	/**
+	 * Fire a projectile from the player
+	 */
 	private void fire() {
 
 	}
 
+	/**
+	 * Provide an X offset to centre the player on the screen
+	 *
+	 * @return x offset to centre the player
+	 */
 	@Override
 	public float offsetX() {
 		return ((this.main.width / 2f) / this.scale()) - this.player.laggedPosition().x;
 	}
 
+	/**
+	 * Provide a Y offset to centre the player on the screen
+	 *
+	 * @return y offset to centre the player
+	 */
 	@Override
 	public float offsetY() {
 		return ((this.main.height / 2f) / this.scale()) - this.player.laggedPosition().y;
 	}
 
+	/**
+	 * Provide a zoom to the view
+	 *
+	 * @return scale factor for zoom on viewport
+	 */
 	@Override
 	public float scale() {
 		return this.scale;

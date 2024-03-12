@@ -291,7 +291,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder asHud() {
+	public TextBuilder asHUD() {
 		return this.hud(true);
 	}
 
