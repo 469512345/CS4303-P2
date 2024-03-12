@@ -352,7 +352,7 @@ public final class RectBuilder implements Rectangle {
 	 * @return immutable rectangle from current rect builder state
 	 */
 	public Rectangle capture() {
-		return new RectCapture(this.positionX, this.positionY, this.width, this.height);
+		return new RectangleImpl(this.positionX, this.positionY, this.width, this.height);
 	}
 
 }

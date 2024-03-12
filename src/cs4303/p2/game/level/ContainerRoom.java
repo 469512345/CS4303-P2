@@ -3,6 +3,8 @@ package cs4303.p2.game.level;
 import cs4303.p2.Main;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
+import cs4303.p2.util.collisions.HorizontalLine;
+import cs4303.p2.util.collisions.VerticalLine;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -140,7 +142,7 @@ public final class ContainerRoom extends AbstractRoom {
 	}
 
 	@Override
-	public void appendWalls(Collection<HorizontalWall> horizontalWalls, Collection<VerticalWall> verticalWalls) {
+	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
 		this.child1.appendWalls(horizontalWalls, verticalWalls);
 		this.child2.appendWalls(horizontalWalls, verticalWalls);
 	}

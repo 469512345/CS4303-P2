@@ -75,4 +75,19 @@ public interface Circle extends Collidable {
 			x, y
 		);
 	}
+
+	/**
+	 * Circle record implementation
+	 *
+	 * @param centreX x coordinate of centre of circle
+	 * @param centreY y coordinate of centre of circle
+	 * @param radius  radius of circle
+	 */
+	record CircleImpl(
+		float centreX,
+		float centreY,
+		float radius
+	) implements Circle {
+
+	}
 }

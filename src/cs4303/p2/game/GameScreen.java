@@ -2,12 +2,13 @@ package cs4303.p2.game;
 
 import cs4303.p2.Main;
 import cs4303.p2.game.level.AbstractRoom;
-import cs4303.p2.game.level.HorizontalWall;
 import cs4303.p2.game.level.LeafRoom;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.level.VerticalWall;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.util.builder.LineBuilder;
+import cs4303.p2.util.collisions.Collidable;
+import cs4303.p2.util.collisions.HorizontalLine;
+import cs4303.p2.util.collisions.VerticalLine;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
 import cs4303.p2.util.keybind.MouseKeybind;
@@ -36,11 +37,12 @@ public class GameScreen implements Screen {
 	/**
 	 * Horizontal walls
 	 */
-	public final List<HorizontalWall> horizontalWalls = new LinkedList<>();
+	public final List<HorizontalLine> horizontalWalls = new LinkedList<>();
 	/**
 	 * Vertical walls
 	 */
-	public final List<VerticalWall> verticalWalls = new LinkedList<>();
+	public final List<VerticalLine> verticalWalls = new LinkedList<>();
+	public final List<Collidable> walls = new LinkedList<>();
 	/**
 	 * Rooms
 	 */
@@ -91,6 +93,8 @@ public class GameScreen implements Screen {
 		this.main = main;
 		this.level = AbstractRoom.createRoot(this.main, this.generateLevelInfo(1));
 		this.level.appendWalls(this.horizontalWalls, this.verticalWalls);
+		this.walls.addAll(this.horizontalWalls);
+		this.walls.addAll(this.verticalWalls);
 
 		this.level.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
@@ -109,13 +113,13 @@ public class GameScreen implements Screen {
 		LineBuilder line = this.main.line()
 			.stroke(Color.GREEN)
 			.strokeWeight(1);
-		for (HorizontalWall horizontalWall : this.horizontalWalls) {
+		for (HorizontalLine horizontalWall : this.horizontalWalls) {
 			line
 				.from(horizontalWall.minX(), horizontalWall.y())
 				.to(horizontalWall.maxX(), horizontalWall.y())
 				.draw();
 		}
-		for (VerticalWall verticalWall : this.verticalWalls) {
+		for (VerticalLine verticalWall : this.verticalWalls) {
 			line.from(verticalWall.x(), verticalWall.minY())
 				.to(verticalWall.x(), verticalWall.maxY())
 				.draw();

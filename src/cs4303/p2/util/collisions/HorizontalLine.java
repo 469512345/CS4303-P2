@@ -90,4 +90,19 @@ public interface HorizontalLine extends Collidable {
 			x, y
 		);
 	}
+
+	/**
+	 * Horizontal line record implementaion
+	 *
+	 * @param minX minimum x coordinate
+	 * @param maxX maximum x coordinate
+	 * @param y    y coordinate
+	 */
+	record HorizontalLineImpl(
+		float minX,
+		float maxX,
+		float y
+	) implements HorizontalLine {
+
+	}
 }

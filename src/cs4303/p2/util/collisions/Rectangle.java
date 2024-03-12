@@ -118,4 +118,52 @@ public interface Rectangle extends Collidable {
 			x, y
 		);
 	}
+
+	/**
+	 * Calculate the intersection between this rectangle and another
+	 *
+	 * @param other other rectangle
+	 *
+	 * @return new rectangle representing the intersection, or null if the rectangles do not intersect
+	 */
+	default Rectangle intersection(Rectangle other) {
+		return Collidable.rectIntersectionWithRect(
+			this.minX(), this.minY(), this.width(), this.height(),
+			other.minX(), other.minY(), other.width(), other.height()
+		);
+	}
+
+	default HorizontalLine topEdge() {
+		return new HorizontalLine.HorizontalLineImpl(this.minX(), this.maxX(), this.minY());
+	}
+
+	default HorizontalLine bottomEdge() {
+		return new HorizontalLine.HorizontalLineImpl(this.minX(), this.maxX(), this.maxY());
+	}
+
+	default VerticalLine leftEdge() {
+		return new VerticalLine.VerticalLineImpl(this.minX(), this.minY(), this.maxY());
+	}
+
+	default VerticalLine rightEdge() {
+		return new VerticalLine.VerticalLineImpl(this.maxX(), this.minY(), this.maxY());
+	}
+
+	/**
+	 * Rectangle record implementation
+	 *
+	 * @param minX   Min x coord
+	 * @param minY   Min y coord
+	 * @param width  Width of rectangle
+	 * @param height Height of rectangle
+	 */
+	record RectangleImpl(
+		float minX,
+		float minY,
+		float width,
+		float height
+	) implements Rectangle {
+
+
+	}
 }

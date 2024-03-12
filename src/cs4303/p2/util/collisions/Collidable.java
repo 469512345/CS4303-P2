@@ -151,7 +151,7 @@ public interface Collidable {
 	 * @param r2MinX   min x coordinate of rectangle 2
 	 * @param r2MinY   min y coordinate of rectangle 2
 	 * @param r2Width  width of rectangle 2
-	 * @param r2Height height of rectangle true
+	 * @param r2Height height of rectangle 2
 	 *
 	 * @return true if the rectangles intersect, false otherwise
 	 */
@@ -577,6 +577,37 @@ public interface Collidable {
 		return vlX == x &&
 			y >= vlMinY &&
 			y <= vlMaxY;
+	}
+
+	/**
+	 * Calculate the intersection between two rectangles
+	 *
+	 * @param r1MinX   min x coordinate of rectangle 1
+	 * @param r1MinY   min y coordinate of rectangle 1
+	 * @param r1Width  width of rectangle 1
+	 * @param r1Height height of rectangle 1
+	 * @param r2MinX   min x coordinate of rectangle 2
+	 * @param r2MinY   min y coordinate of rectangle 2
+	 * @param r2Width  width of rectangle 2
+	 * @param r2Height height of rectangle 2
+	 *
+	 * @return intersection between the rectangles, or null if they do not intersect
+	 */
+	static Rectangle rectIntersectionWithRect(
+		float r1MinX, float r1MinY, float r1Width, float r1Height,
+		float r2MinX, float r2MinY, float r2Width, float r2Height
+	) {
+		float x1 = Math.max(r1MinX, r2MinX);
+		float y1 = Math.max(r1MinY, r2MinY);
+		float x2 = Math.min(r1MinX + r1Width, r2MinX + r2Width);
+		float y2 = Math.min(r1MinY + r1Height, r2MinY + r2Height);
+
+		if (!(x1 < x2) || !(y1 < y2)) {
+			return null;
+		}
+		return new Rectangle.RectangleImpl(x1, y1, x2 - x1, y2 - y1);
+
+
 	}
 
 }

@@ -3,7 +3,9 @@ package cs4303.p2.game.level;
 import cs4303.p2.Main;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
+import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
+import cs4303.p2.util.collisions.VerticalLine;
 
 import java.util.Collection;
 import java.util.Random;
@@ -98,11 +100,15 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	public abstract void appendRooms(Collection<LeafRoom> result);
 
 	/**
-	 * Append any horizontalWalls contained within this region to a collection
+	 * Append any walls contained within this region to collections for horizontal and vertical
 	 *
-	 * @param result collection to append to
+	 * @param horizontalWalls collection to append horizontal walls to
+	 * @param verticalWalls   collection to append vertical walls to
 	 */
-	public abstract void appendWalls(Collection<HorizontalWall> horizontalWalls, Collection<VerticalWall> verticalWalls);
+	public abstract void appendWalls(
+		Collection<HorizontalLine> horizontalWalls,
+		Collection<VerticalLine> verticalWalls
+	);
 
 	@Override
 	public float minX() {

@@ -89,4 +89,19 @@ public interface VerticalLine extends Collidable {
 			x, y
 		);
 	}
+
+	/**
+	 * Vertical line record implementation
+	 *
+	 * @param x    x coordinate
+	 * @param minY minimum y coordinate
+	 * @param maxY maximum y coordinate
+	 */
+	record VerticalLineImpl(
+		float x,
+		float minY,
+		float maxY
+	) implements VerticalLine {
+
+	}
 }

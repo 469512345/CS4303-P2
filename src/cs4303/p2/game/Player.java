@@ -1,8 +1,9 @@
 package cs4303.p2.game;
 
-import cs4303.p2.game.level.HorizontalWall;
-import cs4303.p2.game.level.VerticalWall;
 import cs4303.p2.util.collisions.Circle;
+import cs4303.p2.util.collisions.Collidable;
+import cs4303.p2.util.collisions.HorizontalLine;
+import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -121,26 +122,12 @@ public class Player implements Circle {
 		boolean breakX = false;
 		boolean breakY = false;
 
-		for (HorizontalWall horizontalWall : this.game.horizontalWalls) {
-			if (!breakX && horizontalWall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
+		for (Collidable wall : this.game.walls) {
+			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
 				newX = this.position.x;
 				breakX = true;
 			}
-			if (!breakY && horizontalWall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
-				newY = this.position.y;
-				breakY = true;
-			}
-			if (breakX && breakY) {
-				break;
-			}
-		}
-
-		for (VerticalWall verticalWall : this.game.verticalWalls) {
-			if (!breakX && verticalWall.closestDistanceSqFrom(newX, this.position.y) < PLAYER_RADIUS_SQUARED) {
-				newX = this.position.x;
-				breakX = true;
-			}
-			if (!breakY && verticalWall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
+			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < PLAYER_RADIUS_SQUARED) {
 				newY = this.position.y;
 				breakY = true;
 			}

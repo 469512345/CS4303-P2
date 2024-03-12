@@ -2,7 +2,6 @@ package cs4303.p2.game.level;
 
 import cs4303.p2.Main;
 import cs4303.p2.util.builder.RectBuilder;
-import cs4303.p2.util.builder.RectCapture;
 import cs4303.p2.util.collisions.Rectangle;
 import processing.core.PVector;
 
@@ -202,6 +201,6 @@ public class Corridor {
 		float width = maxX - minX + 2 * margin;
 		float height = maxY - minY + 2 * margin;
 
-		return new RectCapture(minX - margin, minY - margin, width, height);
+		return new Rectangle.RectangleImpl(minX - margin, minY - margin, width, height);
 	}
 }
