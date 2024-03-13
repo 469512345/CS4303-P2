@@ -70,7 +70,7 @@ public final class LineBuilder {
 		this.startY = 0;
 		this.direction.set(0, 0);
 		this.strokeColor = null;
-		this.strokeWeight = 0;
+		this.strokeWeight = 1;
 		this.strokeCap = PConstants.SQUARE;
 		this.hud = false;
 		return this;
@@ -297,6 +297,17 @@ public final class LineBuilder {
 		return this;
 	}
 
+	/**
+	 * Set the length of the line
+	 *
+	 * @param length length of the line
+	 *
+	 * @return this
+	 */
+	public LineBuilder length(float length) {
+		this.direction.setMag(length);
+		return this;
+	}
 
 
 	/**
@@ -354,5 +365,4 @@ public final class LineBuilder {
 		this.app.popMatrix();
 		this.app.pop();
 	}
-
 }

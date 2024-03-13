@@ -404,9 +404,6 @@ public class GameScreen implements Screen {
 		for (HorizontalLine wall : this.horizontalWalls) {
 			PVector intersection;
 			if (!surfaces.contains(wall) && (intersection = wall.intersection(trajectory)) != null) {
-				System.out.println(wall);
-				System.out.println(trajectory);
-				System.out.println(intersection);
 				bounceAxis = Axis.HORIZONTAL;
 				surfaces.add(wall);
 				bouncePoint = intersection;
@@ -417,9 +414,6 @@ public class GameScreen implements Screen {
 			for (VerticalLine wall : this.verticalWalls) {
 				PVector intersection;
 				if (!surfaces.contains(wall) && (intersection = wall.intersection(trajectory)) != null) {
-					System.out.println(wall);
-					System.out.println(trajectory);
-					System.out.println(intersection);
 					bounceAxis = Axis.VERTICAL;
 					surfaces.add(wall);
 					bouncePoint = intersection;
@@ -446,9 +440,9 @@ public class GameScreen implements Screen {
 
 			//Adjust the direction of the velocity to perform the bounce
 			if (bounceAxis == Axis.HORIZONTAL) {
-				velocity.set(velocity.x, -velocity.y);
-			} else {
 				velocity.set(-velocity.x, velocity.y);
+			} else {
+				velocity.set(velocity.x, -velocity.y);
 			}
 			//Update the position to the bounce point
 			position.set(bouncePoint);

@@ -888,20 +888,8 @@ public interface Collidable {
 			return null;
 		}
 		// Calculate the intersection point
-		float intersectionXT = l1X1 + t * (l1X2 - l1X1);
-		float intersectionYT = l1Y1 + t * (l1Y2 - l1Y1);
-
 		float intersectionXU = l2X1 + u * (l2X2 - l2X1);
 		float intersectionYU = l2Y1 + u * (l2Y2 - l2Y1);
-
-		System.out.printf(
-			"l1x1=%f, l1y1=%f, l1x2=%f, l2x2=%f,%nl2x1=%f, l2y1=%f, l2x2=%f, l2y2=%f,%nt=%f, nT=%f, iXT=%f, iYT=%f,%nu=%f, nU=%f, iXU=%f, iYU=%f, denom=%f%n",
-			l1X1, l1Y1, l1X2, l1Y2,
-			l2X1, l2Y1, l2X2, l2Y2,
-			t, numeratorT, intersectionXT, intersectionYT,
-			u, numeratorU, intersectionXU, intersectionYU,
-			denominator
-		);
 		return new PVector(intersectionXU, intersectionYU);
 	}
 
