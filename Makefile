@@ -1,6 +1,8 @@
-CLASSPATH = "libjars/core.jar"
+#The classpath is the libjars folder
+CLASSPATH = libjars/*.jar
 SRC_DIR = "src"
 BUILD_DIR = "build"
+#Where to unzip the jars in the classpath to
 LIB_DIR = "lib"
 MAIN_CLASS = "cs4303.p2.Main"
 JAR = "CS4303P2.jar"

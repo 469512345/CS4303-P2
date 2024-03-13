@@ -200,16 +200,22 @@ public class GameScreen implements Screen {
 	 */
 	private void updateProjectiles() {
 		Iterator<Projectile> iterator = this.projectiles.iterator();
+		boolean clearProjectiles = false;
 		while (iterator.hasNext()) {
 			Projectile projectile = iterator.next();
 			projectile.update();
-			if (projectile.intersects(this.player) && projectile.canHitPlayer()) {
+			if (!projectile.expired() && projectile.intersects(this.player) && projectile.canHitPlayer()) {
 				projectile.expire();
 				this.die();
+				//Clear the list of projectiles, so they are not there when the player respawns
+				clearProjectiles = true;
 			}
 			if (projectile.expired()) {
 				iterator.remove();
 			}
+		}
+		if (clearProjectiles) {
+			this.projectiles.clear();
 		}
 	}
 
@@ -550,5 +556,50 @@ public class GameScreen implements Screen {
 	 */
 	public GameScreen nextWave() {
 		return new GameScreen(this.main, this.wave + 1, this.score, this.lives);
+	}
+
+	/**
+	 * Calculate whether there is line of sight between two points
+	 *
+	 * @param point1 first point
+	 * @param point2 second point
+	 *
+	 * @return true if the two points have line of sight, false if there is a wall in the way
+	 */
+	public boolean lineOfSightBetween(PVector point1, PVector point2) {
+		return !this.lineIntersectsWalls(Line.of(point1, point2));
+	}
+
+	/**
+	 * Calculate whether there is line of sight between two points
+	 *
+	 * @param x1 x coordinate of point 1
+	 * @param y1 y coordinate of point 1
+	 * @param x2 x coordinate of point 2
+	 * @param y2 y coordinate of point 2
+	 *
+	 * @return true if the two points have line of sight, false if there is a wall in the way
+	 */
+	public boolean lineOfSightBetween(
+		float x1, float y1,
+		float x2, float y2
+	) {
+		return !this.lineIntersectsWalls(Line.of(x1, y1, x2, y2));
+	}
+
+	/**
+	 * Calculate if a line intersects any walls
+	 *
+	 * @param line line to test
+	 *
+	 * @return true if it intersects any wall, false otherwise
+	 */
+	private boolean lineIntersectsWalls(Line line) {
+		for (Collidable wall : this.walls) {
+			if (wall.intersects(line)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

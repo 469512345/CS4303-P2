@@ -6,7 +6,6 @@ import cs4303.p2.util.keybind.MouseKeybind;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
-import processing.event.MouseEvent;
 
 import java.awt.Color;
 
@@ -84,7 +83,7 @@ public abstract class Properties extends PApplet {
 	/**
 	 * Initial zoom of the viewport
 	 */
-	public final float INITIAL_ZOOM = 2f;
+	public final float INITIAL_ZOOM = 3f;
 
 	//Game settings
 	/**
@@ -118,6 +117,21 @@ public abstract class Properties extends PApplet {
 	 * How many frames the camera should lag behind the player's current position
 	 */
 	public final int CAMERA_LAG_FRAMES = 15;
+
+	//Player eye properties
+	/**
+	 * Distance from the centre of the player to their eye
+	 */
+	public final float PLAYER_EYE_DISTANCE = 6f;
+	/**
+	 * Radius of the player's eye
+	 */
+	public final float PLAYER_EYE_RADIUS = 2f;
+	/**
+	 * Colour of the player's eye
+	 */
+	public final Color PLAYER_EYE_COLOR = Color.BLACK;
+	public final float PLAYER_EYE_TURN_INCREMENT = (float) (Math.PI / 32d);
 
 	//Player projectile settings
 	/**

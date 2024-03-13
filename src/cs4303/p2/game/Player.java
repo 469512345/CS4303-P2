@@ -1,28 +1,17 @@
 package cs4303.p2.game;
 
-import cs4303.p2.util.collisions.Circle;
+import cs4303.p2.game.entity.Entity;
 import processing.core.PVector;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
  * Player instance
  */
-public final class Player implements Circle, ProjectileSource {
+public final class Player extends Entity implements ProjectileSource {
 
-	/**
-	 * Game instance
-	 */
-	private final GameScreen game;
-	/**
-	 * Player's position
-	 */
-	private final PVector position;
-	/**
-	 * Player's velocity
-	 */
-	private final PVector velocity = new PVector();
 	/**
 	 * Position history
 	 */
@@ -51,24 +40,15 @@ public final class Player implements Circle, ProjectileSource {
 	 * @param position initial position
 	 */
 	public Player(GameScreen game, PVector position) {
-		this.game = game;
-		this.position = position;
+		super(game, position);
 	}
 
-	/**
-	 * Draw the player
-	 */
+	@Override
 	public void draw() {
-		this.game.main
-			.ellipse()
-			.copy(this)
-			.fill(this.game.main.PLAYER_COLOR)
-			.draw();
+		this.drawBase();
 	}
 
-	/**
-	 * Update the player's position based on movement
-	 */
+	@Override
 	public void update() {
 		if (this.positionHistory.size() > this.game.main.CAMERA_LAG_FRAMES) {
 			this.positionHistory.poll();
@@ -96,7 +76,7 @@ public final class Player implements Circle, ProjectileSource {
 			//Set the magnitude if non-zero. stops diagonal movement getting sqrt(2) * speed
 			.setMag(this.game.main.PLAYER_MOVEMENT_VELOCITY);
 
-		this.game.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
+		this.move();
 
 		//Add this new position to the history
 		this.positionHistory.add(this.position.copy());
@@ -121,26 +101,38 @@ public final class Player implements Circle, ProjectileSource {
 	}
 
 	/**
-	 * Set the player's position to a new PVector
+	 * Set the player's position to a new PVector, and clear the position history
 	 *
 	 * @param position new position
 	 */
 	public void setPosition(PVector position) {
 		this.position.set(position);
-	}
-
-	@Override
-	public float centreX() {
-		return this.position.x;
-	}
-
-	@Override
-	public float centreY() {
-		return this.position.y;
+		this.positionHistory.clear();
+		this.positionHistory.add(position);
 	}
 
 	@Override
 	public float radius() {
 		return this.game.main.PLAYER_RADIUS;
+	}
+
+	@Override
+	protected Color baseColor() {
+		return this.game.main.PLAYER_COLOR;
+	}
+
+	@Override
+	protected Color eyeColor() {
+		return this.game.main.PLAYER_EYE_COLOR;
+	}
+
+	@Override
+	protected float eyeRadius() {
+		return this.game.main.PLAYER_EYE_RADIUS;
+	}
+
+	@Override
+	protected float eyeDistance() {
+		return this.game.main.PLAYER_EYE_DISTANCE;
 	}
 }
