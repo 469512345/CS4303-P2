@@ -5,7 +5,11 @@ import processing.core.PVector;
 /**
  * Interface for something that can be collided into.
  * <p>
- * Current implementations of this are {@link Rectangle} and {@link Circle}.
+ * Current implementations of this are {@link Rectangle}, {@link Circle}, {@link HorizontalLine}, {@link VerticalLine},
+ * and {@link Line}.
+ * <p>
+ * Some of the implementations for {@link Line} have been written with assistance from CHAT-GPT. Such implementations
+ * acknowledge where this is the case.
  */
 public interface Collidable {
 
@@ -44,6 +48,40 @@ public interface Collidable {
 	 * @return true if objects intersect, false otherwise
 	 */
 	boolean intersects(HorizontalLine horizontalLine);
+
+	/**
+	 * Whether the collidable object intersects a line
+	 *
+	 * @param line line to test
+	 *
+	 * @return true if objects intersect, false otherwise
+	 */
+	boolean intersects(Line line);
+
+	/**
+	 * Whether the collidable object intersects another collidable object. This method will inspect the collidable
+	 * object to find the appropriate implementation, and error if it is not one of {@link Circle}, {@link Rectangle},
+	 * {@link VerticalLine}, {@link HorizontalLine}.
+	 *
+	 * @param collidable object to test
+	 *
+	 * @return true if objects intersect, false otherwise
+	 */
+	default boolean intersects(Collidable collidable) {
+		if (collidable instanceof Circle circle) {
+			return this.intersects(circle);
+		} else if (collidable instanceof Rectangle rectangle) {
+			return this.intersects(rectangle);
+		} else if (collidable instanceof VerticalLine verticalLine) {
+			return this.intersects(verticalLine);
+		} else if (collidable instanceof HorizontalLine horizontalLine) {
+			return this.intersects(horizontalLine);
+		} else if (collidable instanceof Line line) {
+			return this.intersects(line);
+		} else {
+			throw new ClassCastException("Unable to determine the collidable type of " + collidable.getClass());
+		}
+	}
 
 	/**
 	 * Whether this object contains a point
@@ -609,5 +647,247 @@ public interface Collidable {
 
 
 	}
+
+	//BEGIN CHAT-GPT GENERATED CODE
+
+	/**
+	 * Determines if two line segments intersect.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param l1x1 x-coordinate of the first endpoint of the first line
+	 * @param l1y1 y-coordinate of the first endpoint of the first line
+	 * @param l1x2 x-coordinate of the second endpoint of the first line
+	 * @param l1y2 y-coordinate of the second endpoint of the first line
+	 * @param l2x1 x-coordinate of the first endpoint of the second line
+	 * @param l2y1 y-coordinate of the first endpoint of the second line
+	 * @param l2x2 x-coordinate of the second endpoint of the second line
+	 * @param l2y2 y-coordinate of the second endpoint of the second line
+	 * @return true if the two lines intersect, false otherwise
+	 */
+	static boolean lineIntersectsLine(
+		float l1x1, float l1y1, float l1x2, float l1y2,
+		float l2x1, float l2y1, float l2x2, float l2y2
+	) {
+		float denominator = (l1x1 - l1x2) * (l2y1 - l2y2) - (l1y1 - l1y2) * (l2x1 - l2x2);
+
+		// If the denominator is 0, the lines are parallel and do not intersect
+		if (denominator == 0) {
+			return false;
+		}
+
+		float numerator1 = (l1x1 - l2x1) * (l2y1 - l2y2) - (l1y1 - l2y1) * (l2x1 - l2x2);
+		float numerator2 = (l1x1 - l1x2) * (l1y1 - l2y1) - (l1y1 - l1y2) * (l1x1 - l2x1);
+
+		float t1 = numerator1 / denominator;
+		float t2 = numerator2 / denominator;
+
+		// If t1 and t2 are between 0 and 1, the lines intersect
+		return t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1;
+	}
+
+	/**
+	 * Determines if a circle intersects with a line segment.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param cX x-coordinate of the center of the circle
+	 * @param cY y-coordinate of the center of the circle
+	 * @param cR radius of the circle
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @return true if the circle intersects with the line segment, false otherwise
+	 */
+	static boolean circleIntersectsLine(
+		float cX, float cY, float cR,
+		float lX1, float lY1, float lX2, float lY2
+	) {
+		PVector closestPoint = lineClosestPoint(lX1, lY1, lX2, lY2, cX, cY);
+		return circleContainsPoint(cX, cY, cR, closestPoint.x, closestPoint.y);
+	}
+
+	/**
+	 * Determines if a rectangle intersects with a line segment.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param rMinX x-coordinate of the top-left corner of the rectangle
+	 * @param rMinY y-coordinate of the top-left corner of the rectangle
+	 * @param rWidth width of the rectangle
+	 * @param rHeight height of the rectangle
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @return true if the rectangle intersects with the line segment, false otherwise
+	 */
+	static boolean rectangleIntersectsLine(
+		float rMinX, float rMinY, float rWidth, float rHeight,
+		float lX1, float lY1, float lX2, float lY2
+	) {
+		return lineIntersectsLine(rMinX, rMinY, rMinX + rWidth, rMinY, lX1, lY1, lX2, lY2) ||
+			lineIntersectsLine(rMinX, rMinY, rMinX, rMinY + rHeight, lX1, lY1, lX2, lY2) ||
+			lineIntersectsLine(rMinX + rWidth, rMinY, rMinX + rWidth, rMinY + rHeight, lX1, lY1, lX2, lY2) ||
+			lineIntersectsLine(rMinX, rMinY + rHeight, rMinX + rWidth, rMinY + rHeight, lX1, lY1, lX2, lY2) ||
+			rectContainsPoint(rMinX, rMinY, rWidth, rHeight, lX1, lY1) ||
+			rectContainsPoint(rMinX, rMinY, rWidth, rHeight, lX2, lY2);
+	}
+
+	/**
+	 * Determines if a vertical line segment intersects with another line segment.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param vlX x-coordinate of the vertical line
+	 * @param vlMinY y-coordinate of the top endpoint of the vertical line
+	 * @param vlMaxY y-coordinate of the bottom endpoint of the vertical line
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @return true if the vertical line segment intersects with the other line segment, false otherwise
+	 */
+	static boolean verticalLineIntersectsLine(
+		float vlX, float vlMinY, float vlMaxY,
+		float lX1, float lY1, float lX2, float lY2
+	) {
+		return lineIntersectsLine(vlX, vlMinY, vlX, vlMaxY, lX1, lY1, lX2, lY2);
+	}
+
+	/**
+	 * Determines if a horizontal line segment intersects with another line segment.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param hlMinX x-coordinate of the left endpoint of the horizontal line
+	 * @param hlMaxX x-coordinate of the right endpoint of the horizontal line
+	 * @param hlY y-coordinate of the horizontal line
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @return true if the horizontal line segment intersects with the other line segment, false otherwise
+	 */
+	static boolean horizontalLineIntersectsLine(
+		float hlMinX, float hlMaxX, float hlY,
+		float lX1, float lY1, float lX2, float lY2
+	) {
+		return lineIntersectsLine(hlMinX, hlY, hlMaxX, hlY, lX1, lY1, lX2, lY2);
+	}
+
+	/**
+	 * Finds the closest point on a line segment to a given point.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @param x x-coordinate of the point
+	 * @param y y-coordinate of the point
+	 * @return closest point on the line segment to the given point
+	 */
+	static PVector lineClosestPoint(
+		float lX1, float lY1, float lX2, float lY2,
+		float x, float y
+	) {
+		float dx = lX2 - lX1;
+		float dy = lY2 - lY1;
+		float t = ((x - lX1) * dx + (y - lY1) * dy) / (dx * dx + dy * dy);
+		t = Math.max(0, Math.min(1, t));
+		float closestX = lX1 + t * dx;
+		float closestY = lY1 + t * dy;
+		return new PVector(closestX, closestY);
+	}
+
+	/**
+	 * Determines if a line segment contains a given point.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param lX1 x-coordinate of the first endpoint of the line segment
+	 * @param lY1 y-coordinate of the first endpoint of the line segment
+	 * @param lX2 x-coordinate of the second endpoint of the line segment
+	 * @param lY2 y-coordinate of the second endpoint of the line segment
+	 * @param x x-coordinate of the point
+	 * @param y y-coordinate of the point
+	 * @return true if the line segment contains the point, false otherwise
+	 */
+	static boolean lineContainsPoint(
+		float lX1, float lY1, float lX2, float lY2,
+		float x, float y
+	) {
+		// Convert the line and point coordinates to vectors
+		PVector lineVector = new PVector(lX2 - lX1, lY2 - lY1);
+		PVector pointVector = new PVector(x - lX1, y - lY1);
+
+		// Calculate the dot product of the line and point vectors
+		float dotProduct = lineVector.dot(pointVector);
+
+		// Calculate the length of the line squared
+		float lineLengthSquared = lineVector.magSq();
+
+		// Calculate the projection of the point vector onto the line vector
+		float projection = dotProduct / lineLengthSquared;
+
+		// Check if the projection is within the range [0, 1]
+		return projection >= 0 && projection <= 1;
+	}
+
+	/**
+	 * Finds the intersection point between two line segments.
+	 * <p>
+	 * Written with assistance from CHAT-GPT.
+	 *
+	 * @param l1X1 x-coordinate of the first endpoint of the first line segment
+	 * @param l1Y1 y-coordinate of the first endpoint of the first line segment
+	 * @param l1X2 x-coordinate of the second endpoint of the first line segment
+	 * @param l1Y2 y-coordinate of the second endpoint of the first line segment
+	 * @param l2X1 x-coordinate of the first endpoint of the second line segment
+	 * @param l2Y1 y-coordinate of the first endpoint of the second line segment
+	 * @param l2X2 x-coordinate of the second endpoint of the second line segment
+	 * @param l2Y2 y-coordinate of the second endpoint of the second line segment
+	 * @return a {@link PVector} representing the intersection point between the two line segments,
+	 *         or {@code null} if they do not intersect
+	 */
+	static PVector lineIntersectionWithLine(
+		float l1X1, float l1Y1, float l1X2, float l1Y2,
+		float l2X1, float l2Y1, float l2X2, float l2Y2
+	) {
+		// Calculate the direction vectors of the lines
+		PVector dir1 = new PVector(l1X2 - l1X1, l1Y2 - l1Y1);
+		PVector dir2 = new PVector(l2X2 - l2X1, l2Y2 - l2Y1);
+
+		// Calculate the determinant
+		float determinant = dir1.x * dir2.y - dir1.y * dir2.x;
+
+		// Check if the lines are parallel
+		if (Math.abs(determinant) < 0.0001) {
+			// Lines are parallel or coincident
+			return null;
+		}
+
+		// Calculate the difference vectors
+		PVector diff1 = new PVector(l1X1 - l2X1, l1Y1 - l2Y1);
+
+		// Calculate the parameter values for the intersection point
+		float t = (diff1.x * dir2.y - diff1.y * dir2.x) / determinant;
+		float u = (diff1.x * dir1.y - diff1.y * dir1.x) / determinant;
+
+		// Check if the intersection point is within the line segments
+		if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+			// Calculate the intersection point
+			float intersectionX = l1X1 + t * (l1X2 - l1X1);
+			float intersectionY = l1Y1 + t * (l1Y2 - l1Y1);
+			return new PVector(intersectionX, intersectionY);
+		} else {
+			// Intersection point is outside the line segments
+			return null;
+		}
+	}
+	//END CHAT-GPT GENERATED CODE
 
 }

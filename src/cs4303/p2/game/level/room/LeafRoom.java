@@ -1,6 +1,6 @@
 package cs4303.p2.game.level.room;
 
-import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
@@ -9,7 +9,6 @@ import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +26,7 @@ public final class LeafRoom extends AbstractRoom {
 	/**
 	 * Create a room
 	 *
-	 * @param main      main instance
+	 * @param game      game instance
 	 * @param parent    parent room, or null if root node
 	 * @param levelInfo parameters describing level generation
 	 * @param minX      minimum x coordinate of room's bounds
@@ -36,7 +35,7 @@ public final class LeafRoom extends AbstractRoom {
 	 * @param maxY      maximum y coordinate of room's bounds
 	 */
 	public LeafRoom(
-		Main main,
+		GameScreen game,
 		ContainerRoom parent,
 		LevelInfo levelInfo,
 		float minX,
@@ -44,14 +43,14 @@ public final class LeafRoom extends AbstractRoom {
 		float maxX,
 		float maxY
 	) {
-		super(main, parent, levelInfo, minX, minY, maxX, maxY);
+		super(game, parent, levelInfo, minX, minY, maxX, maxY);
 	}
 
 	@Override
 	public void draw() {
-		this.main.rect()
+		this.game.main.rect()
 			.noStroke()
-			.fill(Color.WHITE)
+			.fill(this.game.main.ROOM_COLOR)
 			.copy(this)
 			.draw();
 	}

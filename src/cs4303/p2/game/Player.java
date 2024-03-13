@@ -1,7 +1,6 @@
 package cs4303.p2.game;
 
 import cs4303.p2.util.collisions.Circle;
-import cs4303.p2.util.collisions.Collidable;
 import processing.core.PVector;
 
 import java.util.LinkedList;
@@ -94,29 +93,10 @@ public class Player implements Circle {
 
 		//Set the velocity
 		this.velocity.set(velocityX, velocityY)
-			//Set the magnitude if non-zero. stops left+up moving at sqrt(2) * speed
+			//Set the magnitude if non-zero. stops diagonal movement getting sqrt(2) * speed
 			.setMag(this.game.main.PLAYER_MOVEMENT_VELOCITY);
-		float newX = this.position.x + this.velocity.x;
-		float newY = this.position.y + this.velocity.y;
 
-		boolean breakX = false;
-		boolean breakY = false;
-
-		for (Collidable wall : this.game.walls) {
-			if (!breakX && wall.closestDistanceSqFrom(newX, this.position.y) < this.game.main.PLAYER_RADIUS_SQUARED) {
-				newX = this.position.x;
-				breakX = true;
-			}
-			if (!breakY && wall.closestDistanceSqFrom(this.position.x, newY) < this.game.main.PLAYER_RADIUS_SQUARED) {
-				newY = this.position.y;
-				breakY = true;
-			}
-			if (breakX && breakY) {
-				break;
-			}
-		}
-
-		this.position.set(newX, newY);
+		this.game.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
 
 		//Add this new position to the history
 		this.positionHistory.add(this.position.copy());
@@ -129,6 +109,15 @@ public class Player implements Circle {
 	 */
 	public PVector laggedPosition() {
 		return this.positionHistory.peek();
+	}
+
+	/**
+	 * Get a copy of the player's current position
+	 *
+	 * @return copy of the player's current position
+	 */
+	public PVector copyPosition() {
+		return this.position.copy();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package cs4303.p2.game.level.corridor;
 
-import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -28,16 +28,16 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 	/**
 	 * Create a new corridor
 	 *
-	 * @param main  main instance
+	 * @param game  game instance
 	 * @param room1 first room
 	 * @param room2 second room
 	 * @param axis  axis of the corridor
 	 * @param width width of the corridor
 	 */
 	public StraightCorridor(
-		Main main, LeafRoom room1, LeafRoom room2, Axis axis, float width, PVector point1, PVector point2
+		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width, PVector point1, PVector point2
 	) {
-		super(main, room1, room2, axis, width);
+		super(game, room1, room2, axis, width);
 		this.point1 = point1;
 		this.point2 = point2;
 
@@ -52,7 +52,7 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 	 */
 	@Override
 	public void draw() {
-		this.main.rect()
+		this.game.main.rect()
 			.fill(Color.WHITE)
 			.copy(this)
 			.draw();

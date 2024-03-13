@@ -104,6 +104,14 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
+	default boolean intersects(Line line) {
+		return Collidable.rectangleIntersectsLine(
+			this.minX(), this.minY(), this.width(), this.height(),
+			line.x1(), line.y1(), line.x2(), line.y2()
+		);
+	}
+
+	@Override
 	default boolean containsPoint(float x, float y) {
 		return Collidable.rectContainsPoint(
 			this.minX(), this.minY(), this.width(), this.height(),

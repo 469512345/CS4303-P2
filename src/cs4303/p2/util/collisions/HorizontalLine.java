@@ -61,6 +61,14 @@ public interface HorizontalLine extends Collidable {
 		);
 	}
 
+	@Override
+	default boolean intersects(Line line) {
+		return Collidable.horizontalLineIntersectsLine(
+			this.minX(), this.maxX(), this.y(),
+			line.x1(), line.y1(), line.x2(), line.y2()
+		);
+	}
+
 	/**
 	 * Calculate the intersection between a vertical line and this line.
 	 *
@@ -72,6 +80,20 @@ public interface HorizontalLine extends Collidable {
 		return Collidable.horizontalLineIntersectionWithVerticalLine(
 			this.minX(), this.maxX(), this.y(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
+		);
+	}
+
+	/**
+	 * Calculate the intersection between an arbitrary line and this line.
+	 *
+	 * @param line line to calculate intersection with
+	 *
+	 * @return point of intersection between this line and the other line, or null if none exists
+	 */
+	default PVector intersection(Line line) {
+		return Collidable.lineIntersectionWithLine(
+			line.x1(), line.y1(), line.x2(), line.y2(),
+			this.minX(), this.y(), this.maxX(), this.y()
 		);
 	}
 

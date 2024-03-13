@@ -1,6 +1,6 @@
 package cs4303.p2.game.level.room;
 
-import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
@@ -23,7 +23,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 * Main instance
 	 */
 	@NotNull
-	protected final Main main;
+	protected final GameScreen game;
 	/**
 	 * Parent of this room, or null if this room is the root node
 	 */
@@ -54,7 +54,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	/**
 	 * Create a room
 	 *
-	 * @param main      main instance
+	 * @param game      main instance
 	 * @param parent    parent room, or null if root node
 	 * @param levelInfo parameters describing level generation
 	 * @param minX      minimum x coordinate of room's bounds
@@ -63,7 +63,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 * @param maxY      maximum y coordinate of room's bounds
 	 */
 	protected AbstractRoom(
-		@NotNull Main main,
+		@NotNull GameScreen game,
 		@Nullable ContainerRoom parent,
 		@NotNull LevelInfo levelInfo,
 		float minX,
@@ -71,7 +71,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		float maxX,
 		float maxY
 	) {
-		this.main = main;
+		this.game = game;
 		this.parent = parent;
 		this.levelInfo = levelInfo;
 		this.minX = minX;
@@ -136,7 +136,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	/**
 	 * Create a room
 	 *
-	 * @param main      main instance
+	 * @param game      game instance
 	 * @param parent    parent room, or null if creating the root node
 	 * @param levelInfo parameters describing level generation
 	 * @param minX      minimum x coordinate of room's bounds
@@ -147,7 +147,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 * @return created room
 	 */
 	public static AbstractRoom createRoom(
-		@NotNull Main main,
+		@NotNull GameScreen game,
 		@Nullable ContainerRoom parent,
 		@NotNull LevelInfo levelInfo,
 		float minX,
@@ -155,7 +155,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		float maxX,
 		float maxY
 	) {
-		Random random = main.random;
+		Random random = game.main.random;
 
 		float width = maxX - minX;
 		float height = maxY - minY;
@@ -177,7 +177,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 			float topMargin = random.nextFloat(lower, upper);
 			float bottomMargin = random.nextFloat(lower, upper);
 			return new LeafRoom(
-				main,
+				game,
 				parent,
 				levelInfo,
 				minX + leftMargin,
@@ -198,9 +198,9 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 		} else if (!horizontalSplitAllowed) {
 			axis = Axis.VERTICAL;
 		} else {
-			axis = main.random.nextBoolean() ? Axis.VERTICAL : Axis.HORIZONTAL;
+			axis = random.nextBoolean() ? Axis.VERTICAL : Axis.HORIZONTAL;
 		}
-		return new ContainerRoom(main, parent, levelInfo, minX, minY, maxX, maxY, axis);
+		return new ContainerRoom(game, parent, levelInfo, minX, minY, maxX, maxY, axis);
 	}
 
 	/**
@@ -231,13 +231,13 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	/**
 	 * Create the root room
 	 *
-	 * @param main      main instance
+	 * @param game      game instance
 	 * @param levelInfo parameters describing level generation
 	 *
 	 * @return created room instance
 	 */
-	public static AbstractRoom createRoot(Main main, LevelInfo levelInfo) {
-		return createRoom(main, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
+	public static AbstractRoom createRoot(GameScreen game, LevelInfo levelInfo) {
+		return createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
 	}
 
 	@Override

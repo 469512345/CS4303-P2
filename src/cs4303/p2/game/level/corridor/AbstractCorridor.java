@@ -1,6 +1,6 @@
 package cs4303.p2.game.level.corridor;
 
-import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -20,7 +20,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 	/**
 	 * Main instance
 	 */
-	protected final Main main;
+	protected final GameScreen game;
 	/**
 	 * First room
 	 */
@@ -55,14 +55,14 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 	/**
 	 * Create a new corridor
 	 *
-	 * @param main  main instance
+	 * @param game  main instance
 	 * @param room1 first room
 	 * @param room2 second room
 	 * @param axis  axis of the corridor
 	 * @param width half-width of the corridor
 	 */
-	public AbstractCorridor(Main main, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
-		this.main = main;
+	public AbstractCorridor(GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
+		this.game = game;
 		this.room1 = room1;
 		this.room2 = room2;
 		this.axis = axis;
@@ -151,10 +151,28 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 		verticalWalls.add(rectangle.rightEdge());
 	}
 
-	public static AbstractCorridor createCorridor(Main main, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
+	/**
+	 * Create a corridor. This method will look at the two rooms and determine whether the corridor should be straight
+	 * or composite.
+	 *
+	 * @param game  game instance
+	 * @param room1 first room
+	 * @param room2 second room
+	 * @param axis  axis perpendicular to corridor
+	 * @param width width of corridor
+	 *
+	 * @return corridor instance
+	 */
+	public static AbstractCorridor createCorridor(
+		GameScreen game,
+		LeafRoom room1,
+		LeafRoom room2,
+		Axis axis,
+		float width
+	) {
 		float margin = width / 2f;
 
-		Random random = main.random;
+		Random random = game.main.random;
 
 		if (axis == Axis.VERTICAL) {
 			Float corridorY = null;
@@ -181,7 +199,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 			if (corridorY != null) {
 				PVector point1 = new PVector(room1.maxX, corridorY);
 				PVector point2 = new PVector(room2.minX, corridorY);
-				return new StraightCorridor(main, room1, room2, axis, width, point1, point2);
+				return new StraightCorridor(game, room1, room2, axis, width, point1, point2);
 			} else {
 				float centreX = (room1.maxX + room2.minX) / 2;
 				float room1CorridorY = random(random, room1.minY + margin, room1.maxY - margin);
@@ -192,7 +210,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 				PVector point3 = new PVector(centreX, room2CorridorY);
 				PVector point4 = new PVector(room2.minX, room2CorridorY);
 
-				return new CompositeCorridor(main, room1, room2, axis, width, point1, point2, point3, point4);
+				return new CompositeCorridor(game, room1, room2, axis, width, point1, point2, point3, point4);
 			}
 		} else {
 			Float corridorX = null;
@@ -220,7 +238,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 				PVector point1 = new PVector(corridorX, room1.maxY);
 				PVector point2 = new PVector(corridorX, room2.minY);
 
-				return new StraightCorridor(main, room1, room2, axis, width, point1, point2);
+				return new StraightCorridor(game, room1, room2, axis, width, point1, point2);
 			} else {
 				float centreY = (room1.maxY + room2.minY) / 2;
 				float room1CorridorX = random(random, room1.minX + margin, room1.maxX - margin);
@@ -231,7 +249,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 				PVector point3 = new PVector(room2CorridorX, centreY);
 				PVector point4 = new PVector(room2CorridorX, room2.minY);
 
-				return new CompositeCorridor(main, room1, room2, axis, width, point1, point2, point3, point4);
+				return new CompositeCorridor(game, room1, room2, axis, width, point1, point2, point3, point4);
 			}
 
 		}

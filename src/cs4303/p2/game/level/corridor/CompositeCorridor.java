@@ -1,6 +1,6 @@
 package cs4303.p2.game.level.corridor;
 
-import cs4303.p2.Main;
+import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.builder.RectBuilder;
@@ -29,20 +29,20 @@ public final class CompositeCorridor extends AbstractCorridor {
 	/**
 	 * Create a new corridor
 	 *
-	 * @param main  main instance
+	 * @param game  game instance
 	 * @param room1 first room
 	 * @param room2 second room
 	 * @param axis  axis of the corridor
 	 * @param width width of the corridor
 	 */
 	public CompositeCorridor(
-		Main main, LeafRoom room1, LeafRoom room2, Axis axis, float width,
+		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width,
 		PVector point1,
 		PVector point2,
 		PVector point3,
 		PVector point4
 	) {
-		super(main, room1, room2, axis, width);
+		super(game, room1, room2, axis, width);
 		this.point1 = point1;
 		this.point2 = point2;
 		this.point3 = point3;
@@ -67,7 +67,7 @@ public final class CompositeCorridor extends AbstractCorridor {
 	 */
 	@Override
 	public void draw() {
-		RectBuilder rect = this.main.rect()
+		RectBuilder rect = this.game.main.rect()
 			.fill(Color.WHITE);
 
 		rect.copy(this.segment1)

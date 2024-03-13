@@ -1,5 +1,6 @@
 package cs4303.p2.util.screen;
 
+import processing.core.PVector;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -138,6 +139,68 @@ public interface Screen {
 	 */
 	default float offsetY() {
 		return 0;
+	}
+
+	/**
+	 * Convert an x coordinate in world coordinates to screen coordinates
+	 *
+	 * @param x x coordinate in world coordinates
+	 *
+	 * @return transformed x coordinate in screen coordinates
+	 */
+	default float convertX(float x) {
+		return this.scale() * (x + this.offsetX());
+	}
+
+	/**
+	 * Convert a y coordinate in world coordinates to screen coordinates
+	 *
+	 * @param y y coordinate in world coordinates
+	 *
+	 * @return transformed y coordinate in screen coordinates
+	 */
+	default float convertY(float y) {
+		return this.scale() * (y + this.offsetY());
+	}
+
+	/**
+	 * Convert a position vector in world coordinates to screen coordinates. The vector will be written in place.
+	 *
+	 * @param point position vector in world coordinates
+	 */
+	default void convert(PVector point) {
+		point.set(this.convertX(point.x), this.convertY(point.y));
+	}
+
+	/**
+	 * Convert an x coordinate in screen coordinates to world coordinates
+	 *
+	 * @param x x coordinate in screen coordinate
+	 *
+	 * @return reverse transformed x coordinate in world coordinates
+	 */
+	default float unconvertX(float x) {
+		return x / this.scale() - this.offsetX();
+	}
+
+	/**
+	 * Convert a y coordinate in screen coordinates to world coordinates
+	 *
+	 * @param y y coordinate in screen coordinate
+	 *
+	 * @return reverse transformed y coordinate in world coordinates
+	 */
+	default float unconvertY(float y) {
+		return y / this.scale() - this.offsetY();
+	}
+
+	/**
+	 * Convert a position vector in screen coordinates to world coordinates. The vector will be written in place
+	 *
+	 * @param point position vector in screen coordinates
+	 */
+	default void unconvert(PVector point) {
+		point.set(this.unconvertX(point.x), this.unconvertY(point.y));
 	}
 
 }

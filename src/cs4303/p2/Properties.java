@@ -4,10 +4,11 @@ import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
 import cs4303.p2.util.keybind.MouseKeybind;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 
 /**
  * Properties for the application. The Main class extends this class to gain access to these properties without
@@ -36,6 +37,12 @@ public abstract class Properties extends PApplet {
 	 * Height of buttons
 	 */
 	public final int BUTTON_HEIGHT = 50;
+
+	//Room properties
+	/**
+	 * Colour of a room on the level
+	 */
+	public final Color ROOM_COLOR = Color.WHITE;
 
 	//Wall properties
 	/**
@@ -99,13 +106,36 @@ public abstract class Properties extends PApplet {
 	 */
 	public final float PLAYER_RADIUS_SQUARED = this.PLAYER_RADIUS * this.PLAYER_RADIUS;
 	/**
-	 * The magnitude of the player's velocity. This is the same velocity in the cardinal directions, and also when moving diagonally.
+	 * The magnitude of the player's velocity. This is the same velocity in the cardinal directions, and also when
+	 * moving diagonally.
 	 */
 	public final float PLAYER_MOVEMENT_VELOCITY = 0.8f; // pixels / frame
 	/**
 	 * How many frames the camera should lag behind the player's current position
 	 */
 	public final int CAMERA_LAG_FRAMES = 15;
+
+	//Player projectile settings
+	/**
+	 * Colour of the player's projectiles
+	 */
+	public final Color PLAYER_PROJECTILE_COLOR = Color.CYAN;
+	/**
+	 * Radius of the player's projectiles
+	 */
+	public final float PLAYER_PROJECTILE_RADIUS = 2f;
+	/**
+	 * Radius squared of the player's projectiles
+	 */
+	public final float PLAYER_PROJECTILE_RADIUS_SQUARED = this.PLAYER_PROJECTILE_RADIUS * this.PLAYER_PROJECTILE_RADIUS;
+	/**
+	 * Magnitude of the player's projectiles' velocity
+	 */
+	public final float PLAYER_PROJECTILE_MOVEMENT_VELOCITY = 1.6f;
+	/**
+	 * Maximum number of bounces a player's projectile can have
+	 */
+	public final int PLAYER_PROJECTILE_MAX_BOUNCES = 3;
 
 	//Keybind settings
 	/**
@@ -127,7 +157,7 @@ public abstract class Properties extends PApplet {
 	/**
 	 * Keybind for fire
 	 */
-	public Keybind KEYBIND_FIRE = new MouseKeybind(MouseEvent.BUTTON1, 0); // left click
+	public Keybind KEYBIND_FIRE = new MouseKeybind(PConstants.LEFT, 0); // left click
 	/**
 	 * Keybind for zoom in
 	 */
