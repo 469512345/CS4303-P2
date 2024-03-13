@@ -681,7 +681,7 @@ public interface Collidable {
 		float numeratorU = (l1X1 - l1X2) * (l1Y1 - l2Y1) - (l1Y1 - l1Y2) * (l1X1 - l2X1);
 
 		float t = numeratorT / denominator;
-		float u = numeratorU / denominator;
+		float u = -numeratorU / denominator;
 
 		// If t and u are between 0 and 1, the lines intersect
 		return t >= 0 && t <= 1 && u >= 0 && u <= 1;
@@ -880,7 +880,7 @@ public interface Collidable {
 		float numeratorU = (l1X1 - l1X2) * (l1Y1 - l2Y1) - (l1Y1 - l1Y2) * (l1X1 - l2X1);
 
 		float t = numeratorT / denominator;
-		float u = numeratorU / denominator;
+		float u = -numeratorU / denominator;
 
 		// Check if the intersection point is within the line segments
 		if (t < 0 || t > 1 || u < 0 || u > 1) {
