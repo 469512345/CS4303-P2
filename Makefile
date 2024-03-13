@@ -1,4 +1,4 @@
-CLASSPATH = "/cs/home/ejs35/Documents/CS4303/processing-4.3-linux-x64/processing-4.3/core/library/core.jar"
+CLASSPATH = "libjars/core.jar"
 SRC_DIR = "src"
 BUILD_DIR = "build"
 LIB_DIR = "lib"
@@ -12,7 +12,7 @@ mkBuild: clean
 	mkdir $(BUILD_DIR)
 
 compile: mkBuild
-	cd $(SRC_DIR); find . -name "*.java" -print0 | xargs -0 javac --class-path $(CLASSPATH) -d ../$(BUILD_DIR)
+	cd $(SRC_DIR); find . -name "*.java" -print0 | xargs -0 javac --class-path ../$(CLASSPATH) -d ../$(BUILD_DIR)
 
 mkLib:
 	mkdir -p $(LIB_DIR)

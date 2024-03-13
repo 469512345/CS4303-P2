@@ -71,6 +71,14 @@ public interface Rectangle extends Collidable {
 		return this.minY() + (this.height() / 2);
 	}
 
+	/**
+	 * Calculate the position vector of the centre of the rectangle
+	 * @return position vector of the centre of the rectangle
+	 */
+	default PVector centre() {
+		return new PVector(this.centreX(), this.centreY());
+	}
+
 	@Override
 	default boolean intersects(Circle circle) {
 		return Collidable.circleIntersectsRect(

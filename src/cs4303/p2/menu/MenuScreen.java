@@ -3,25 +3,21 @@ package cs4303.p2.menu;
 import cs4303.p2.Main;
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.util.builder.Button;
-import cs4303.p2.util.builder.RectBuilder;
-import cs4303.p2.util.screen.Screen;
 import processing.event.MouseEvent;
-
-import java.awt.Color;
 
 /**
  * Menu screen, when the game opens
  */
-public class MenuScreen implements Screen {
+public class MenuScreen extends AbstractMenuScreen {
 
-	/**
-	 * Main instance
-	 */
-	private final Main main;
 	/**
 	 * Play button on the screen
 	 */
 	private final Button playButton;
+	/**
+	 * Exit to desktop button
+	 */
+	private final Button exitDesktopButton;
 
 	/**
 	 * Create a Menu screen
@@ -29,36 +25,31 @@ public class MenuScreen implements Screen {
 	 * @param main main instance
 	 */
 	public MenuScreen(Main main) {
-		this.main = main;
+		super(main);
 		this.playButton = new Button(main, "Play", main.rect());
+		this.exitDesktopButton = new Button(this.main, "Exit to Desktop", this.main.rect()).asHUD();
+	}
+
+	@Override
+	protected void drawBackground() {
+		this.main.background(this.main.MENU_BACKGROUND_COLOR.getRGB());
 	}
 
 	@Override
 	public void draw() {
-		this.main.background(this.main.MENU_BACKGROUND_COLOR.getRGB());
-
-		RectBuilder rect = this.main.rect();
-
-		float thirdWidth = this.main.width / 3f;
-
-		rect.at(thirdWidth, this.main.height / 3f)
-			.size(thirdWidth, this.main.BUTTON_HEIGHT);
-
-		this.playButton.copy(rect)
-			.draw();
-		rect.translate(0, -200);
-
-		this.main.text("Robotron 4303")
-			.fill(this.main.MENU_TITLE_TEXT_COLOR)
-			.size(this.main.MENU_TITLE_TEXT_SIZE)
-			.centredInRect(rect)
-			.draw();
+		this.drawMenu(
+			"Robotron 4303",
+			this.playButton,
+			this.exitDesktopButton
+		);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		if (this.playButton.clicked(event)) {
 			this.main.setScreen(new GameScreen(this.main));
+		} else if (this.exitDesktopButton.clicked(event)) {
+			this.main.exit();
 		}
 	}
 }

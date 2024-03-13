@@ -5,7 +5,9 @@ import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.game.level.room.AbstractRoom;
 import cs4303.p2.game.level.room.LeafRoom;
-import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.game.subscreens.DiedScreen;
+import cs4303.p2.game.subscreens.GameOverScreen;
+import cs4303.p2.game.subscreens.PauseScreen;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.collisions.Collidable;
@@ -13,6 +15,7 @@ import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Line;
 import cs4303.p2.util.collisions.VerticalLine;
 import cs4303.p2.util.screen.Screen;
+import processing.core.PConstants;
 import processing.core.PVector;
 import processing.event.Event;
 import processing.event.KeyEvent;
@@ -33,6 +36,10 @@ public class GameScreen implements Screen {
 	 * Main instance
 	 */
 	public final Main main;
+	/**
+	 * Current wave number
+	 */
+	public final int wave;
 	/**
 	 * Root of the room tree
 	 */
@@ -73,23 +80,26 @@ public class GameScreen implements Screen {
 	/**
 	 * Current score
 	 */
-	private int score = 0;
+	public int score;
 	/**
 	 * Current lives
 	 */
-	private int lives;
-	/**
-	 * Current wave number
-	 */
-	private int wave = 0;
+	public int lives;
 
 	/**
-	 * Create the game instance
+	 * Create a game instance with existing score, lives etc
 	 *
-	 * @param main main instance
+	 * @param main  main instance
+	 * @param wave  wave number
+	 * @param score current score
+	 * @param lives current number of lives remaining
 	 */
-	public GameScreen(Main main) {
+	public GameScreen(Main main, int wave, int score, int lives) {
 		this.main = main;
+		this.wave = wave;
+		this.score = score;
+		this.lives = lives;
+
 		this.level = AbstractRoom.createRoot(this, this.generateLevelInfo());
 		this.level.appendWalls(this.horizontalWalls, this.verticalWalls);
 		this.walls.addAll(this.horizontalWalls);
@@ -100,14 +110,26 @@ public class GameScreen implements Screen {
 		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1); //The starting room must only have 1 corridor
 		this.startingRoom = singlyConnectedRooms.get(main.random.nextInt(singlyConnectedRooms.size()));
 
-		this.player = new Player(this, new PVector(this.startingRoom.centreX(), this.startingRoom.centreY()));
-		this.lives = this.main.STARTING_LIVES;
+		this.player = new Player(this, this.startingRoom.centre());
 		this.scale = this.main.INITIAL_ZOOM;
+	}
+
+	/**
+	 * Create a new game for wave 1 with no score
+	 *
+	 * @param main Main instance
+	 */
+	public GameScreen(Main main) {
+		this(main, 1, 0, main.STARTING_LIVES);
 	}
 
 	@Override
 	public void draw() {
 		this.update();
+		this.justDraw();
+	}
+
+	public void justDraw() {
 		this.main.background(this.main.GAME_BACKGROUND_COLOR.getRGB());
 		this.level.draw();
 		this.drawWalls();
@@ -181,6 +203,10 @@ public class GameScreen implements Screen {
 		while (iterator.hasNext()) {
 			Projectile projectile = iterator.next();
 			projectile.update();
+			if (projectile.intersects(this.player) && projectile.canHitPlayer()) {
+				projectile.expire();
+				this.die();
+			}
 			if (projectile.expired()) {
 				iterator.remove();
 			}
@@ -189,8 +215,12 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void keyPressed(KeyEvent event) {
-		if (event.getKey() == ' ') {
-			this.main.setScreen(new MenuScreen(this.main));
+		if (event.getKeyCode() == PConstants.ESC) {
+			//Overwrite key to stop process ending
+			this.main.key = 0;
+			this.main.keyCode = 0;
+			//Show the pause screen
+			this.main.setScreen(new PauseScreen(this));
 			return;
 		}
 		this.handleKeyOrMouseDown(event);
@@ -278,8 +308,26 @@ public class GameScreen implements Screen {
 		this.unconvert(velocity); // Convert the screen coordinates back to world coordinates
 		velocity.sub(position)
 			.setMag(this.main.PLAYER_PROJECTILE_MOVEMENT_VELOCITY);
-		Projectile projectile = new Projectile(this, position, velocity);
+		Projectile projectile = new Projectile(this, position, velocity, this.player);
 		this.projectiles.add(projectile);
+	}
+
+	private void die() {
+		this.lives--;
+		if (this.lives <= 0) {
+			this.main.setScreen(new GameOverScreen(this));
+		} else {
+			this.main.setScreen(new DiedScreen(this));
+		}
+	}
+
+	public void respawn() {
+		this.player.setPosition(this.startingRoom.centre());
+		//Ignore any movement that was present when the player died
+		this.player.up = false;
+		this.player.down = false;
+		this.player.left = false;
+		this.player.right = false;
 	}
 
 	/**
@@ -337,6 +385,26 @@ public class GameScreen implements Screen {
 	}
 
 	/**
+	 * Calculate the score multiplier for the current wave.
+	 * <p>
+	 * This will be x1 for waves 1 and 2, x2 for 3 and 4, and increase in this way for every 2 levels.
+	 *
+	 * @return the score multiplier.
+	 */
+	public int scoreMultiplier() {
+		return 1 + Math.floorDiv(this.wave - 1, 2);
+	}
+
+	/**
+	 * Increase the player's score
+	 *
+	 * @param score
+	 */
+	public void addScore(int score) {
+		this.score += score * this.scoreMultiplier();
+	}
+
+	/**
 	 * Move a circular object with collision detection. This method will update the position accordingly based on the
 	 * velocity and any collision detection that occurs. If a collision occurs, the object will be prevented from moving
 	 * in the direction that the collision occurs in
@@ -383,7 +451,19 @@ public class GameScreen implements Screen {
 		return this.moveBounce(position, velocity, radius, 0, velocity.mag(), new HashSet<>());
 	}
 
-	public int moveBounce(
+	/**
+	 * Inner recursive bounce implementation
+	 *
+	 * @param position         current position
+	 * @param velocity         current velocity
+	 * @param radius           radius of object
+	 * @param count            how many bounces have happened so far
+	 * @param initialMagnitude the original magnitude of the velocity
+	 * @param surfaces         a collection of surfaces which have been bounced off in this iteration
+	 *
+	 * @return the number of bounces which were encountered
+	 */
+	private int moveBounce(
 		PVector position,
 		PVector velocity,
 		float radius,
@@ -391,6 +471,10 @@ public class GameScreen implements Screen {
 		float initialMagnitude,
 		Set<Collidable> surfaces
 	) {
+		//Add the radius to the length of the velocity when checking trajectory
+		float mag = velocity.mag();
+		velocity.setMag(mag + radius);
+
 		float newX = position.x + velocity.x;
 		float newY = position.y + velocity.y;
 
@@ -440,9 +524,9 @@ public class GameScreen implements Screen {
 
 			//Adjust the direction of the velocity to perform the bounce
 			if (bounceAxis == Axis.HORIZONTAL) {
-				velocity.set(-velocity.x, velocity.y);
-			} else {
 				velocity.set(velocity.x, -velocity.y);
+			} else {
+				velocity.set(-velocity.x, velocity.y);
 			}
 			//Update the position to the bounce point
 			position.set(bouncePoint);
@@ -459,4 +543,12 @@ public class GameScreen implements Screen {
 		return count;
 	}
 
+	/**
+	 * Create a game instance for the next wave
+	 *
+	 * @return game instance for the next wave
+	 */
+	public GameScreen nextWave() {
+		return new GameScreen(this.main, this.wave + 1, this.score, this.lives);
+	}
 }

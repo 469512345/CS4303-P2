@@ -21,6 +21,10 @@ public class Projectile implements Circle {
 	 */
 	private final PVector velocity;
 	/**
+	 * Source (shooter) of the projectile
+	 */
+	private final ProjectileSource source;
+	/**
 	 * Number of bounces remaining
 	 */
 	private int bouncesRemaining;
@@ -35,11 +39,13 @@ public class Projectile implements Circle {
 	 * @param game     game instance
 	 * @param position initial position
 	 * @param velocity initial velocity
+	 * @param source   source (shooter) of projectile
 	 */
-	public Projectile(GameScreen game, PVector position, PVector velocity) {
+	public Projectile(GameScreen game, PVector position, PVector velocity, ProjectileSource source) {
 		this.game = game;
 		this.position = position;
 		this.velocity = velocity;
+		this.source = source;
 
 		this.bouncesRemaining = this.game.main.PLAYER_PROJECTILE_MAX_BOUNCES;
 	}
@@ -78,6 +84,13 @@ public class Projectile implements Circle {
 		return this.expired;
 	}
 
+	/**
+	 * Mark this projectile as expired, so it will be cleaned up next update cycle.
+	 */
+	public void expire() {
+		this.expired = true;
+	}
+
 	@Override
 	public float centreX() {
 		return this.position.x;
@@ -91,5 +104,15 @@ public class Projectile implements Circle {
 	@Override
 	public float radius() {
 		return this.game.main.PLAYER_PROJECTILE_RADIUS;
+	}
+
+	/**
+	 * Whether the projectile can hit the player. A player's own projectiles can only hit them after making at least one
+	 * bounce. An enemy's projectile can hit the player immediately.
+	 *
+	 * @return whether the projectile can hit the player
+	 */
+	public boolean canHitPlayer() {
+		return !(this.source instanceof Player) || this.bouncesRemaining < this.game.main.PLAYER_PROJECTILE_MAX_BOUNCES;
 	}
 }

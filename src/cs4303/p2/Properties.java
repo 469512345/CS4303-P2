@@ -37,6 +37,10 @@ public abstract class Properties extends PApplet {
 	 * Height of buttons
 	 */
 	public final int BUTTON_HEIGHT = 50;
+	/**
+	 * Spacing between buttons
+	 */
+	public final float BUTTON_SPACING = this.BUTTON_HEIGHT * 1.6f;
 
 	//Room properties
 	/**
@@ -135,7 +139,7 @@ public abstract class Properties extends PApplet {
 	/**
 	 * Maximum number of bounces a player's projectile can have
 	 */
-	public final int PLAYER_PROJECTILE_MAX_BOUNCES = 3;
+	public final int PLAYER_PROJECTILE_MAX_BOUNCES = 1;
 
 	//Keybind settings
 	/**
@@ -180,4 +184,8 @@ public abstract class Properties extends PApplet {
 	 * Colour of the title text on the menu screen
 	 */
 	public final Color MENU_TITLE_TEXT_COLOR = Color.RED;
+	/**
+	 * Colour of overlays on pause screens
+	 */
+	public final Color OVERLAY_COLOR = new Color(100, 100, 100, 100);
 }

@@ -9,7 +9,7 @@ import java.util.Queue;
 /**
  * Player instance
  */
-public class Player implements Circle {
+public final class Player implements Circle, ProjectileSource {
 
 	/**
 	 * Game instance
@@ -118,6 +118,15 @@ public class Player implements Circle {
 	 */
 	public PVector copyPosition() {
 		return this.position.copy();
+	}
+
+	/**
+	 * Set the player's position to a new PVector
+	 *
+	 * @param position new position
+	 */
+	public void setPosition(PVector position) {
+		this.position.set(position);
 	}
 
 	@Override
