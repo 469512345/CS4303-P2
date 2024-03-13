@@ -380,14 +380,13 @@ public class GameScreen implements Screen {
 	 * @return the number of bounces which were encountered
 	 */
 	public int moveBounce(PVector position, PVector velocity, float radius) {
-		return this.moveBounce(position, velocity, radius, radius * radius, 0, velocity.mag(), new HashSet<>());
+		return this.moveBounce(position, velocity, radius, 0, velocity.mag(), new HashSet<>());
 	}
 
 	public int moveBounce(
 		PVector position,
 		PVector velocity,
 		float radius,
-		float radiusSquared,
 		int count,
 		float initialMagnitude,
 		Set<Collidable> surfaces
@@ -405,6 +404,9 @@ public class GameScreen implements Screen {
 		for (HorizontalLine wall : this.horizontalWalls) {
 			PVector intersection;
 			if (!surfaces.contains(wall) && (intersection = wall.intersection(trajectory)) != null) {
+				System.out.println(wall);
+				System.out.println(trajectory);
+				System.out.println(intersection);
 				bounceAxis = Axis.HORIZONTAL;
 				surfaces.add(wall);
 				bouncePoint = intersection;
@@ -415,6 +417,9 @@ public class GameScreen implements Screen {
 			for (VerticalLine wall : this.verticalWalls) {
 				PVector intersection;
 				if (!surfaces.contains(wall) && (intersection = wall.intersection(trajectory)) != null) {
+					System.out.println(wall);
+					System.out.println(trajectory);
+					System.out.println(intersection);
 					bounceAxis = Axis.VERTICAL;
 					surfaces.add(wall);
 					bouncePoint = intersection;
@@ -424,7 +429,6 @@ public class GameScreen implements Screen {
 		}
 
 		if (bounceAxis != null) {
-
 			float magnitude = velocity.mag();
 
 			//The bounce point doesn't take into account the radius of the particle,
@@ -450,7 +454,7 @@ public class GameScreen implements Screen {
 			position.set(bouncePoint);
 
 			//Recursively try to perform more bounces
-			return this.moveBounce(position, velocity, radius, radiusSquared, count + 1, initialMagnitude, surfaces);
+			return this.moveBounce(position, velocity, radius, count + 1, initialMagnitude, surfaces);
 		}
 
 		//If no bounces, then position is the new location, and restore the velocity to its initial
