@@ -98,6 +98,29 @@ public abstract class Entity implements Circle {
 	protected abstract float eyeDistance();
 
 	/**
+	 * Magnitude of the entity's movement velocity
+	 *
+	 * @return magnitude of the entity's movement velocity
+	 */
+	protected abstract float velocityMagnitude();
+
+	protected boolean canSeeRobotsThroughWalls() {
+		return false;
+	}
+
+	protected boolean canBeSeenThroughWallsByRobots() {
+		return false;
+	}
+
+	protected boolean canSeeHumansThroughWalls() {
+		return false;
+	}
+
+	protected boolean canBeSeenThroughWallsByHumans() {
+		return false;
+	}
+
+	/**
 	 * Move the entity, respecting collisions with the map
 	 */
 	protected void move() {

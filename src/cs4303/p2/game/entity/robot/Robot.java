@@ -8,6 +8,12 @@ import processing.core.PVector;
  * Base class for robots
  */
 public abstract class Robot extends AIEntity {
+
+	/**
+	 * Whether this robot is dead
+	 */
+	private boolean dead = false;
+
 	/**
 	 * Construct an enemy
 	 *
@@ -16,5 +22,27 @@ public abstract class Robot extends AIEntity {
 	 */
 	public Robot(GameScreen game, PVector position) {
 		super(game, position);
+	}
+
+	/**
+	 * How many points the player should earn for killing this robot
+	 *
+	 * @return points earned for killing this robot
+	 */
+	public abstract int pointsForKilling();
+
+	/**
+	 * Mark this robot as killed, and for removal on next update cycle
+	 */
+	public void kill() {
+		this.dead = true;
+	}
+
+	/**
+	 * Whether this robot is dead, and should be removed from the world
+	 * @return true if this robot is dead, false otherwise
+	 */
+	public boolean dead() {
+		return this.dead;
 	}
 }

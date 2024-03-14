@@ -1,9 +1,12 @@
 package cs4303.p2.game;
 
 import cs4303.p2.game.entity.Entity;
+import cs4303.p2.game.powerup.ActivePowerup;
+import cs4303.p2.game.powerup.Powerup;
 import processing.core.PVector;
 
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +19,10 @@ public final class Player extends Entity implements ProjectileSource {
 	 * Position history
 	 */
 	private final Queue<PVector> positionHistory = new LinkedList<>();
+	/**
+	 * Active powerups on the player
+	 */
+	public final LinkedList<ActivePowerup> activePowerups = new LinkedList<>();
 	/**
 	 * Whether the player should move left on next update
 	 */
@@ -80,6 +87,21 @@ public final class Player extends Entity implements ProjectileSource {
 
 		//Add this new position to the history
 		this.positionHistory.add(this.position.copy());
+		this.updatePowerups();
+	}
+
+	/**
+	 * Update the powerups on the player
+	 */
+	private void updatePowerups() {
+		Iterator<ActivePowerup> iterator = this.activePowerups.iterator();
+		while (iterator.hasNext()) {
+			ActivePowerup powerup = iterator.next();
+			powerup.update(this.game.deltaTime);
+			if (powerup.finished()) {
+				iterator.remove();
+			}
+		}
 	}
 
 	/**
@@ -106,9 +128,35 @@ public final class Player extends Entity implements ProjectileSource {
 	 * @param position new position
 	 */
 	public void setPosition(PVector position) {
+
+	}
+
+	/**
+	 * Respawn the player in a position
+	 *
+	 * @param position position to respawn
+	 */
+	public void respawn(PVector position) {
+		//Move the player, and clear the position history
 		this.position.set(position);
 		this.positionHistory.clear();
 		this.positionHistory.add(position);
+		//Ignore any movement that was present when the player died
+		this.up = false;
+		this.down = false;
+		this.left = false;
+		this.right = false;
+		//Clear any active powerups
+		this.activePowerups.clear();
+	}
+
+	/**
+	 * Add a powerup to the player
+	 * @param powerup
+	 */
+	public void applyPowerup(Powerup powerup) {
+		this.activePowerups.add(new ActivePowerup(powerup.type));
+		powerup.remove();
 	}
 
 	@Override
@@ -134,5 +182,10 @@ public final class Player extends Entity implements ProjectileSource {
 	@Override
 	protected float eyeDistance() {
 		return this.game.main.PLAYER_EYE_DISTANCE;
+	}
+
+	@Override
+	protected float velocityMagnitude() {
+		return 0;
 	}
 }

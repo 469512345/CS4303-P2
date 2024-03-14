@@ -1,10 +1,13 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.entity.family.Family;
+import cs4303.p2.game.entity.robot.Robot;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.game.level.room.AbstractRoom;
 import cs4303.p2.game.level.room.LeafRoom;
+import cs4303.p2.game.powerup.Powerup;
 import cs4303.p2.game.subscreens.DiedScreen;
 import cs4303.p2.game.subscreens.GameOverScreen;
 import cs4303.p2.game.subscreens.PauseScreen;
@@ -69,6 +72,18 @@ public class GameScreen implements Screen {
 	 */
 	private final LeafRoom startingRoom;
 	/**
+	 * Powerups in the world
+	 */
+	private final List<Powerup> powerups = new LinkedList<>();
+	/**
+	 * Family members in the world
+	 */
+	private final List<Family> family = new LinkedList<>();
+	/**
+	 * Robots in the world
+	 */
+	private final List<Robot> robots = new LinkedList<>();
+	/**
 	 * Player instance
 	 */
 	private final Player player;
@@ -85,6 +100,18 @@ public class GameScreen implements Screen {
 	 * Current lives
 	 */
 	public int lives;
+	/**
+	 * Time that the last frame was drawn, according to {@link System#currentTimeMillis()}
+	 */
+	public long lastFrameMillis;
+	/**
+	 * Time since the last frame, difference between {@link #lastFrameMillis} for successive frames
+	 */
+	public long deltaTime;
+	/**
+	 * Milliseconds since the start of the game
+	 */
+	public long gameTimeMillis;
 
 	/**
 	 * Create a game instance with existing score, lives etc
@@ -129,11 +156,22 @@ public class GameScreen implements Screen {
 		this.justDraw();
 	}
 
+	/**
+	 * Just draw the game, without performing any update
+	 */
 	public void justDraw() {
+		long nowMillis = System.currentTimeMillis();
+		if (this.lastFrameMillis != 0) {
+			this.deltaTime = nowMillis - this.lastFrameMillis;
+		}
+		this.lastFrameMillis = nowMillis;
 		this.main.background(this.main.GAME_BACKGROUND_COLOR.getRGB());
 		this.level.draw();
 		this.drawWalls();
 		this.drawProjectiles();
+		this.drawFamily();
+		this.drawRobots();
+		this.drawPowerups();
 		this.player.draw();
 		this.drawHUD();
 	}
@@ -168,6 +206,33 @@ public class GameScreen implements Screen {
 	}
 
 	/**
+	 * Draw powerups on screen
+	 */
+	private void drawPowerups() {
+		for (Powerup powerup : this.powerups) {
+			powerup.draw();
+		}
+	}
+
+	/**
+	 * Draw the family members on screen
+	 */
+	private void drawFamily() {
+		for (Family family : this.family) {
+			family.draw();
+		}
+	}
+
+	/**
+	 * Draw the robots on screen
+	 */
+	private void drawRobots() {
+		for (Robot robot : this.robots) {
+			robot.draw();
+		}
+	}
+
+	/**
 	 * Draw the HUD
 	 */
 	private void drawHUD() {
@@ -191,8 +256,13 @@ public class GameScreen implements Screen {
 	 * Update the physics of all objects
 	 */
 	public void update() {
+		//This should technically be after the draw call, but it's probably fine having it here
+		this.gameTimeMillis += this.deltaTime;
 		this.player.update();
 		this.updateProjectiles();
+		this.updatePowerups();
+		this.updateFamily();
+		this.updateRobots();
 	}
 
 	/**
@@ -216,6 +286,41 @@ public class GameScreen implements Screen {
 		}
 		if (clearProjectiles) {
 			this.projectiles.clear();
+		}
+	}
+
+	/**
+	 * Update the powerups in the world, removing any which have been collected
+	 */
+	private void updatePowerups() {
+		this.powerups.removeIf(Powerup::collected);
+	}
+
+	/**
+	 * Update the family in the world
+	 */
+	private void updateFamily() {
+		Iterator<Family> iterator = this.family.iterator();
+		while (iterator.hasNext()) {
+			Family familyMember = iterator.next();
+			familyMember.update();
+			if (familyMember.rescued()) {
+				iterator.remove();
+			}
+		}
+	}
+
+	/**
+	 * Update any robots in the world
+	 */
+	private void updateRobots() {
+		Iterator<Robot> iterator = this.robots.iterator();
+		while (iterator.hasNext()) {
+			Robot robot = iterator.next();
+			robot.update();
+			if (robot.dead()) {
+				iterator.remove();
+			}
 		}
 	}
 
@@ -318,6 +423,9 @@ public class GameScreen implements Screen {
 		this.projectiles.add(projectile);
 	}
 
+	/**
+	 * Trigger a death for the player, and move to the necessary screen
+	 */
 	private void die() {
 		this.lives--;
 		if (this.lives <= 0) {
@@ -327,13 +435,11 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Respawn the player in the starting room
+	 */
 	public void respawn() {
-		this.player.setPosition(this.startingRoom.centre());
-		//Ignore any movement that was present when the player died
-		this.player.up = false;
-		this.player.down = false;
-		this.player.left = false;
-		this.player.right = false;
+		this.player.respawn(this.startingRoom.centre());
 	}
 
 	/**
@@ -404,7 +510,7 @@ public class GameScreen implements Screen {
 	/**
 	 * Increase the player's score
 	 *
-	 * @param score
+	 * @param score amount to increase score by (before any multiplier)
 	 */
 	public void addScore(int score) {
 		this.score += score * this.scoreMultiplier();
