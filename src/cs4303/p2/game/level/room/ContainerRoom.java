@@ -1,11 +1,10 @@
 package cs4303.p2.game.level.room;
 
-import cs4303.p2.Main;
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.level.corridor.AbstractCorridor;
+import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -18,7 +17,7 @@ import java.util.Random;
 /**
  * Room which is not a leaf node on the tree. This room will contain two child rooms
  */
-public final class ContainerRoom extends AbstractRoom {
+public final class ContainerRoom extends Room {
 
 	/**
 	 * The axis this room is split on
@@ -29,17 +28,17 @@ public final class ContainerRoom extends AbstractRoom {
 	 * First child room
 	 */
 	@NotNull
-	public final AbstractRoom child1;
+	public final Room child1;
 	/**
 	 * Second child room
 	 */
 	@NotNull
-	public final AbstractRoom child2;
+	public final Room child2;
 	/**
-	 * AbstractCorridor connecting the child rooms
+	 * Corridor connecting the child rooms
 	 */
 	@NotNull
-	public final AbstractCorridor corridor;
+	public final Corridor corridor;
 
 	/**
 	 * Create a container room
@@ -69,7 +68,7 @@ public final class ContainerRoom extends AbstractRoom {
 		if (this.splitAxis == Axis.HORIZONTAL) {
 			float splitLine = split(game.main.random, minY, maxY, levelInfo.minRoomHeight());
 
-			this.child1 = AbstractRoom.createRoom(
+			this.child1 = Room.createRoom(
 				this.game,
 				this,
 				levelInfo,
@@ -78,7 +77,7 @@ public final class ContainerRoom extends AbstractRoom {
 				this.maxX,
 				splitLine
 			);
-			this.child2 = AbstractRoom.createRoom(
+			this.child2 = Room.createRoom(
 				this.game,
 				this,
 				levelInfo,
@@ -90,7 +89,7 @@ public final class ContainerRoom extends AbstractRoom {
 		} else {
 			float splitLine = split(game.main.random, minX, maxX, levelInfo.minRoomWidth());
 
-			this.child1 = AbstractRoom.createRoom(
+			this.child1 = Room.createRoom(
 				this.game,
 				this,
 				levelInfo,
@@ -99,7 +98,7 @@ public final class ContainerRoom extends AbstractRoom {
 				splitLine,
 				this.maxY
 			);
-			this.child2 = AbstractRoom.createRoom(
+			this.child2 = Room.createRoom(
 				this.game,
 				this,
 				levelInfo,
@@ -113,7 +112,7 @@ public final class ContainerRoom extends AbstractRoom {
 		LeafRoom child1Leaf = this.child1.findRoom(this.splitAxis.other(), AxisDirection.MAX);
 		LeafRoom child2Leaf = this.child2.findRoom(this.splitAxis.other(), AxisDirection.MIN);
 
-		this.corridor = AbstractCorridor.createCorridor(
+		this.corridor = Corridor.createCorridor(
 			game,
 			child1Leaf,
 			child2Leaf,
@@ -150,6 +149,13 @@ public final class ContainerRoom extends AbstractRoom {
 	public void appendRooms(Collection<LeafRoom> result) {
 		this.child1.appendRooms(result);
 		this.child2.appendRooms(result);
+	}
+
+	@Override
+	public void appendCorridors(Collection<Corridor> corridors) {
+		corridors.add(this.corridor);
+		this.child1.appendCorridors(corridors);
+		this.child2.appendCorridors(corridors);
 	}
 
 	@Override

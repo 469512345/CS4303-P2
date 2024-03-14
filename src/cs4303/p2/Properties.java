@@ -202,4 +202,18 @@ public abstract class Properties extends PApplet {
 	 * Colour of overlays on pause screens
 	 */
 	public final Color OVERLAY_COLOR = new Color(100, 100, 100, 100);
+
+	//Obstacle properties
+	/**
+	 * Colour of obstacles in the map
+	 */
+	public final Color OBSTACLE_COLOR = Color.ORANGE;
+	/**
+	 * Maximum number of failed attempts to place an obstacle in a room before it is aborted
+	 */
+	public final int OBSTACLE_MAX_FAILED_ATTEMPTS = 10;
+	/**
+	 * Score for exploding an obstacle
+	 */
+	public final int OBSTACLE_EXPLODE_SCORE = 10;
 }

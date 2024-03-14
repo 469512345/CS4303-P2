@@ -4,7 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.level.corridor.AbstractCorridor;
+import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * A leaf node in a room tree
  */
-public final class LeafRoom extends AbstractRoom {
+public final class LeafRoom extends Room {
 
 	/**
 	 * Corridors leading into this room
 	 */
-	public final List<AbstractCorridor> corridors = new ArrayList<>();
+	public final List<Corridor> corridors = new ArrayList<>();
 
 	/**
 	 * Create a room
@@ -66,6 +66,11 @@ public final class LeafRoom extends AbstractRoom {
 	}
 
 	@Override
+	public void appendCorridors(Collection<Corridor> corridors) {
+		//Nothing to do - all handled by parent
+	}
+
+	@Override
 	public void appendWalls(
 		Collection<HorizontalLine> horizontalWalls,
 		Collection<VerticalLine> verticalWalls
@@ -74,7 +79,7 @@ public final class LeafRoom extends AbstractRoom {
 		VerticalLine rightWall = this.rightEdge();
 		HorizontalLine topWall = this.topEdge();
 		VerticalLine leftWall = this.leftEdge();
-		for (AbstractCorridor corridor : this.corridors) {
+		for (Corridor corridor : this.corridors) {
 			for (Rectangle segment : corridor.segments) {
 				if (bottomWall != null && segment.intersects(bottomWall)) {
 					bottomWall = null;

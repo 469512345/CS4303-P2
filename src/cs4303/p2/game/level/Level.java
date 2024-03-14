@@ -4,13 +4,15 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.Projectile;
 import cs4303.p2.game.entity.family.Family;
 import cs4303.p2.game.entity.robot.Robot;
-import cs4303.p2.game.level.room.AbstractRoom;
+import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.game.level.room.LeafRoom;
+import cs4303.p2.game.level.room.Room;
 import cs4303.p2.game.powerup.Powerup;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.collisions.Collidable;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Line;
+import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
@@ -18,8 +20,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
+/**
+ * A level in the game
+ */
 public class Level {
 
 	/**
@@ -33,7 +39,7 @@ public class Level {
 	/**
 	 * Root of the room tree
 	 */
-	private final AbstractRoom root;
+	private final Room root;
 	/**
 	 * Horizontal walls
 	 */
@@ -51,6 +57,10 @@ public class Level {
 	 */
 	private final List<LeafRoom> rooms = new LinkedList<>();
 	/**
+	 * Corridors
+	 */
+	private final List<Corridor> corridors = new LinkedList<>();
+	/**
 	 * Projectiles currently active in the world
 	 */
 	public final List<Projectile> projectiles = new LinkedList<>();
@@ -58,6 +68,10 @@ public class Level {
 	 * The room that the player starts in
 	 */
 	public final LeafRoom startingRoom;
+	/**
+	 * Obstacles in the world
+	 */
+	private final List<Obstacle> obstacles = new LinkedList<>();
 	/**
 	 * Powerups in the world
 	 */
@@ -71,19 +85,89 @@ public class Level {
 	 */
 	private final List<Robot> robots = new LinkedList<>();
 
+	/**
+	 * Create a new level
+	 *
+	 * @param game      game instance
+	 * @param levelInfo level generation parameters
+	 */
 	public Level(GameScreen game, LevelInfo levelInfo) {
 		this.game = game;
 		this.levelInfo = levelInfo;
-		this.root = AbstractRoom.createRoot(game, levelInfo);
+		this.root = Room.createRoot(this.game, this.levelInfo);
 
 		this.root.appendWalls(this.horizontalWalls, this.verticalWalls);
 		this.walls.addAll(this.horizontalWalls);
 		this.walls.addAll(this.verticalWalls);
 
+		Random random = this.game.main.random;
+
 		this.root.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
 		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1); //The starting room must only have 1 corridor
-		this.startingRoom = singlyConnectedRooms.get(game.main.random.nextInt(singlyConnectedRooms.size()));
+		this.startingRoom = singlyConnectedRooms.get(random.nextInt(singlyConnectedRooms.size()));
+
+		for (LeafRoom room : this.rooms) {
+			this.addObstaclesToRegion(room, this.levelInfo.minObstaclesPerRoom(), levelInfo.maxObstaclesPerRoom());
+		}
+
+		this.root.appendCorridors(this.corridors);
+
+		for (Corridor corridor : this.corridors) {
+			for (Rectangle segment : corridor.segments) {
+				this.addObstaclesToRegion(
+					segment,
+					this.levelInfo.minObstaclesPerCorridor(),
+					levelInfo.maxObstaclesPerCorridor()
+				);
+			}
+		}
+	}
+
+	/**
+	 * Add some obstacles to a region of the map
+	 *
+	 * @param region region to populate
+	 * @param min    minimum number of obstacles
+	 * @param max    maximum number of obstacles
+	 */
+	private void addObstaclesToRegion(Rectangle region, int min, int max) {
+		Random random = this.game.main.random;
+		int obstaclesToAdd = random.nextInt(min, max + 1);
+		//Failed attempts to place an obstacle
+		int failedAttempts = 0;
+		while (obstaclesToAdd > 0) {
+			//Abort if exceeded maximum number of failed attempts
+			if (failedAttempts > this.game.main.OBSTACLE_MAX_FAILED_ATTEMPTS) {
+				break;
+			}
+			//Get the smallest dimension of the room
+			float minimumDimension = Math.min(region.height(), region.width());
+			//The max radius for the obstacle should not exceed half the minimum dimension of the room
+			float maxRadius = Math.min(this.levelInfo.maxObstacleRadius(), minimumDimension / 2);
+			//Min radius cannot exceed max radius
+			float minRadius = Math.min(this.levelInfo.minObstacleRadius(), maxRadius);
+			float radius = random.nextFloat(minRadius, maxRadius);
+			//Position the centre of the obstacle at least one radius from the edge of the room
+			float positionX = random.nextFloat(region.minX() + radius, region.maxX() - radius);
+			float positionY = random.nextFloat(region.minY() + radius, region.maxY() - radius);
+			Obstacle obstacle = new Obstacle(this.game, new PVector(positionX, positionY), radius);
+
+			//If this new obstacle intersects any existing obstacles then don't add it
+			boolean conflictsWithExisting = false;
+			for (Obstacle existingObstacle : this.obstacles) {
+				if (obstacle.intersects(existingObstacle)) {
+					conflictsWithExisting = true;
+					break;
+				}
+			}
+			if (conflictsWithExisting) {
+				failedAttempts++;
+			} else {
+				this.obstacles.add(obstacle);
+				obstaclesToAdd--;
+			}
+		}
 	}
 
 	/**
@@ -96,6 +180,7 @@ public class Level {
 		this.drawFamily();
 		this.drawRobots();
 		this.drawPowerups();
+		this.drawObstacles();
 	}
 
 	/**
@@ -123,7 +208,9 @@ public class Level {
 	 */
 	private void drawProjectiles() {
 		for (Projectile projectile : this.projectiles) {
-			projectile.draw();
+			if(this.game.player.hasLineOfSight(projectile.centre())) {
+				projectile.draw();
+			}
 		}
 	}
 
@@ -132,7 +219,20 @@ public class Level {
 	 */
 	private void drawPowerups() {
 		for (Powerup powerup : this.powerups) {
-			powerup.draw();
+			if(this.game.player.hasLineOfSight(powerup.centre())) {
+				powerup.draw();
+			}
+		}
+	}
+
+	/**
+	 * Draw the obstacles on the map
+	 */
+	private void drawObstacles() {
+		for (Obstacle obstacle : this.obstacles) {
+			if(this.game.player.hasLineOfSight(obstacle.centre())) {
+				obstacle.draw();
+			}
 		}
 	}
 
@@ -164,6 +264,7 @@ public class Level {
 	public void update() {
 		this.updateProjectiles();
 		this.updatePowerups();
+		this.updateObstacles();
 		this.updateFamily();
 		this.updateRobots();
 	}
@@ -173,7 +274,6 @@ public class Level {
 	 */
 	private void updateProjectiles() {
 		Iterator<Projectile> iterator = this.projectiles.iterator();
-		boolean clearProjectiles = false;
 		while (iterator.hasNext()) {
 			Projectile projectile = iterator.next();
 			projectile.update();
@@ -181,14 +281,35 @@ public class Level {
 				projectile.expire();
 				this.game.die();
 				//Clear the list of projectiles, so they are not there when the player respawns
-				clearProjectiles = true;
+				this.projectiles.clear();
+				break;
+			}
+			for (Obstacle obstacle : this.obstacles) {
+				if (projectile.intersects(obstacle)) {
+					projectile.expire();
+					obstacle.explode();
+				}
 			}
 			if (projectile.expired()) {
 				iterator.remove();
 			}
 		}
-		if (clearProjectiles) {
-			this.projectiles.clear();
+	}
+
+	/**
+	 * Update the obstacles in the world, removing any which have been exploded
+	 */
+	private void updateObstacles() {
+		Iterator<Obstacle> iterator = this.obstacles.iterator();
+		while (iterator.hasNext()) {
+			Obstacle obstacle = iterator.next();
+			if (obstacle.intersects(this.game.player)) {
+				this.game.die();
+				obstacle.explode();
+			}
+			if (obstacle.exploded()) {
+				iterator.remove();
+			}
 		}
 	}
 
@@ -409,5 +530,14 @@ public class Level {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Remove any obstacles touching a given object
+	 *
+	 * @param object object to test for collisions with
+	 */
+	public void removeObstaclesTouching(Collidable object) {
+		this.obstacles.removeIf(obstacle -> obstacle.intersects(object));
 	}
 }

@@ -28,6 +28,15 @@ public interface Circle extends Collidable {
 	 */
 	float radius();
 
+	/**
+	 * Position vector of centre of the circle
+	 *
+	 * @return position vector of centre of the circle
+	 */
+	default PVector centre() {
+		return new PVector(this.centreX(), this.centreY());
+	}
+
 	@Override
 	default boolean intersects(Circle other) {
 		return Collidable.circleIntersectsCircle(

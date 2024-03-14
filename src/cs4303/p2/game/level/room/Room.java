@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -17,7 +18,7 @@ import java.util.StringJoiner;
 /**
  * Abstract base class for a Room in the Partition Tree
  */
-public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom, ContainerRoom {
+public sealed abstract class Room implements Rectangle permits LeafRoom, ContainerRoom {
 
 	/**
 	 * Main instance
@@ -62,7 +63,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 * @param maxX      maximum x coordinate of room's bounds
 	 * @param maxY      maximum y coordinate of room's bounds
 	 */
-	protected AbstractRoom(
+	protected Room(
 		@NotNull GameScreen game,
 		@Nullable ContainerRoom parent,
 		@NotNull LevelInfo levelInfo,
@@ -101,6 +102,13 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 * @param result collection to append to
 	 */
 	public abstract void appendRooms(Collection<LeafRoom> result);
+
+	/**
+	 * Append any corridors contained within this region to a collection
+	 *
+	 * @param corridors collection to append to
+	 */
+	public abstract void appendCorridors(Collection<Corridor> corridors);
 
 	/**
 	 * Append any walls contained within this region to collections for horizontal and vertical
@@ -146,7 +154,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 *
 	 * @return created room
 	 */
-	public static AbstractRoom createRoom(
+	public static Room createRoom(
 		@NotNull GameScreen game,
 		@Nullable ContainerRoom parent,
 		@NotNull LevelInfo levelInfo,
@@ -212,7 +220,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 *
 	 * @return int < 0 for lower, int > 1 for greater, 0 for equal
 	 */
-	public int compareTo(AbstractRoom other, Axis axis, AxisDirection axisDirection) {
+	public int compareTo(Room other, Axis axis, AxisDirection axisDirection) {
 		if (axis == Axis.HORIZONTAL) {
 			if (axisDirection == AxisDirection.MIN) {
 				return Float.compare(this.minX, other.minX);
@@ -236,7 +244,7 @@ public sealed abstract class AbstractRoom implements Rectangle permits LeafRoom,
 	 *
 	 * @return created room instance
 	 */
-	public static AbstractRoom createRoot(GameScreen game, LevelInfo levelInfo) {
+	public static Room createRoot(GameScreen game, LevelInfo levelInfo) {
 		return createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
 	}
 

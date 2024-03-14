@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * A corridor between two rooms. This will aim to be straight if possible, but will otherwise consist of 3 segments.
  */
-public final class CompositeCorridor extends AbstractCorridor {
+public final class CompositeCorridor extends Corridor {
 
 	private final PVector point1;
 	private final PVector point2;

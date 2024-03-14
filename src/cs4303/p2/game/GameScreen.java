@@ -1,21 +1,12 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
-import cs4303.p2.game.entity.family.Family;
-import cs4303.p2.game.entity.robot.Robot;
-import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.Level;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.powerup.Powerup;
 import cs4303.p2.game.subscreens.DiedScreen;
 import cs4303.p2.game.subscreens.GameOverScreen;
 import cs4303.p2.game.subscreens.PauseScreen;
-import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.builder.TextBuilder;
-import cs4303.p2.util.collisions.Collidable;
-import cs4303.p2.util.collisions.HorizontalLine;
-import cs4303.p2.util.collisions.Line;
-import cs4303.p2.util.collisions.VerticalLine;
 import cs4303.p2.util.screen.DeferredDrawTarget;
 import cs4303.p2.util.screen.DrawTarget;
 import cs4303.p2.util.screen.Screen;
@@ -24,10 +15,6 @@ import processing.core.PVector;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Screen shown to the user when playing the game
@@ -93,6 +80,9 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		this.level = new Level(this, this.generateLevelInfo());
 
 		this.player = new Player(this, this.level.startingRoom.centre());
+
+		this.level.removeObstaclesTouching(this.player);
+
 		this.scale = this.main.INITIAL_ZOOM;
 	}
 
@@ -324,7 +314,13 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 			16,
 			80,
 			0.8f,
-			30
+			30,
+			5,
+			25,
+			1,
+			3,
+			0,
+			1
 		);
 	}
 

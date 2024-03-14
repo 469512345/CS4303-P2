@@ -14,7 +14,7 @@ import java.util.Collection;
 /**
  * A corridor between two rooms. This will aim to be straight if possible, but will otherwise consist of 3 segments.
  */
-public final class StraightCorridor extends AbstractCorridor implements Rectangle {
+public final class StraightCorridor extends Corridor implements Rectangle {
 
 	/**
 	 * First point - min x or min y

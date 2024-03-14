@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  * A corridor between two rooms. This will aim to be straight if possible, but will otherwise consist of 3 segments.
  */
-public sealed abstract class AbstractCorridor permits CompositeCorridor, StraightCorridor {
+public sealed abstract class Corridor permits CompositeCorridor, StraightCorridor {
 
 	/**
 	 * Main instance
@@ -61,7 +61,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 	 * @param axis  axis of the corridor
 	 * @param width half-width of the corridor
 	 */
-	public AbstractCorridor(GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
+	public Corridor(GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width) {
 		this.game = game;
 		this.room1 = room1;
 		this.room2 = room2;
@@ -163,7 +163,7 @@ public sealed abstract class AbstractCorridor permits CompositeCorridor, Straigh
 	 *
 	 * @return corridor instance
 	 */
-	public static AbstractCorridor createCorridor(
+	public static Corridor createCorridor(
 		GameScreen game,
 		LeafRoom room1,
 		LeafRoom room2,
