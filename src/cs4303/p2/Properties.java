@@ -224,4 +224,9 @@ public abstract class Properties extends PApplet {
 	 * Whether the player can kill their own family, or themself
 	 */
 	public boolean FRIENDLY_FIRE = false;
+
+	/**
+	 * How many ticks between recalculating the AI for an entity
+	 */
+	public final int CALCULATE_AI_EVERY_TICKS = 30;
 }

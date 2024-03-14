@@ -3,7 +3,7 @@ package cs4303.p2.game.level;
 import processing.core.PVector;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  * @param y     y coordinate of node
  * @param edges undirected edges from this node to other nodes
  */
-public record Node(float x, float y, Collection<Node> edges) {
+public record Node(float x, float y, ArrayList<Node> edges) implements AStar.AStarNode<Node> {
 
 	/**
 	 * Create a node at a position
@@ -42,6 +42,7 @@ public record Node(float x, float y, Collection<Node> edges) {
 	 *
 	 * @return cost between the two nodes
 	 */
+	@Override
 	public float costTo(Node other) {
 		return this.distanceTo(other.x, other.y);
 	}
@@ -79,5 +80,17 @@ public record Node(float x, float y, Collection<Node> edges) {
 			.add("x=" + x)
 			.add("y=" + y)
 			.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Node node)) return false;
+		return Float.compare(this.x, node.x) == 0 && Float.compare(this.y, node.y) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.x, this.y);
 	}
 }

@@ -1,7 +1,7 @@
 package cs4303.p2.game.entity;
 
 /**
- * Types of entity
+ * Types of target
  */
 public enum EntityType {
 	/**

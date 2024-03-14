@@ -20,6 +20,11 @@ public class Grandparent extends Family {
 	}
 
 	@Override
+	public void recalculateGoal() {
+
+	}
+
+	@Override
 	public int pointsForRescuing() {
 		return 150;
 	}
@@ -27,11 +32,6 @@ public class Grandparent extends Family {
 	@Override
 	public void draw() {
 		this.drawBase();
-	}
-
-	@Override
-	public void update() {
-
 	}
 
 	@Override

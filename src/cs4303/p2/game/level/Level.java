@@ -686,7 +686,7 @@ public class Level {
 	 *
 	 * @return first wall with collision, or null if none collided
 	 */
-	private Collidable collidesWithWall(Collidable subject) {
+	public Collidable collidesWithWall(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.walls);
 	}
 
@@ -698,7 +698,7 @@ public class Level {
 	 *
 	 * @return first obstacle with collision, or null if none collided
 	 */
-	private Obstacle collidesWithObstacle(Collidable subject) {
+	public Obstacle collidesWithObstacle(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.obstacles);
 	}
 
@@ -762,126 +762,6 @@ public class Level {
 		}
 
 		return min;
-	}
-
-	/**
-	 * Calculate the shortest path between two nodes using A* search
-	 *
-	 * @param start start node
-	 * @param end   end node
-	 *
-	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
-	 */
-	public LinkedList<Node> shortestPathBetween(Node start, Node end) {
-		ArrayList<AStarNodeInfo> open = new ArrayList<>();
-		ArrayList<AStarNodeInfo> closed = new ArrayList<>();
-
-		AStarNodeInfo current = AStarNodeInfo.startNode(start, end);
-		open.add(current);
-
-		//Keep going until we have reached the end node
-		while (current.node != end) {
-//			System.out.println(current);
-			open.remove(current);
-			closed.add(current);
-			for (Node connected : current.node.edges()) {
-				boolean alreadySeen = false;
-				for (AStarNodeInfo closedNode : closed) {
-					if (closedNode.node == connected) {
-						alreadySeen = true;
-						break;
-					}
-				}
-				if (!alreadySeen) {
-					for (AStarNodeInfo openNode : open) {
-						if (openNode.node == connected) {
-							alreadySeen = true;
-							break;
-						}
-					}
-				}
-				if (!alreadySeen) {
-					open.add(AStarNodeInfo.next(connected, current, end));
-				}
-			}
-
-			//Find the node in the open list with the lowest total cost
-			Optional<AStarNodeInfo> min = open.stream()
-				.min((a, b) -> Float.compare(a.totalCost(), b.totalCost()));
-			if (min.isPresent()) {
-				current = min.get();
-			} else {
-				// If the open list is empty, then there is no path to the destination node.
-				// This should never happen given the tree based room generation,
-				// but this algorithm should still protect against this case
-				return null;
-			}
-		}
-
-		LinkedList<Node> path = new LinkedList<>();
-		while (current.previous != null) {
-			path.addFirst(current.node);
-			current = current.previous;
-		}
-		path.addFirst(current.node);
-
-		return path;
-	}
-
-	/**
-	 * A node used in the A* algorithm
-	 *
-	 * @param node
-	 * @param previous
-	 * @param heuristicCost
-	 * @param edgeCost
-	 * @param costSoFar
-	 */
-	record AStarNodeInfo(
-		Node node,
-		AStarNodeInfo previous,
-		float heuristicCost,
-		float edgeCost,
-		float costSoFar
-	) {
-
-		/**
-		 * Get the total cost for this node
-		 *
-		 * @return total cost for this node
-		 */
-		public float totalCost() {
-			return this.heuristicCost + this.edgeCost + this.costSoFar;
-		}
-
-		public static AStarNodeInfo next(Node node, AStarNodeInfo previous, Node endNode) {
-			return new AStarNodeInfo(
-				node,
-				previous,
-				node.costTo(endNode),
-				node.costTo(previous.node),
-				previous.totalCost()
-			);
-		}
-
-		/**
-		 * Create the info for the start node in A*
-		 *
-		 * @param startNode start node
-		 * @param endNode   end node
-		 *
-		 * @return A* start node
-		 */
-		public static AStarNodeInfo startNode(Node startNode, Node endNode) {
-			return new AStarNodeInfo(
-				startNode,
-				null,
-				startNode.costTo(endNode),
-				0,
-				0
-			);
-		}
-
 	}
 
 }

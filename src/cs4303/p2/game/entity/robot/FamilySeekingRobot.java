@@ -20,6 +20,11 @@ public class FamilySeekingRobot extends Robot {
 	}
 
 	@Override
+	public void recalculateGoal() {
+
+	}
+
+	@Override
 	public int pointsForKilling() {
 		return 100;
 	}
@@ -27,11 +32,6 @@ public class FamilySeekingRobot extends Robot {
 	@Override
 	public void draw() {
 		this.drawBase();
-	}
-
-	@Override
-	public void update() {
-
 	}
 
 	@Override

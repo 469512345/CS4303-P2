@@ -39,11 +39,6 @@ public class MutatedFamilyRobot extends Robot {
 	}
 
 	@Override
-	public void update() {
-
-	}
-
-	@Override
 	public Color baseColor() {
 		return this.familyMember.baseColor();
 	}
@@ -61,5 +56,10 @@ public class MutatedFamilyRobot extends Robot {
 	@Override
 	public float radius() {
 		return this.familyMember.radius();
+	}
+
+	@Override
+	public void recalculateGoal() {
+
 	}
 }

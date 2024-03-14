@@ -68,7 +68,7 @@ public record LevelInfo(
 	public interface ObjectConstructor<T> {
 
 		/**
-		 * Create the entity
+		 * Create the target
 		 *
 		 * @param game     game instance
 		 * @param position position

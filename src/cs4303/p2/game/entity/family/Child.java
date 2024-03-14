@@ -21,6 +21,11 @@ public class Child extends Family {
 	}
 
 	@Override
+	public void recalculateGoal() {
+
+	}
+
+	@Override
 	public int pointsForRescuing() {
 		return 50;
 	}
@@ -28,11 +33,6 @@ public class Child extends Family {
 	@Override
 	public void draw() {
 		this.drawBase();
-	}
-
-	@Override
-	public void update() {
-
 	}
 
 	@Override

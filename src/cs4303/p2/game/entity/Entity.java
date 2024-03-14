@@ -1,6 +1,7 @@
 package cs4303.p2.game.entity;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.util.builder.EllipseBuilder;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PVector;
@@ -15,7 +16,7 @@ public abstract class Entity implements Circle {
 	/**
 	 * Game instance
 	 */
-	protected final GameScreen game;
+	public final GameScreen game;
 	/**
 	 * Current position
 	 */
@@ -23,14 +24,14 @@ public abstract class Entity implements Circle {
 	/**
 	 * Current velocity
 	 */
-	protected final PVector velocity = new PVector();
+	public final PVector velocity = new PVector();
 	/**
 	 * The current orientation
 	 */
 	protected float orientation = 0;
 
 	/**
-	 * Construct an entity
+	 * Construct an target
 	 *
 	 * @param game     game instance
 	 * @param position initial position
@@ -41,17 +42,17 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
-	 * Draw this entity on the screen
+	 * Draw this target on the screen
 	 */
 	public abstract void draw();
 
 	/**
-	 * Update this entity's position, velocity etc
+	 * Update this target's position, velocity etc
 	 */
 	public abstract void update();
 
 	/**
-	 * Draw the entity as a circle with its eye
+	 * Draw the target as a circle with its eye
 	 */
 	protected void drawBase() {
 		EllipseBuilder circle = this.game.ellipse();
@@ -70,87 +71,87 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
-	 * Colour of the entity's base
+	 * Colour of the target's base
 	 *
-	 * @return colour of the entity's base
+	 * @return colour of the target's base
 	 */
 	public abstract Color baseColor();
 
 	/**
-	 * Colour of the entity's eye
+	 * Colour of the target's eye
 	 *
-	 * @return colour of the entity's eye
+	 * @return colour of the target's eye
 	 */
 	protected abstract Color eyeColor();
 
 	/**
-	 * Radius of the entity's eye
+	 * Radius of the target's eye
 	 *
-	 * @return radius of the entity's eye
+	 * @return radius of the target's eye
 	 */
 	public abstract float eyeRadius();
 
 	/**
-	 * Distance from the centre of the entity to the centre of its eye
+	 * Distance from the centre of the target to the centre of its eye
 	 *
-	 * @return distance from the centre of the entity to the centre of its eye
+	 * @return distance from the centre of the target to the centre of its eye
 	 */
 	public float eyeDistance() {
 		return this.radius() - this.eyeRadius();
 	}
 
 	/**
-	 * Magnitude of the entity's movement velocity
+	 * Magnitude of the target's movement velocity
 	 *
-	 * @return magnitude of the entity's movement velocity
+	 * @return magnitude of the target's movement velocity
 	 */
 	public abstract float velocityMagnitude();
 
 	/**
-	 * The type of entity - robot or human
+	 * The type of target - robot or human
 	 *
-	 * @return type of entity
+	 * @return type of target
 	 */
 	protected abstract EntityType type();
 
 	/**
-	 * Whether this entity can see robots through walls
+	 * Whether this target can see robots through walls
 	 *
-	 * @return true if this entity can see robots through walls, false otherwise
+	 * @return true if this target can see robots through walls, false otherwise
 	 */
 	protected boolean canSeeRobotsThroughWalls() {
 		return false;
 	}
 
 	/**
-	 * Whether this entity can be seen through walls by robots
+	 * Whether this target can be seen through walls by robots
 	 *
-	 * @return true if this entity can be seen through walls by robots, false otherwise
+	 * @return true if this target can be seen through walls by robots, false otherwise
 	 */
 	protected boolean canBeSeenThroughWallsByRobots() {
 		return false;
 	}
 
 	/**
-	 * Whether this entity can see humans through walls.
+	 * Whether this target can see humans through walls.
 	 *
-	 * @return true if this entity can see humans through walls, false otherwise
+	 * @return true if this target can see humans through walls, false otherwise
 	 */
 	protected boolean canSeeHumansThroughWalls() {
 		return false;
 	}
 
 	/**
-	 * Whether this entity can be seen through walls by humans
+	 * Whether this target can be seen through walls by humans
 	 *
-	 * @return true if this entity can be seen through walls by humans, false otherwise
+	 * @return true if this target can be seen through walls by humans, false otherwise
 	 */
 	protected boolean canBeSeenThroughWallsByHumans() {
 		return false;
 	}
 
 	/**
-	 * Move the entity, respecting collisions with the map
+	 * Move the target, respecting collisions with the map
 	 */
 	protected void move() {
 		this.game.level.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
@@ -194,13 +195,13 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
-	 * Whether an entity can see another entity, respecting the values of {@link #canSeeHumansThroughWalls()},
+	 * Whether an target can see another target, respecting the values of {@link #canSeeHumansThroughWalls()},
 	 * {@link #canSeeRobotsThroughWalls()}, {@link #canBeSeenThroughWallsByHumans()}, and
 	 * {@link #canBeSeenThroughWallsByRobots()}.
 	 *
-	 * @param entity entity to test
+	 * @param entity target to test
 	 *
-	 * @return true of this entity can see the given entity, false otherwise
+	 * @return true of this target can see the given target, false otherwise
 	 */
 	public boolean canSee(Entity entity) {
 		return this.hasLineOfSight(entity) ||
@@ -215,37 +216,48 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
-	 * Whether this entity has line of sight to a point
+	 * Whether this enemy has line of sight to a point
 	 *
 	 * @param x x coordinate of point
 	 * @param y y coordinate of point
 	 *
-	 * @return true if this entity has line of sight to the point, false otherwise
+	 * @return true if this enemy has line of sight to the point, false otherwise
 	 */
 	public boolean hasLineOfSight(float x, float y) {
 		return this.game.level.lineOfSightBetween(this.position.x, this.position.y, x, y);
 	}
 
 	/**
-	 * Whether this entity has line of sight to a point
+	 * Whether this enemy has line of sight to a point
 	 *
 	 * @param position position vector of point
 	 *
-	 * @return true if this entity has line of sight to the point, false otherwise
+	 * @return true if this enemy has line of sight to the point, false otherwise
 	 */
 	public boolean hasLineOfSight(PVector position) {
 		return this.hasLineOfSight(position.x, position.y);
 	}
 
 	/**
-	 * Whether this entity has line of sight to another entity
+	 * Whether this enemy has line of sight to a node
 	 *
-	 * @param entity entity to test
+	 * @param node node
 	 *
-	 * @return true if this entity has line of sight to the entity, false otherwise
+	 * @return true if this enemy has line of sight to the node, false otherwise
 	 */
-	public boolean hasLineOfSight(Entity entity) {
-		return this.hasLineOfSight(entity.position);
+	public boolean hasLineOfSight(Node node) {
+		return this.hasLineOfSight(node.x(), node.y());
+	}
+
+	/**
+	 * Whether this enemy has line of sight to another target
+	 *
+	 * @param target target to test
+	 *
+	 * @return true if this enemy has line of sight to the target, false otherwise
+	 */
+	public boolean hasLineOfSight(Entity target) {
+		return this.hasLineOfSight(target.position);
 	}
 
 	@Override
