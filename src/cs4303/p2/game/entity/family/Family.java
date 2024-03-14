@@ -41,6 +41,14 @@ public abstract class Family extends AIEntity {
 	 */
 	public void rescue() {
 		this.rescued = true;
+		this.game.addScore(this.pointsForRescuing());
+	}
+
+	/**
+	 * Mark this family member as killed
+	 */
+	public void kill() {
+		this.rescued = true;
 	}
 
 	/**

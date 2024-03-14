@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * A level in the game
@@ -141,40 +142,30 @@ public class Level {
 	/**
 	 * Add some obstacles to a region of the map
 	 *
-	 * @param region region to populate
-	 * @param min    minimum number of obstacles
-	 * @param max    maximum number of obstacles
+	 * @param room region to populate
+	 * @param min  minimum number of obstacles
+	 * @param max  maximum number of obstacles
 	 */
-	private void addObstaclesToRegion(Rectangle region, int min, int max) {
+	private void addObstaclesToRegion(Rectangle room, int min, int max) {
 		Random random = this.game.main.random;
-		int obstaclesToAdd = random.nextInt(min, max + 1);
-		//Failed attempts to place an obstacle
-		int failedAttempts = 0;
-		while (obstaclesToAdd > 0) {
-			//Abort if exceeded maximum number of failed attempts
-			if (failedAttempts > this.game.main.OBSTACLE_MAX_FAILED_ATTEMPTS) {
-				break;
-			}
-			//Get the smallest dimension of the room
-			float minimumDimension = Math.min(region.height(), region.width());
-			//The max radius for the obstacle should not exceed half the minimum dimension of the room
-			float maxRadius = Math.min(this.levelInfo.maxObstacleRadius(), minimumDimension / 2);
-			//Min radius cannot exceed max radius
-			float minRadius = Math.min(this.levelInfo.minObstacleRadius(), maxRadius);
-			float radius = random.nextFloat(minRadius, maxRadius);
-			//Position the centre of the obstacle at least one radius from the edge of the room
-			float positionX = random.nextFloat(region.minX() + radius, region.maxX() - radius);
-			float positionY = random.nextFloat(region.minY() + radius, region.maxY() - radius);
-			Obstacle obstacle = new Obstacle(this.game, new PVector(positionX, positionY), radius);
+		//Get the smallest dimension of the room
+		float minimumDimension = Math.min(room.height(), room.width());
+		//The max radius for the obstacle should not exceed half the minimum dimension of the room
+		float maxRadius = Math.min(this.levelInfo.maxObstacleRadius(), minimumDimension / 2);
+		//Min radius cannot exceed max radius
+		float minRadius = Math.min(this.levelInfo.minObstacleRadius(), maxRadius);
 
-			//Only add the object if it doesn't collide with anything
-			if (this.collidesWithAnything(obstacle)) {
-				failedAttempts++;
-			} else {
-				this.obstacles.add(obstacle);
-				obstaclesToAdd--;
+		this.populateRegion(this.obstacles, min, max,
+			(game, position) -> {
+				float radius = random.nextFloat(minRadius, maxRadius);
+				return new Obstacle(this.game, position, radius);
+			}, (obstacle, position) -> {
+				float radius = obstacle.radius();
+				//Position the centre of the obstacle at least one radius from the edge of the room
+				position.x = random.nextFloat(room.minX() + radius, room.maxX() - radius);
+				position.y = random.nextFloat(room.minY() + radius, room.maxY() - radius);
 			}
-		}
+		);
 	}
 
 	/**
@@ -184,12 +175,19 @@ public class Level {
 	 */
 	private void addRobotsToRegion(Rectangle room) {
 		Random random = this.game.main.random;
-		int robotsToAdd = random.nextInt(this.levelInfo.minRobotsPerRoom(), this.levelInfo.maxRobotsPerRoom() + 1);
-		while (robotsToAdd > 0) {
 
+		LevelInfo.RobotConstructor[] constructors = this.levelInfo.robotConstructors();
+		LevelInfo.RobotConstructor constructor = constructors[random.nextInt(0, constructors.length)];
 
-			robotsToAdd--;
-		}
+		this.populateRegion(this.robots, this.levelInfo.minRobotsPerRoom(), this.levelInfo.maxRobotsPerRoom(),
+			constructor,
+			(robot, position) -> {
+				float radius = robot.radius();
+				//Position the centre of the obstacle at least one radius from the edge of the room
+				position.x = random.nextFloat(room.minX() + radius, room.maxX() - radius);
+				position.y = random.nextFloat(room.minY() + radius, room.maxY() - radius);
+			}
+		);
 	}
 
 	/**
@@ -198,7 +196,69 @@ public class Level {
 	 * @param room room to populate
 	 */
 	private void addHumansToRegion(Rectangle room) {
+		Random random = this.game.main.random;
 
+		LevelInfo.HumanConstructor[] constructors = this.levelInfo.humanConstructors();
+		LevelInfo.HumanConstructor constructor = constructors[random.nextInt(0, constructors.length)];
+
+		this.populateRegion(this.family, this.levelInfo.minHumansPerRoom(), this.levelInfo.maxHumansPerRoom(),
+			constructor,
+			(human, position) -> {
+				float radius = human.radius();
+				//Position the centre of the obstacle at least one radius from the edge of the room
+				position.x = random.nextFloat(room.minX() + radius, room.maxX() - radius);
+				position.y = random.nextFloat(room.minY() + radius, room.maxY() - radius);
+			}
+		);
+	}
+
+	/**
+	 * Populate a region with a random number of items
+	 *
+	 * @param collection         collection of items to append to
+	 * @param min                minimum number to create
+	 * @param max                maximum number to create
+	 * @param constructor        constructor for items
+	 * @param positionRandomizer function to randomise the position within the region
+	 * @param <T>                type of item being populated
+	 */
+	private <T extends Collidable> void populateRegion(
+		Collection<T> collection,
+		int min,
+		int max,
+		LevelInfo.ObjectConstructor<T> constructor,
+		BiConsumer<T, PVector> positionRandomizer
+	) {
+		Random random = this.game.main.random;
+		int objectsToAdd = random.nextInt(min, max + 1);
+		//Failed attempts to place an obstacle
+		int failedSpawns = 0;
+		while (objectsToAdd > 0) {
+			//Abort if exceeded maximum number of failed attempts
+			if (failedSpawns > this.game.main.OBSTACLE_MAX_FAILED_ATTEMPTS) {
+				break;
+			}
+			PVector position = new PVector();
+			T object = constructor.construct(this.game, position);
+
+			int failedPlacements = 0;
+			boolean collides;
+			do {
+				positionRandomizer.accept(object, position);
+				collides = this.collidesWithAnything(object);
+				if (collides) {
+					if (failedPlacements++ >= this.game.main.OBSTACLE_MAX_FAILED_ATTEMPTS) {
+						failedSpawns++;
+						break;
+					}
+				}
+			} while (collides);
+
+			if (!collides) {
+				collection.add(object);
+				objectsToAdd--;
+			}
+		}
 	}
 
 	/**
@@ -308,17 +368,32 @@ public class Level {
 		while (iterator.hasNext()) {
 			Projectile projectile = iterator.next();
 			projectile.update();
-			if (!projectile.expired() && projectile.intersects(this.game.player) && projectile.canHitPlayer()) {
+			if (!projectile.expired() && projectile.canHitPlayer() && projectile.intersects(this.game.player)) {
 				projectile.expire();
 				this.game.die();
 				//Clear the list of projectiles, so they are not there when the player respawns
 				this.projectiles.clear();
 				break;
 			}
-			for (Obstacle obstacle : this.obstacles) {
-				if (projectile.intersects(obstacle)) {
+			if (!projectile.expired()) {
+				Obstacle obstacle = this.collidesWithObstacle(projectile);
+				if (obstacle != null) {
 					projectile.expire();
 					obstacle.explode();
+				}
+			}
+			if (!projectile.expired()) {
+				Robot robot = this.collidesWithRobot(projectile);
+				if (robot != null) {
+					projectile.expire();
+					robot.kill();
+				}
+			}
+			if (!projectile.expired() && this.game.main.PLAYER_CAN_KILL_FAMILY) {
+				Family family = this.collidesWithFamily(projectile);
+				if (family != null) {
+					projectile.expire();
+					family.kill();
 				}
 			}
 			if (projectile.expired()) {
@@ -555,12 +630,7 @@ public class Level {
 	 * @return true if it intersects any wall, false otherwise
 	 */
 	private boolean lineIntersectsWalls(Line line) {
-		for (Collidable wall : this.walls) {
-			if (wall.intersects(line)) {
-				return true;
-			}
-		}
-		return false;
+		return this.collidesWithWall(line) != null;
 	}
 
 	/**
@@ -571,10 +641,10 @@ public class Level {
 	 * @return true if the object collides with anything in the world, false otherwise
 	 */
 	private boolean collidesWithAnything(Collidable subject) {
-		return this.collidesWithAnythingIn(subject, this.obstacles) ||
-			this.collidesWithAnythingIn(subject, this.family) ||
-			this.collidesWithAnythingIn(subject, this.robots) ||
-			this.collidesWithAnythingIn(subject, this.projectiles);
+		return this.collidesWithObstacle(subject) != null ||
+			this.collidesWithFamily(subject) != null ||
+			this.collidesWithRobot(subject) != null ||
+			this.collidesWithProjectile(subject) != null;
 	}
 
 	/**
@@ -584,15 +654,35 @@ public class Level {
 	 * @param objects collection of collidable objects
 	 * @param <T>     type of object in collection
 	 *
-	 * @return true if the subject collides with anything in the collection, false otherwise
+	 * @return object which collided, or null if none
 	 */
-	private <T extends Collidable> boolean collidesWithAnythingIn(Collidable subject, Collection<T> objects) {
-		for (Collidable object : objects) {
-			if (object.intersects(subject)) {
-				return true;
+	private <T extends Collidable> T collidesWithAnythingIn(Collidable subject, Collection<T> objects) {
+		for (T object : objects) {
+			if (object != subject && object.intersects(subject)) {
+				return object;
 			}
 		}
-		return false;
+		return null;
+	}
+
+	private Collidable collidesWithWall(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.walls);
+	}
+
+	private Obstacle collidesWithObstacle(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.obstacles);
+	}
+
+	private Family collidesWithFamily(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.family);
+	}
+
+	private Robot collidesWithRobot(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.robots);
+	}
+
+	private Projectile collidesWithProjectile(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.projectiles);
 	}
 
 }

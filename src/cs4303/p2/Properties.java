@@ -130,7 +130,10 @@ public abstract class Properties extends PApplet {
 	/**
 	 * Colour of the player's eye
 	 */
-	public final Color PLAYER_EYE_COLOR = Color.BLACK;
+	public final Color PLAYER_EYE_COLOR = Color.GREEN;
+	/**
+	 * Radius by which the player's orientation change each update
+	 */
 	public final float PLAYER_EYE_TURN_INCREMENT = (float) (Math.PI / 32d);
 
 	//Player projectile settings
@@ -216,4 +219,9 @@ public abstract class Properties extends PApplet {
 	 * Score for exploding an obstacle
 	 */
 	public final int OBSTACLE_EXPLODE_SCORE = 10;
+
+	/**
+	 * Whether the player can kill their own family
+	 */
+	public boolean PLAYER_CAN_KILL_FAMILY = false;
 }

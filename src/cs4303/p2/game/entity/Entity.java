@@ -74,7 +74,7 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return colour of the entity's base
 	 */
-	protected abstract Color baseColor();
+	public abstract Color baseColor();
 
 	/**
 	 * Colour of the entity's eye
@@ -88,21 +88,23 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return radius of the entity's eye
 	 */
-	protected abstract float eyeRadius();
+	public abstract float eyeRadius();
 
 	/**
 	 * Distance from the centre of the entity to the centre of its eye
 	 *
 	 * @return distance from the centre of the entity to the centre of its eye
 	 */
-	protected abstract float eyeDistance();
+	public float eyeDistance() {
+		return this.radius() - this.eyeRadius();
+	}
 
 	/**
 	 * Magnitude of the entity's movement velocity
 	 *
 	 * @return magnitude of the entity's movement velocity
 	 */
-	protected abstract float velocityMagnitude();
+	public abstract float velocityMagnitude();
 
 	/**
 	 * The type of entity - robot or human

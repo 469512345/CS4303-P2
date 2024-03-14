@@ -44,10 +44,12 @@ public abstract class Robot extends AIEntity {
 	 */
 	public void kill() {
 		this.dead = true;
+		this.game.addScore(this.pointsForKilling());
 	}
 
 	/**
 	 * Whether this robot is dead, and should be removed from the world
+	 *
 	 * @return true if this robot is dead, false otherwise
 	 */
 	public boolean dead() {

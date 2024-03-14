@@ -21,12 +21,12 @@ public class Grandparent extends Family {
 
 	@Override
 	public int pointsForRescuing() {
-		return 0;
+		return 150;
 	}
 
 	@Override
 	public void draw() {
-
+		this.drawBase();
 	}
 
 	@Override
@@ -35,32 +35,22 @@ public class Grandparent extends Family {
 	}
 
 	@Override
-	protected Color baseColor() {
-		return null;
+	public Color baseColor() {
+		return Color.DARK_GRAY;
 	}
 
 	@Override
-	protected Color eyeColor() {
-		return null;
+	public float eyeRadius() {
+		return 2;
 	}
 
 	@Override
-	protected float eyeRadius() {
-		return 0;
-	}
-
-	@Override
-	protected float eyeDistance() {
-		return 0;
-	}
-
-	@Override
-	protected float velocityMagnitude() {
-		return 0;
+	public float velocityMagnitude() {
+		return 0.4f;
 	}
 
 	@Override
 	public float radius() {
-		return 0;
+		return 10f;
 	}
 }

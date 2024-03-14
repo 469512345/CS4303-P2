@@ -154,7 +154,7 @@ public final class Player extends Entity implements ProjectileSource {
 	/**
 	 * Add a powerup to the player
 	 *
-	 * @param powerup
+	 * @param powerup powerup to apply to the player
 	 */
 	public void applyPowerup(Powerup powerup) {
 		this.activePowerups.add(new ActivePowerup(powerup.type));
@@ -167,7 +167,7 @@ public final class Player extends Entity implements ProjectileSource {
 	}
 
 	@Override
-	protected Color baseColor() {
+	public Color baseColor() {
 		return this.game.main.PLAYER_COLOR;
 	}
 
@@ -177,18 +177,13 @@ public final class Player extends Entity implements ProjectileSource {
 	}
 
 	@Override
-	protected float eyeRadius() {
+	public float eyeRadius() {
 		return this.game.main.PLAYER_EYE_RADIUS;
 	}
 
 	@Override
-	protected float eyeDistance() {
-		return this.game.main.PLAYER_EYE_DISTANCE;
-	}
-
-	@Override
-	protected float velocityMagnitude() {
-		return 0;
+	public float velocityMagnitude() {
+		return this.game.main.PLAYER_MOVEMENT_VELOCITY;
 	}
 
 	@Override

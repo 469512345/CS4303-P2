@@ -6,9 +6,6 @@ import cs4303.p2.game.entity.family.Family;
 import cs4303.p2.game.entity.robot.Robot;
 import processing.core.PVector;
 
-import javax.swing.text.Position;
-import java.util.function.BiFunction;
-
 /**
  * Simple record containing parameters for level generation
  *
@@ -64,11 +61,11 @@ public record LevelInfo(
 ) {
 
 	/**
-	 * Functional interface for representing an entity's constructor
+	 * Functional interface for representing a constructor for an object in the world
 	 *
-	 * @param <T> type of entity
+	 * @param <T> type of object
 	 */
-	public interface EntityConstructor<T extends Entity> {
+	public interface ObjectConstructor<T> {
 
 		/**
 		 * Create the entity
@@ -76,7 +73,7 @@ public record LevelInfo(
 		 * @param game     game instance
 		 * @param position position
 		 *
-		 * @return newly constructed entity instance
+		 * @return newly constructed object instance
 		 */
 		T construct(GameScreen game, PVector position);
 
@@ -86,7 +83,7 @@ public record LevelInfo(
 	 * Constructor for humans.
 	 * Making this its own type makes creating arrays much easier; it is not easy to create an array of a generic type
 	 */
-	public interface HumanConstructor extends EntityConstructor<Family> {
+	public interface HumanConstructor extends ObjectConstructor<Family> {
 
 	}
 
@@ -94,8 +91,7 @@ public record LevelInfo(
 	 * Constructor for robots.
 	 * Making this its own type makes creating arrays much easier; it is not easy to create an array of a generic type
 	 */
-	public interface RobotConstructor extends EntityConstructor<Robot> {
-
+	public interface RobotConstructor extends ObjectConstructor<Robot> {
 	}
 
 }

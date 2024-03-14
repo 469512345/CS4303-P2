@@ -1,6 +1,7 @@
 package cs4303.p2.game.entity.robot;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.game.entity.family.Family;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -9,24 +10,32 @@ import java.awt.Color;
  * A mutated family member
  */
 public class MutatedFamilyRobot extends Robot {
+
+	/**
+	 * The family member that was mutated into this robot
+	 */
+	private final Family familyMember;
+
 	/**
 	 * Construct a mutated family member
 	 *
 	 * @param game     game instance
 	 * @param position initial position
+	 * @param family   the family member that was mutated into this robot
 	 */
-	public MutatedFamilyRobot(GameScreen game, PVector position) {
+	public MutatedFamilyRobot(GameScreen game, PVector position, Family family) {
 		super(game, position);
+		this.familyMember = family;
 	}
 
 	@Override
 	public int pointsForKilling() {
-		return 0;
+		return 150;
 	}
 
 	@Override
 	public void draw() {
-
+		this.drawBase();
 	}
 
 	@Override
@@ -35,32 +44,22 @@ public class MutatedFamilyRobot extends Robot {
 	}
 
 	@Override
-	protected Color baseColor() {
-		return null;
+	public Color baseColor() {
+		return this.familyMember.baseColor();
 	}
 
 	@Override
-	protected Color eyeColor() {
-		return null;
+	public float eyeRadius() {
+		return this.familyMember.eyeRadius();
 	}
 
 	@Override
-	protected float eyeRadius() {
-		return 0;
-	}
-
-	@Override
-	protected float eyeDistance() {
-		return 0;
-	}
-
-	@Override
-	protected float velocityMagnitude() {
-		return 0;
+	public float velocityMagnitude() {
+		return this.familyMember.velocityMagnitude();
 	}
 
 	@Override
 	public float radius() {
-		return 0;
+		return this.familyMember.radius();
 	}
 }

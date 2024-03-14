@@ -73,10 +73,28 @@ public interface Rectangle extends Collidable {
 
 	/**
 	 * Calculate the position vector of the centre of the rectangle
+	 *
 	 * @return position vector of the centre of the rectangle
 	 */
 	default PVector centre() {
 		return new PVector(this.centreX(), this.centreY());
+	}
+
+	/**
+	 * Create a copy of this rectangle, but with a margin added to the shape. A negative margin will make the shape
+	 * smaller.
+	 *
+	 * @param margin margin to extend the shape by
+	 *
+	 * @return copy of this rectangle with margin applied
+	 */
+	default Rectangle withMargin(float margin) {
+		return Rectangle.of(
+			this.minX() - margin,
+			this.minY() - margin,
+			this.width() + 2 * margin,
+			this.height() + 2 * margin
+		);
 	}
 
 	@Override

@@ -22,12 +22,12 @@ public class Child extends Family {
 
 	@Override
 	public int pointsForRescuing() {
-		return 0;
+		return 50;
 	}
 
 	@Override
 	public void draw() {
-
+		this.drawBase();
 	}
 
 	@Override
@@ -36,32 +36,22 @@ public class Child extends Family {
 	}
 
 	@Override
-	protected Color baseColor() {
-		return null;
+	public Color baseColor() {
+		return Color.PINK;
 	}
 
 	@Override
-	protected Color eyeColor() {
-		return null;
+	public float eyeRadius() {
+		return 1;
 	}
 
 	@Override
-	protected float eyeRadius() {
-		return 0;
-	}
-
-	@Override
-	protected float eyeDistance() {
-		return 0;
-	}
-
-	@Override
-	protected float velocityMagnitude() {
-		return 0;
+	public float velocityMagnitude() {
+		return 1.2f;
 	}
 
 	@Override
 	public float radius() {
-		return 0;
+		return 4;
 	}
 }
