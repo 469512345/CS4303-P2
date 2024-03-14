@@ -15,6 +15,10 @@ public class MenuScreen extends AbstractMenuScreen {
 	 */
 	private final Button playButton;
 	/**
+	 * Options button
+	 */
+	private final Button optionsButton;
+	/**
 	 * Exit to desktop button
 	 */
 	private final Button exitDesktopButton;
@@ -26,7 +30,9 @@ public class MenuScreen extends AbstractMenuScreen {
 	 */
 	public MenuScreen(Main main) {
 		super(main);
+
 		this.playButton = new Button(main, "Play", main.rect());
+		this.optionsButton = new Button(main, "Options", main.rect());
 		this.exitDesktopButton = new Button(this.main, "Exit to Desktop", this.main.rect()).asHUD();
 	}
 
@@ -40,6 +46,7 @@ public class MenuScreen extends AbstractMenuScreen {
 		this.drawMenu(
 			"Robotron 4303",
 			this.playButton,
+			this.optionsButton,
 			this.exitDesktopButton
 		);
 	}
@@ -48,6 +55,8 @@ public class MenuScreen extends AbstractMenuScreen {
 	public void mouseClicked(MouseEvent event) {
 		if (this.playButton.clicked(event)) {
 			this.main.setScreen(new GameScreen(this.main));
+		} else if (this.optionsButton.clicked(event)) {
+			this.main.setScreen(new OptionsScreen(this.main, this));
 		} else if (this.exitDesktopButton.clicked(event)) {
 			this.main.exit();
 		}

@@ -221,7 +221,7 @@ public abstract class Properties extends PApplet {
 	public final int OBSTACLE_EXPLODE_SCORE = 10;
 
 	/**
-	 * Whether the player can kill their own family
+	 * Whether the player can kill their own family, or themself
 	 */
-	public boolean PLAYER_CAN_KILL_FAMILY = false;
+	public boolean FRIENDLY_FIRE = false;
 }

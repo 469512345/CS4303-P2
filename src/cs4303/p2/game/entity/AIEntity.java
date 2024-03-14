@@ -1,6 +1,8 @@
 package cs4303.p2.game.entity;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.game.entity.ai.Goal;
+import cs4303.p2.game.entity.ai.Patrol;
 import processing.core.PVector;
 
 /**
@@ -8,7 +10,10 @@ import processing.core.PVector;
  */
 public abstract class AIEntity extends Entity {
 
-	protected PVector target = null;
+	/**
+	 * Current goal of this entity
+	 */
+	protected Goal goal = new Patrol();
 
 	/**
 	 * Construct an entity

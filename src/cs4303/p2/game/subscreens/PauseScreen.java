@@ -2,6 +2,7 @@ package cs4303.p2.game.subscreens;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.menu.OptionsScreen;
 import cs4303.p2.util.builder.Button;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
@@ -21,6 +22,10 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 	 */
 	private final Button restartButton;
 	/**
+	 * Button for options screen
+	 */
+	private final Button optionsButton;
+	/**
 	 * Exit to main menu button
 	 */
 	private final Button exitMenuButton;
@@ -36,8 +41,10 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 	 */
 	public PauseScreen(GameScreen game) {
 		super(game);
+
 		this.continueButton = new Button(game.main, "Continue", game.rect()).asHUD();
 		this.restartButton = new Button(game.main, "Restart game", game.rect()).asHUD();
+		this.optionsButton = new Button(game.main, "Options", game.rect()).asHUD();
 		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.rect()).asHUD();
 		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.rect()).asHUD();
 	}
@@ -48,6 +55,7 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 			"Paused",
 			this.continueButton,
 			this.restartButton,
+			this.optionsButton,
 			this.exitMenuButton,
 			this.exitDesktopButton
 		);
@@ -59,6 +67,8 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 			this.game.main.setScreen(this.game);
 		} else if (this.restartButton.clicked(event)) {
 			this.game.main.setScreen(new GameScreen(this.game.main));
+		} else if (this.optionsButton.clicked(event)) {
+			this.game.main.setScreen(new OptionsScreen(this.game.main, this));
 		} else if (this.exitMenuButton.clicked(event)) {
 			this.game.main.setScreen(new MenuScreen(this.game.main));
 		} else if (this.exitDesktopButton.clicked(event)) {

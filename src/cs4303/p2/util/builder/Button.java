@@ -18,7 +18,7 @@ public class Button implements Rectangle {
 	/**
 	 * Text on button
 	 */
-	private final String text;
+	private String text;
 	/**
 	 * Min X of rectangle
 	 */
@@ -69,6 +69,18 @@ public class Button implements Rectangle {
 	 */
 	public Button(Main app, String text, Rectangle rectangle) {
 		this(app, text, rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
+	}
+
+	/**
+	 * Set the button's text
+	 *
+	 * @param text new text for the button
+	 *
+	 * @return this
+	 */
+	public Button text(String text) {
+		this.text = text;
+		return this;
 	}
 
 	/**

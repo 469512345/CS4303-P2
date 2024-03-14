@@ -203,7 +203,7 @@ public abstract class Entity implements Circle {
 	 * @return true of this entity can see the given entity, false otherwise
 	 */
 	public boolean canSee(Entity entity) {
-		return entity.hasLineOfSight(entity) ||
+		return this.hasLineOfSight(entity) ||
 			switch (entity.type()) {
 				case HUMAN -> this.canSeeHumansThroughWalls();
 				case ROBOT -> this.canSeeRobotsThroughWalls();

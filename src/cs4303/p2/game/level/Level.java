@@ -389,7 +389,7 @@ public class Level {
 					robot.kill();
 				}
 			}
-			if (!projectile.expired() && this.game.main.PLAYER_CAN_KILL_FAMILY) {
+			if (!projectile.expired() && this.game.main.FRIENDLY_FIRE) {
 				Family family = this.collidesWithFamily(projectile);
 				if (family != null) {
 					projectile.expire();
@@ -411,7 +411,6 @@ public class Level {
 			Obstacle obstacle = iterator.next();
 			if (obstacle.intersects(this.game.player)) {
 				this.game.die();
-				obstacle.explode();
 			}
 			if (obstacle.exploded()) {
 				iterator.remove();
@@ -434,6 +433,9 @@ public class Level {
 		while (iterator.hasNext()) {
 			Family familyMember = iterator.next();
 			familyMember.update();
+			if (!familyMember.rescued() && familyMember.intersects(this.game.player)) {
+				familyMember.rescue();
+			}
 			if (familyMember.rescued()) {
 				iterator.remove();
 			}
@@ -448,6 +450,9 @@ public class Level {
 		while (iterator.hasNext()) {
 			Robot robot = iterator.next();
 			robot.update();
+			if (!robot.dead() && robot.intersects(this.game.player)) {
+				this.game.die();
+			}
 			if (robot.dead()) {
 				iterator.remove();
 			}

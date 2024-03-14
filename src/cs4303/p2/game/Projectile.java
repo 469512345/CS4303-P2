@@ -107,12 +107,12 @@ public class Projectile implements Circle {
 	}
 
 	/**
-	 * Whether the projectile can hit the player. A player's own projectiles can only hit them after making at least one
+	 * Whether the projectile can hit the player. For this, friendly fire must be enabled.A player's own projectiles can only hit them after making at least one
 	 * bounce. An enemy's projectile can hit the player immediately.
 	 *
 	 * @return whether the projectile can hit the player
 	 */
 	public boolean canHitPlayer() {
-		return !(this.source instanceof Player) || this.bouncesRemaining < this.game.main.PLAYER_PROJECTILE_MAX_BOUNCES;
+		return this.game.main.FRIENDLY_FIRE && (!(this.source instanceof Player) || this.bouncesRemaining < this.game.main.PLAYER_PROJECTILE_MAX_BOUNCES);
 	}
 }
