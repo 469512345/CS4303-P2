@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
@@ -159,6 +160,18 @@ public final class ContainerRoom extends Room {
 	}
 
 	@Override
+	public void appendNodes(Collection<Node> nodes) {
+		this.child1.appendNodes(nodes);
+		this.child2.appendNodes(nodes);
+	}
+
+	@Override
+	public void connectNodes() {
+		this.child1.connectNodes();
+		this.child2.connectNodes();
+	}
+
+	@Override
 	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
 		this.child1.appendWalls(horizontalWalls, verticalWalls);
 		this.child2.appendWalls(horizontalWalls, verticalWalls);
@@ -171,8 +184,10 @@ public final class ContainerRoom extends Room {
 	 * midpoint of the numbers and the standard deviation is 1/8th of the range. This means the numbers will be heavily
 	 * weighted towards the mean, but with possibility of more extreme values.
 	 *
-	 * @param min minimum value
-	 * @param max maximum value
+	 * @param random   random instance
+	 * @param min      minimum value
+	 * @param max      maximum value
+	 * @param smallest the margin from min and max values
 	 *
 	 * @return random number in range
 	 */

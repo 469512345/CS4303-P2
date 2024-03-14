@@ -19,7 +19,7 @@ public abstract class Entity implements Circle {
 	/**
 	 * Current position
 	 */
-	protected final PVector position;
+	public final PVector position;
 	/**
 	 * Current velocity
 	 */

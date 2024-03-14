@@ -2,6 +2,7 @@ package cs4303.p2.game.level.corridor;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
@@ -45,7 +46,7 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	 * Nodes of the corridor. If the corridor is straight then this will only be the start and end point, but if the
 	 * corridor has bends there will be point at each 90-degree bend.
 	 */
-	public final ArrayList<PVector> points;
+	public final ArrayList<Node> nodes;
 	/**
 	 * Rectangle segments that make up this corridor. These are calculated from the points upon construction to avoid
 	 * recomputing each frame
@@ -68,7 +69,7 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 		this.axis = axis;
 		this.width = width;
 		this.margin = width / 2f;
-		this.points = new ArrayList<>();
+		this.nodes = new ArrayList<>();
 		this.segments = new ArrayList<>();
 
 		this.room1.corridors.add(this);
@@ -90,6 +91,20 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 		Collection<HorizontalLine> horizontalWalls,
 		Collection<VerticalLine> verticalWalls
 	);
+
+	/**
+	 * Get the node of this corridor in room 1 - on the bottom or right hand wall
+	 *
+	 * @return node of this corridor in room 1
+	 */
+	public abstract Node startingNode();
+
+	/**
+	 * Get the node of this corridor in room 2 - on the top or left hand wall
+	 *
+	 * @return node of this corridor in room 2
+	 */
+	public abstract Node endingNode();
 
 	/**
 	 * Get a random value based on a gaussian distribution

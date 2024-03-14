@@ -9,6 +9,7 @@ import cs4303.p2.game.entity.robot.MutatingRobot;
 import cs4303.p2.game.entity.robot.PlayerSeekingRobot;
 import cs4303.p2.game.level.Level;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.subscreens.DiedScreen;
 import cs4303.p2.game.subscreens.GameOverScreen;
 import cs4303.p2.game.subscreens.PauseScreen;
@@ -21,6 +22,9 @@ import processing.core.PVector;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
+
+import java.awt.Color;
+import java.util.LinkedList;
 
 /**
  * Screen shown to the user when playing the game
@@ -117,6 +121,34 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		this.main.background(this.main.GAME_BACKGROUND_COLOR.getRGB());
 		this.level.draw();
 		this.player.draw();
+
+		if (this.startNode != null) {
+			this.ellipse()
+				.at(this.startNode.x(), this.startNode.y())
+				.radius(20)
+				.fill(Color.GREEN)
+				.draw();
+		}
+		if (this.endNode != null) {
+			this.ellipse()
+				.at(this.endNode.x(), this.endNode.y())
+				.radius(20)
+				.fill(Color.RED)
+				.draw();
+		}
+		if (this.currentPath != null) {
+			for (int i = 1; i < this.currentPath.size(); i++) {
+				Node start = this.currentPath.get(i - 1);
+				Node end = this.currentPath.get(i);
+				this.line()
+					.from(start.x(), start.y())
+					.to(end.x(), end.y())
+					.stroke(Color.RED)
+					.strokeWeight(1)
+					.draw();
+			}
+		}
+
 		this.drawHUD();
 	}
 
@@ -168,8 +200,22 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		this.handleKeyOrMouseUp(event);
 	}
 
+	private Node startNode = null;
+	private Node endNode = null;
+	private LinkedList<Node> currentPath = null;
+
 	@Override
 	public void mousePressed(MouseEvent event) {
+		if (event.isShiftDown()) {
+			this.startNode = this.level.closestNodeTo(this.player.position.x, this.player.position.y, true);
+			this.endNode = this.level.closestNodeTo(
+				this.unconvertX(this.main.mouseX),
+				this.unconvertY(this.main.mouseY),
+				false
+			);
+			this.currentPath = this.level.shortestPathBetween(this.startNode, this.endNode);
+			return;
+		}
 		this.handleKeyOrMouseDown(event);
 	}
 

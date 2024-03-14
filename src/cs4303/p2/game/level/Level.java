@@ -16,11 +16,13 @@ import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -62,6 +64,10 @@ public class Level {
 	 * Corridors
 	 */
 	private final List<Corridor> corridors = new LinkedList<>();
+	/**
+	 * Nodes in the graph-based representation of the world
+	 */
+	private final List<Node> nodes = new LinkedList<>();
 	/**
 	 * Projectiles currently active in the world
 	 */
@@ -136,6 +142,8 @@ public class Level {
 				);
 			}
 		}
+
+		this.root.appendNodes(this.nodes);
 
 	}
 
@@ -670,24 +678,210 @@ public class Level {
 		return null;
 	}
 
+	/**
+	 * Check if an object collides with any wall, returning the wall with the collision. Note this will only consider
+	 * the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first wall with collision, or null if none collided
+	 */
 	private Collidable collidesWithWall(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.walls);
 	}
 
+	/**
+	 * Check if an object collides with any obstacle, returning the obstacle with the collision. Note this will only
+	 * consider the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first obstacle with collision, or null if none collided
+	 */
 	private Obstacle collidesWithObstacle(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.obstacles);
 	}
 
+	/**
+	 * Check if an object collides with any family member, returning the family member with the collision. Note this
+	 * will only consider the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first family member with collision, or null if none collided
+	 */
 	private Family collidesWithFamily(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.family);
 	}
 
+	/**
+	 * Check if an object collides with any robot, returning the robot with the collision. Note this will only consider
+	 * the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first robot with collision, or null if none collided
+	 */
 	private Robot collidesWithRobot(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.robots);
 	}
 
+	/**
+	 * Check if an object collides with any projectile, returning the projectile with the collision. Note this will only
+	 * consider the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first projectile with collision, or null if none collided
+	 */
 	private Projectile collidesWithProjectile(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.projectiles);
+	}
+
+	/**
+	 * Calculate the closest node to a given point
+	 *
+	 * @param x                  x coordinate of point
+	 * @param y                  y coordinate of point
+	 * @param requireLineOfSight whether a direct line of sight between the point and the node is required
+	 *
+	 * @return node if it was found, or null if no nodes were found (for example if none had direct line of sight).
+	 */
+	public Node closestNodeTo(float x, float y, boolean requireLineOfSight) {
+		float smallestDistanceSq = Float.MAX_VALUE;
+		Node min = null;
+
+		for (Node node : this.nodes) {
+			if (!requireLineOfSight || this.lineOfSightBetween(x, y, node.x(), node.y())) {
+				float distanceSq = node.distanceSqTo(x, y);
+				if (distanceSq < smallestDistanceSq) {
+					smallestDistanceSq = distanceSq;
+					min = node;
+				}
+			}
+		}
+
+		return min;
+	}
+
+	/**
+	 * Calculate the shortest path between two nodes using A* search
+	 *
+	 * @param start start node
+	 * @param end   end node
+	 *
+	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
+	 */
+	public LinkedList<Node> shortestPathBetween(Node start, Node end) {
+		ArrayList<AStarNodeInfo> open = new ArrayList<>();
+		ArrayList<AStarNodeInfo> closed = new ArrayList<>();
+
+		AStarNodeInfo current = AStarNodeInfo.startNode(start, end);
+		open.add(current);
+
+		//Keep going until we have reached the end node
+		while (current.node != end) {
+//			System.out.println(current);
+			open.remove(current);
+			closed.add(current);
+			for (Node connected : current.node.edges()) {
+				boolean alreadySeen = false;
+				for (AStarNodeInfo closedNode : closed) {
+					if (closedNode.node == connected) {
+						alreadySeen = true;
+						break;
+					}
+				}
+				if (!alreadySeen) {
+					for (AStarNodeInfo openNode : open) {
+						if (openNode.node == connected) {
+							alreadySeen = true;
+							break;
+						}
+					}
+				}
+				if (!alreadySeen) {
+					open.add(AStarNodeInfo.next(connected, current, end));
+				}
+			}
+
+			//Find the node in the open list with the lowest total cost
+			Optional<AStarNodeInfo> min = open.stream()
+				.min((a, b) -> Float.compare(a.totalCost(), b.totalCost()));
+			if (min.isPresent()) {
+				current = min.get();
+			} else {
+				// If the open list is empty, then there is no path to the destination node.
+				// This should never happen given the tree based room generation,
+				// but this algorithm should still protect against this case
+				return null;
+			}
+		}
+
+		LinkedList<Node> path = new LinkedList<>();
+		while (current.previous != null) {
+			path.addFirst(current.node);
+			current = current.previous;
+		}
+		path.addFirst(current.node);
+
+		return path;
+	}
+
+	/**
+	 * A node used in the A* algorithm
+	 *
+	 * @param node
+	 * @param previous
+	 * @param heuristicCost
+	 * @param edgeCost
+	 * @param costSoFar
+	 */
+	record AStarNodeInfo(
+		Node node,
+		AStarNodeInfo previous,
+		float heuristicCost,
+		float edgeCost,
+		float costSoFar
+	) {
+
+		/**
+		 * Get the total cost for this node
+		 *
+		 * @return total cost for this node
+		 */
+		public float totalCost() {
+			return this.heuristicCost + this.edgeCost + this.costSoFar;
+		}
+
+		public static AStarNodeInfo next(Node node, AStarNodeInfo previous, Node endNode) {
+			return new AStarNodeInfo(
+				node,
+				previous,
+				node.costTo(endNode),
+				node.costTo(previous.node),
+				previous.totalCost()
+			);
+		}
+
+		/**
+		 * Create the info for the start node in A*
+		 *
+		 * @param startNode start node
+		 * @param endNode   end node
+		 *
+		 * @return A* start node
+		 */
+		public static AStarNodeInfo startNode(Node startNode, Node endNode) {
+			return new AStarNodeInfo(
+				startNode,
+				null,
+				startNode.costTo(endNode),
+				0,
+				0
+			);
+		}
+
 	}
 
 }

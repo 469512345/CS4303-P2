@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
@@ -68,6 +69,37 @@ public final class LeafRoom extends Room {
 	@Override
 	public void appendCorridors(Collection<Corridor> corridors) {
 		//Nothing to do - all handled by parent
+	}
+
+	@Override
+	public void appendNodes(Collection<Node> nodes) {
+		for (Corridor corridor : this.corridors) {
+			if (this == corridor.room1) {
+				nodes.addAll(corridor.nodes);
+			}
+		}
+	}
+
+	@Override
+	public void connectNodes() {
+		ArrayList<Node> nodes = new ArrayList<>(this.corridors.size());
+
+		for (Corridor corridor : this.corridors) {
+			Node node;
+			if (this == corridor.room1) {
+				node = corridor.startingNode();
+			} else {
+				node = corridor.endingNode();
+			}
+			nodes.add(node);
+		}
+
+		for (int i = 0; i < nodes.size(); i++) {
+			for (int j = i + 1; j < nodes.size(); j++) {
+				nodes.get(i)
+					.connectTo(nodes.get(j));
+			}
+		}
 	}
 
 	@Override

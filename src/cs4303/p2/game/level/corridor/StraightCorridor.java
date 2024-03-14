@@ -2,6 +2,7 @@ package cs4303.p2.game.level.corridor;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
@@ -17,13 +18,13 @@ import java.util.Collection;
 public final class StraightCorridor extends Corridor implements Rectangle {
 
 	/**
-	 * First point - min x or min y
+	 * First point - min x or min y - connecting to bottom or right of room 1
 	 */
-	private final PVector point1;
+	private final Node node1;
 	/**
-	 * Second point - max x or max y
+	 * Second point - max x or max y - connecting to top or left of room 2
 	 */
-	private final PVector point2;
+	private final Node node2;
 
 	/**
 	 * Create a new corridor
@@ -33,16 +34,20 @@ public final class StraightCorridor extends Corridor implements Rectangle {
 	 * @param room2 second room
 	 * @param axis  axis of the corridor
 	 * @param width width of the corridor
+	 * @param node1 node in room 1
+	 * @param node2 node in room 2
 	 */
 	public StraightCorridor(
-		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width, PVector point1, PVector point2
+		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width, PVector node1, PVector node2
 	) {
 		super(game, room1, room2, axis, width);
-		this.point1 = point1;
-		this.point2 = point2;
+		this.node1 = new Node(node1);
+		this.node2 = new Node(node2);
 
-		this.points.add(point1);
-		this.points.add(point2);
+		this.node1.connectTo(this.node2);
+
+		this.nodes.add(this.node1);
+		this.nodes.add(this.node2);
 
 		this.segments.add(this);
 	}
@@ -97,22 +102,32 @@ public final class StraightCorridor extends Corridor implements Rectangle {
 	}
 
 	@Override
+	public Node startingNode() {
+		return this.node1;
+	}
+
+	@Override
+	public Node endingNode() {
+		return this.node2;
+	}
+
+	@Override
 	public float minX() {
-		return this.point1.x - this.margin;
+		return this.node1.x() - this.margin;
 	}
 
 	@Override
 	public float minY() {
-		return this.point1.y - this.margin;
+		return this.node1.y() - this.margin;
 	}
 
 	@Override
 	public float width() {
-		return this.point2.x - this.point1.x + this.width;
+		return this.node2.x() - this.node1.x() + this.width;
 	}
 
 	@Override
 	public float height() {
-		return this.point2.y - this.point1.y + this.width;
+		return this.node2.y() - this.node1.y() + this.width;
 	}
 }

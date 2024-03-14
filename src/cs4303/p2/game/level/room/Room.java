@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.AxisDirection;
 import cs4303.p2.game.level.LevelInfo;
+import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
@@ -109,6 +110,18 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 * @param corridors collection to append to
 	 */
 	public abstract void appendCorridors(Collection<Corridor> corridors);
+
+	/**
+	 * Append any nodes contained within this region to a collection
+	 *
+	 * @param nodes collection to append to
+	 */
+	public abstract void appendNodes(Collection<Node> nodes);
+
+	/**
+	 * Connect the nodes for any corridors into rooms in this region to eachother
+	 */
+	public abstract void connectNodes();
 
 	/**
 	 * Append any walls contained within this region to collections for horizontal and vertical
@@ -245,7 +258,9 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 * @return created room instance
 	 */
 	public static Room createRoot(GameScreen game, LevelInfo levelInfo) {
-		return createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
+		Room room = createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
+		room.connectNodes();
+		return room;
 	}
 
 	@Override
