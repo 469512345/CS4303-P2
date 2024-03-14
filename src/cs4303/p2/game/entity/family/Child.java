@@ -9,6 +9,7 @@ import java.awt.Color;
  * Child in the last remaining family
  */
 public class Child extends Family {
+
 	/**
 	 * Construct a child
 	 *
@@ -17,6 +18,11 @@ public class Child extends Family {
 	 */
 	public Child(GameScreen game, PVector position) {
 		super(game, position);
+	}
+
+	@Override
+	public int pointsForRescuing() {
+		return 0;
 	}
 
 	@Override
@@ -46,6 +52,11 @@ public class Child extends Family {
 
 	@Override
 	protected float eyeDistance() {
+		return 0;
+	}
+
+	@Override
+	protected float velocityMagnitude() {
 		return 0;
 	}
 

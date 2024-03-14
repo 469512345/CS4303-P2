@@ -19,7 +19,7 @@ public enum PowerupType {
 	) {
 		@Override
 		public void draw(GameScreen game, PVector position) {
-			game.main.rect()
+			game.rect()
 				.at(position)
 				.size(this.width, this.height)
 				.fill(Color.RED)

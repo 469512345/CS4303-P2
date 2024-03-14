@@ -67,7 +67,7 @@ public final class CompositeCorridor extends AbstractCorridor {
 	 */
 	@Override
 	public void draw() {
-		RectBuilder rect = this.game.main.rect()
+		RectBuilder rect = this.game.rect()
 			.fill(Color.WHITE);
 
 		rect.copy(this.segment1)

@@ -29,7 +29,7 @@ public abstract class AbstractGameMenuScreen extends AbstractMenuScreen {
 	@Override
 	protected void drawBackground() {
 		this.game.justDraw();
-		this.main.rect()
+		this.rect()
 			.asHUD()
 			.at(0, 0)
 			.size(this.main.width, this.main.height)

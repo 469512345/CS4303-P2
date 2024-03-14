@@ -25,13 +25,14 @@ public final class GameOverScreen extends AbstractGameMenuScreen {
 
 	/**
 	 * Create a game over screen
+	 *
 	 * @param game game instance
 	 */
 	public GameOverScreen(GameScreen game) {
 		super(game);
-		this.playAgainButton = new Button(game.main, "Play Again", game.main.rect()).asHUD();
-		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.main.rect()).asHUD();
-		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.main.rect()).asHUD();
+		this.playAgainButton = new Button(game.main, "Play Again", game.rect()).asHUD();
+		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.rect()).asHUD();
+		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.rect()).asHUD();
 	}
 
 	@Override
@@ -46,11 +47,11 @@ public final class GameOverScreen extends AbstractGameMenuScreen {
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		if(this.playAgainButton.clicked(event)) {
+		if (this.playAgainButton.clicked(event)) {
 			this.game.main.setScreen(new GameScreen(this.game.main));
-		} else if(this.exitMenuButton.clicked(event)) {
+		} else if (this.exitMenuButton.clicked(event)) {
 			this.game.main.setScreen(new MenuScreen(this.game.main));
-		} else if(this.exitDesktopButton.clicked(event)) {
+		} else if (this.exitDesktopButton.clicked(event)) {
 			this.game.main.exit();
 		}
 	}

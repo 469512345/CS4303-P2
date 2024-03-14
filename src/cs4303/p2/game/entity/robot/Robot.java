@@ -2,6 +2,7 @@ package cs4303.p2.game.entity.robot;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
+import cs4303.p2.game.entity.EntityType;
 import processing.core.PVector;
 
 /**
@@ -22,6 +23,11 @@ public abstract class Robot extends AIEntity {
 	 */
 	public Robot(GameScreen game, PVector position) {
 		super(game, position);
+	}
+
+	@Override
+	protected EntityType type() {
+		return EntityType.ROBOT;
 	}
 
 	/**

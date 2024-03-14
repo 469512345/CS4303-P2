@@ -54,7 +54,7 @@ public class Projectile implements Circle {
 	 * Draw this projectile
 	 */
 	public void draw() {
-		this.game.main.ellipse()
+		this.game.ellipse()
 			.copy(this)
 			.fill(this.game.main.PLAYER_PROJECTILE_COLOR)
 			.noStroke()
@@ -65,7 +65,7 @@ public class Projectile implements Circle {
 	 * Update this projectile's position
 	 */
 	public void update() {
-		this.bouncesRemaining -= this.game.moveBounce(
+		this.bouncesRemaining -= this.game.level.moveBounce(
 			this.position,
 			this.velocity,
 			this.game.main.PLAYER_PROJECTILE_RADIUS_SQUARED

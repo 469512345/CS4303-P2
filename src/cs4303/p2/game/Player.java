@@ -1,6 +1,7 @@
 package cs4303.p2.game;
 
 import cs4303.p2.game.entity.Entity;
+import cs4303.p2.game.entity.EntityType;
 import cs4303.p2.game.powerup.ActivePowerup;
 import cs4303.p2.game.powerup.Powerup;
 import processing.core.PVector;
@@ -152,6 +153,7 @@ public final class Player extends Entity implements ProjectileSource {
 
 	/**
 	 * Add a powerup to the player
+	 *
 	 * @param powerup
 	 */
 	public void applyPowerup(Powerup powerup) {
@@ -187,5 +189,10 @@ public final class Player extends Entity implements ProjectileSource {
 	@Override
 	protected float velocityMagnitude() {
 		return 0;
+	}
+
+	@Override
+	protected EntityType type() {
+		return EntityType.HUMAN;
 	}
 }

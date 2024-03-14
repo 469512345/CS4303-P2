@@ -31,14 +31,15 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 
 	/**
 	 * Create a pause screen
+	 *
 	 * @param game game instance
 	 */
 	public PauseScreen(GameScreen game) {
 		super(game);
-		this.continueButton = new Button(game.main, "Continue", game.main.rect()).asHUD();
-		this.restartButton = new Button(game.main, "Restart game", game.main.rect()).asHUD();
-		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.main.rect()).asHUD();
-		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.main.rect()).asHUD();
+		this.continueButton = new Button(game.main, "Continue", game.rect()).asHUD();
+		this.restartButton = new Button(game.main, "Restart game", game.rect()).asHUD();
+		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.rect()).asHUD();
+		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.rect()).asHUD();
 	}
 
 	@Override

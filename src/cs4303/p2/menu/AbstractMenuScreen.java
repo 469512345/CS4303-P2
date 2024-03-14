@@ -3,6 +3,8 @@ package cs4303.p2.menu;
 import cs4303.p2.Main;
 import cs4303.p2.util.builder.Button;
 import cs4303.p2.util.builder.RectBuilder;
+import cs4303.p2.util.screen.DeferredDrawTarget;
+import cs4303.p2.util.screen.DrawTarget;
 import cs4303.p2.util.screen.Screen;
 
 import java.awt.Color;
@@ -10,7 +12,7 @@ import java.awt.Color;
 /**
  * Abstract menu screen. A menu screen has title text and a number of buttons under it
  */
-public abstract class AbstractMenuScreen implements Screen {
+public abstract class AbstractMenuScreen implements Screen, DeferredDrawTarget {
 
 	/**
 	 * Main instance
@@ -41,11 +43,11 @@ public abstract class AbstractMenuScreen implements Screen {
 		this.drawBackground();
 		float thirdWidth = this.main.width / 3f;
 
-		RectBuilder rect = this.main.rect()
+		RectBuilder rect = this.rect()
 			.at(thirdWidth, this.titleY())
 			.size(thirdWidth, this.main.BUTTON_HEIGHT);
 
-		this.main.text(text)
+		this.text(text)
 			.fill(this.titleTextColour())
 			.size(this.titleTextSize())
 			.centredInRect(rect)
@@ -106,4 +108,8 @@ public abstract class AbstractMenuScreen implements Screen {
 		return this.main.BUTTON_SPACING * 2;
 	}
 
+	@Override
+	public DrawTarget deferRenderingTo() {
+		return this.main;
+	}
 }

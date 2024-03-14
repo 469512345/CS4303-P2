@@ -33,10 +33,10 @@ public final class DiedScreen extends AbstractGameMenuScreen {
 	 */
 	public DiedScreen(GameScreen game) {
 		super(game);
-		this.respawnButton = new Button(game.main, "Respawn", game.main.rect()).asHUD();
-		this.restartButton = new Button(game.main, "Restart game", game.main.rect()).asHUD();
-		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.main.rect()).asHUD();
-		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.main.rect()).asHUD();
+		this.respawnButton = new Button(game.main, "Respawn", game.rect()).asHUD();
+		this.restartButton = new Button(game.main, "Restart game", game.rect()).asHUD();
+		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.rect()).asHUD();
+		this.exitDesktopButton = new Button(game.main, "Exit to Desktop", game.rect()).asHUD();
 	}
 
 	@Override

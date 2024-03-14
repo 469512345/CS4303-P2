@@ -6,6 +6,7 @@ import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.collisions.Rectangle;
+import cs4303.p2.util.screen.DrawTarget;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -17,7 +18,7 @@ import java.util.Random;
  * Main class. This extends the Properties class, so it can inherit all of the definitions in this file, without
  * resulting in cluttering the main file.
  */
-public class Main extends Properties implements Rectangle {
+public class Main extends Properties implements Rectangle, DrawTarget {
 
 	/**
 	 * Random instance
@@ -174,6 +175,7 @@ public class Main extends Properties implements Rectangle {
 	 *
 	 * @return textBuilder builder instance
 	 */
+	@Override
 	public TextBuilder text(String text) {
 		return this.textBuilder.clear()
 			.text(text);
@@ -184,6 +186,7 @@ public class Main extends Properties implements Rectangle {
 	 *
 	 * @return ellipseBuilder instance
 	 */
+	@Override
 	public EllipseBuilder ellipse() {
 		return this.ellipseBuilder.clear();
 	}
@@ -193,6 +196,7 @@ public class Main extends Properties implements Rectangle {
 	 *
 	 * @return rectBuilder instance
 	 */
+	@Override
 	public RectBuilder rect() {
 		return this.rectBuilder.clear();
 	}
@@ -202,6 +206,7 @@ public class Main extends Properties implements Rectangle {
 	 *
 	 * @return lineBuilder instance
 	 */
+	@Override
 	public LineBuilder line() {
 		return this.lineBuilder.clear();
 	}

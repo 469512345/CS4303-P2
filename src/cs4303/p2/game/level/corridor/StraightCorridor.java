@@ -52,7 +52,7 @@ public final class StraightCorridor extends AbstractCorridor implements Rectangl
 	 */
 	@Override
 	public void draw() {
-		this.game.main.rect()
+		this.game.rect()
 			.fill(Color.WHITE)
 			.copy(this)
 			.draw();

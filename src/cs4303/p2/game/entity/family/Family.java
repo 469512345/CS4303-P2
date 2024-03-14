@@ -2,6 +2,7 @@ package cs4303.p2.game.entity.family;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
+import cs4303.p2.game.entity.EntityType;
 import processing.core.PVector;
 
 /**
@@ -19,6 +20,11 @@ public abstract class Family extends AIEntity {
 	 */
 	public Family(GameScreen game, PVector position) {
 		super(game, position);
+	}
+
+	@Override
+	protected EntityType type() {
+		return EntityType.HUMAN;
 	}
 
 	/**

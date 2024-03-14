@@ -54,7 +54,7 @@ public abstract class Entity implements Circle {
 	 * Draw the entity as a circle with its eye
 	 */
 	protected void drawBase() {
-		EllipseBuilder circle = this.game.main.ellipse();
+		EllipseBuilder circle = this.game.ellipse();
 		circle
 			.copy(this)
 			.fill(this.baseColor())
@@ -104,18 +104,45 @@ public abstract class Entity implements Circle {
 	 */
 	protected abstract float velocityMagnitude();
 
+	/**
+	 * The type of entity - robot or human
+	 *
+	 * @return type of entity
+	 */
+	protected abstract EntityType type();
+
+	/**
+	 * Whether this entity can see robots through walls
+	 *
+	 * @return true if this entity can see robots through walls, false otherwise
+	 */
 	protected boolean canSeeRobotsThroughWalls() {
 		return false;
 	}
 
+	/**
+	 * Whether this entity can be seen through walls by robots
+	 *
+	 * @return true if this entity can be seen through walls by robots, false otherwise
+	 */
 	protected boolean canBeSeenThroughWallsByRobots() {
 		return false;
 	}
 
+	/**
+	 * Whether this entity can see humans through walls.
+	 *
+	 * @return true if this entity can see humans through walls, false otherwise
+	 */
 	protected boolean canSeeHumansThroughWalls() {
 		return false;
 	}
 
+	/**
+	 * Whether this entity can be seen through walls by humans
+	 *
+	 * @return true if this entity can be seen through walls by humans, false otherwise
+	 */
 	protected boolean canBeSeenThroughWallsByHumans() {
 		return false;
 	}
@@ -124,7 +151,7 @@ public abstract class Entity implements Circle {
 	 * Move the entity, respecting collisions with the map
 	 */
 	protected void move() {
-		this.game.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
+		this.game.level.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
 
 		//Update velocity if there is currently movement
 		if (this.velocity.mag() > 0) {
@@ -165,6 +192,27 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
+	 * Whether an entity can see another entity, respecting the values of {@link #canSeeHumansThroughWalls()},
+	 * {@link #canSeeRobotsThroughWalls()}, {@link #canBeSeenThroughWallsByHumans()}, and
+	 * {@link #canBeSeenThroughWallsByRobots()}.
+	 *
+	 * @param entity entity to test
+	 *
+	 * @return true of this entity can see the given entity, false otherwise
+	 */
+	public boolean canSee(Entity entity) {
+		return entity.hasLineOfSight(entity) ||
+			switch (entity.type()) {
+				case HUMAN -> this.canSeeHumansThroughWalls();
+				case ROBOT -> this.canSeeRobotsThroughWalls();
+			} ||
+			switch (this.type()) {
+				case HUMAN -> entity.canBeSeenThroughWallsByHumans();
+				case ROBOT -> entity.canBeSeenThroughWallsByRobots();
+			};
+	}
+
+	/**
 	 * Whether this entity has line of sight to a point
 	 *
 	 * @param x x coordinate of point
@@ -173,7 +221,7 @@ public abstract class Entity implements Circle {
 	 * @return true if this entity has line of sight to the point, false otherwise
 	 */
 	public boolean hasLineOfSight(float x, float y) {
-		return this.game.lineOfSightBetween(this.position.x, this.position.y, x, y);
+		return this.game.level.lineOfSightBetween(this.position.x, this.position.y, x, y);
 	}
 
 	/**

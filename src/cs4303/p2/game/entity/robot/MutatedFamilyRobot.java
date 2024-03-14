@@ -20,6 +20,11 @@ public class MutatedFamilyRobot extends Robot {
 	}
 
 	@Override
+	public int pointsForKilling() {
+		return 0;
+	}
+
+	@Override
 	public void draw() {
 
 	}
@@ -46,6 +51,11 @@ public class MutatedFamilyRobot extends Robot {
 
 	@Override
 	protected float eyeDistance() {
+		return 0;
+	}
+
+	@Override
+	protected float velocityMagnitude() {
 		return 0;
 	}
 
