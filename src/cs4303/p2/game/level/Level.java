@@ -16,6 +16,7 @@ import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -107,10 +108,22 @@ public class Level {
 		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1); //The starting room must only have 1 corridor
 		this.startingRoom = singlyConnectedRooms.get(random.nextInt(singlyConnectedRooms.size()));
 
+		//Populate content in rooms
 		for (LeafRoom room : this.rooms) {
-			this.addObstaclesToRegion(room, this.levelInfo.minObstaclesPerRoom(), levelInfo.maxObstaclesPerRoom());
+			//Don't put anything in the starting room
+			if (room == this.startingRoom) {
+				continue;
+			}
+			this.addObstaclesToRegion(room, this.levelInfo.minObstaclesPerRoom(), this.levelInfo.maxObstaclesPerRoom());
+			//Determine if the room should have robots or humans in it
+			if (random.nextFloat(0, 1) < this.levelInfo.roomRobotChance()) {
+				this.addRobotsToRegion(room);
+			} else {
+				this.addHumansToRegion(room);
+			}
 		}
 
+		//Populate content in corridors
 		this.root.appendCorridors(this.corridors);
 
 		for (Corridor corridor : this.corridors) {
@@ -122,6 +135,7 @@ public class Level {
 				);
 			}
 		}
+
 	}
 
 	/**
@@ -153,21 +167,38 @@ public class Level {
 			float positionY = random.nextFloat(region.minY() + radius, region.maxY() - radius);
 			Obstacle obstacle = new Obstacle(this.game, new PVector(positionX, positionY), radius);
 
-			//If this new obstacle intersects any existing obstacles then don't add it
-			boolean conflictsWithExisting = false;
-			for (Obstacle existingObstacle : this.obstacles) {
-				if (obstacle.intersects(existingObstacle)) {
-					conflictsWithExisting = true;
-					break;
-				}
-			}
-			if (conflictsWithExisting) {
+			//Only add the object if it doesn't collide with anything
+			if (this.collidesWithAnything(obstacle)) {
 				failedAttempts++;
 			} else {
 				this.obstacles.add(obstacle);
 				obstaclesToAdd--;
 			}
 		}
+	}
+
+	/**
+	 * Populate a room with robots based on the level generation parameters
+	 *
+	 * @param room room to populate
+	 */
+	private void addRobotsToRegion(Rectangle room) {
+		Random random = this.game.main.random;
+		int robotsToAdd = random.nextInt(this.levelInfo.minRobotsPerRoom(), this.levelInfo.maxRobotsPerRoom() + 1);
+		while (robotsToAdd > 0) {
+
+
+			robotsToAdd--;
+		}
+	}
+
+	/**
+	 * Populate a room with humans based on the level generation parameters
+	 *
+	 * @param room room to populate
+	 */
+	private void addHumansToRegion(Rectangle room) {
+
 	}
 
 	/**
@@ -208,7 +239,7 @@ public class Level {
 	 */
 	private void drawProjectiles() {
 		for (Projectile projectile : this.projectiles) {
-			if(this.game.player.hasLineOfSight(projectile.centre())) {
+			if (this.game.player.hasLineOfSight(projectile.centre())) {
 				projectile.draw();
 			}
 		}
@@ -219,7 +250,7 @@ public class Level {
 	 */
 	private void drawPowerups() {
 		for (Powerup powerup : this.powerups) {
-			if(this.game.player.hasLineOfSight(powerup.centre())) {
+			if (this.game.player.hasLineOfSight(powerup.centre())) {
 				powerup.draw();
 			}
 		}
@@ -230,7 +261,7 @@ public class Level {
 	 */
 	private void drawObstacles() {
 		for (Obstacle obstacle : this.obstacles) {
-			if(this.game.player.hasLineOfSight(obstacle.centre())) {
+			if (this.game.player.hasLineOfSight(obstacle.centre())) {
 				obstacle.draw();
 			}
 		}
@@ -533,11 +564,35 @@ public class Level {
 	}
 
 	/**
-	 * Remove any obstacles touching a given object
+	 * Check if an object collides with anything already in the world
 	 *
-	 * @param object object to test for collisions with
+	 * @param subject object to test
+	 *
+	 * @return true if the object collides with anything in the world, false otherwise
 	 */
-	public void removeObstaclesTouching(Collidable object) {
-		this.obstacles.removeIf(obstacle -> obstacle.intersects(object));
+	private boolean collidesWithAnything(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.obstacles) ||
+			this.collidesWithAnythingIn(subject, this.family) ||
+			this.collidesWithAnythingIn(subject, this.robots) ||
+			this.collidesWithAnythingIn(subject, this.projectiles);
 	}
+
+	/**
+	 * Check if an object collides with anything in a collection
+	 *
+	 * @param subject subject to test against collection
+	 * @param objects collection of collidable objects
+	 * @param <T>     type of object in collection
+	 *
+	 * @return true if the subject collides with anything in the collection, false otherwise
+	 */
+	private <T extends Collidable> boolean collidesWithAnythingIn(Collidable subject, Collection<T> objects) {
+		for (Collidable object : objects) {
+			if (object.intersects(subject)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

@@ -5,6 +5,8 @@ import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
 import processing.core.PVector;
 
+import java.awt.Color;
+
 /**
  * Base class for robots
  */
@@ -50,5 +52,10 @@ public abstract class Robot extends AIEntity {
 	 */
 	public boolean dead() {
 		return this.dead;
+	}
+
+	@Override
+	protected Color eyeColor() {
+		return Color.RED;
 	}
 }

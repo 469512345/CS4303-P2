@@ -5,6 +5,8 @@ import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
 import processing.core.PVector;
 
+import java.awt.Color;
+
 /**
  * A member of the last family
  */
@@ -48,5 +50,10 @@ public abstract class Family extends AIEntity {
 	 */
 	public boolean rescued() {
 		return this.rescued;
+	}
+
+	@Override
+	protected Color eyeColor() {
+		return Color.GREEN;
 	}
 }

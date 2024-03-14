@@ -1,6 +1,12 @@
 package cs4303.p2.game;
 
 import cs4303.p2.Main;
+import cs4303.p2.game.entity.family.Child;
+import cs4303.p2.game.entity.family.Grandparent;
+import cs4303.p2.game.entity.family.Parent;
+import cs4303.p2.game.entity.robot.FamilySeekingRobot;
+import cs4303.p2.game.entity.robot.MutatingRobot;
+import cs4303.p2.game.entity.robot.PlayerSeekingRobot;
 import cs4303.p2.game.level.Level;
 import cs4303.p2.game.level.LevelInfo;
 import cs4303.p2.game.subscreens.DiedScreen;
@@ -80,8 +86,6 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		this.level = new Level(this, this.generateLevelInfo());
 
 		this.player = new Player(this, this.level.startingRoom.centre());
-
-		this.level.removeObstaclesTouching(this.player);
 
 		this.scale = this.main.INITIAL_ZOOM;
 	}
@@ -304,6 +308,19 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		float height = this.main.height;
 		float minWidth = width / 10f;
 		float minHeight = height / 6f;
+
+		LevelInfo.HumanConstructor[] familyConstructors = {
+			Child::new,
+			Parent::new,
+			Grandparent::new
+		};
+
+		LevelInfo.RobotConstructor[] robotConstructors = {
+			FamilySeekingRobot::new,
+			PlayerSeekingRobot::new,
+			MutatingRobot::new
+		};
+
 		return new LevelInfo(
 			width,
 			height,
@@ -320,7 +337,14 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 			1,
 			3,
 			0,
-			1
+			1,
+			1,
+			3,
+			familyConstructors,
+			1,
+			3,
+			robotConstructors,
+			0.6f
 		);
 	}
 

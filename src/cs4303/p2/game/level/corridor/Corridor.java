@@ -134,24 +134,6 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	}
 
 	/**
-	 * Determine the horizontalWalls of a rectangle and add them to a collection
-	 *
-	 * @param rectangle       rectangle to determine
-	 * @param horizontalWalls collection to append horizontal walls to
-	 * @param verticalWalls   collection to append vertical walls to
-	 */
-	protected static void appendWalls(
-		Rectangle rectangle,
-		Collection<HorizontalLine> horizontalWalls,
-		Collection<VerticalLine> verticalWalls
-	) {
-		horizontalWalls.add(rectangle.topEdge());
-		horizontalWalls.add(rectangle.bottomEdge());
-		verticalWalls.add(rectangle.leftEdge());
-		verticalWalls.add(rectangle.rightEdge());
-	}
-
-	/**
 	 * Create a corridor. This method will look at the two rooms and determine whether the corridor should be straight
 	 * or composite.
 	 *
