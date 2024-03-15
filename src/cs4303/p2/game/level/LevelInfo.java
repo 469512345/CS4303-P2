@@ -32,7 +32,7 @@ import processing.core.PVector;
  * @param maxRobotsPerRoom        maximum number of robots per room
  * @param robotConstructors       constructors for robots available in this level
  * @param roomRobotChance         chance that a room generates with robots, otherwise it will generate with humans
- * @param powerupInWorld          number of powerups there should be in the world
+ * @param powerupsInWorld         number of powerups there should be in the world
  */
 public record LevelInfo(
 	float width,
@@ -58,7 +58,7 @@ public record LevelInfo(
 	int maxRobotsPerRoom,
 	RobotConstructor[] robotConstructors,
 	float roomRobotChance,
-	int powerupInWorld
+	int powerupsInWorld
 ) {
 
 	/**

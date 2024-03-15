@@ -155,7 +155,7 @@ public class Level {
 		}
 
 		//Add powerups to world
-		for (int i = 0; i < this.levelInfo.powerupInWorld(); i++) {
+		for (int i = 0; i < this.levelInfo.powerupsInWorld(); i++) {
 			//Cycle through powerup types for even distribution
 			PowerupType type = PowerupType.values()[i % PowerupType.values().length];
 
@@ -471,6 +471,14 @@ public class Level {
 			Obstacle obstacle = iterator.next();
 			if (obstacle.intersects(this.game.player)) {
 				this.game.die();
+			}
+			Family collidedHuman = this.collidesWithFamily(obstacle);
+			Robot collidedRobot = this.collidesWithRobot(obstacle);
+			if (collidedHuman != null) {
+				collidedHuman.kill();
+			}
+			if (collidedRobot != null) {
+				collidedRobot.remove();
 			}
 			if (obstacle.exploded()) {
 				iterator.remove();

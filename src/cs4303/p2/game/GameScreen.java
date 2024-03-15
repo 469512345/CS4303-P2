@@ -344,11 +344,11 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		int maxEntitiesPerRoom = Math.floorDiv(this.wave - 1, 3) + 1;
 
 		return new LevelInfo(
-			width * divisor,
-			height * divisor,
-			192,
+			1920 * divisor,
+			1080 * divisor,
 			180,
-			576,
+			180,
+			540,
 			540,
 			16,
 			80,
