@@ -30,18 +30,24 @@ public record TargetXRay(Entity target) implements Goal {
 			return;
 		}
 
-		LinkedList<Node> path = AStar.shortestPathBetween(startNode, endNode);
-		if (path == null) { // Shouldn't ever happen, but exit if unable to find end node in line of sight
-			return;
+		if(startNode == endNode) {
+			//If the nodes are the same, then just move to the player directly
+			entity.moveTowards(this.target.position.x, this.target.position.y);
+		} else {
+			//Otherwise use A* to get to the nearest node to the player
+			LinkedList<Node> path = AStar.shortestPathBetween(startNode, endNode);
+			if (path == null) { // Shouldn't ever happen, but exit if unable to find end node in line of sight
+				return;
+			}
+
+			Node target = startNode;
+
+			//Keep removing any nodes we have line of sight to. The closest node from above may not be the most direct path
+			while (!path.isEmpty() && entity.hasLineOfSight(path.peekFirst())) {
+				target = path.pollFirst();
+			}
+
+			entity.moveTowards(target.x(), target.y());
 		}
-
-		Node target = startNode;
-
-		//Keep removing any nodes we have line of sight to. The closest node from above may not be the most direct path
-		while (!path.isEmpty() && entity.hasLineOfSight(path.peekFirst())) {
-			target = path.pollFirst();
-		}
-
-		entity.moveTowards(target.x(), target.y());
 	}
 }

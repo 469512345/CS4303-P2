@@ -17,7 +17,10 @@ public record Wander(Node node, Collection<Node> visited) implements Goal {
 
 	@Override
 	public void performGoal(AIEntity entity) {
-		if (entity.containsPoint(this.node.x(), this.node.y())) {
+		float distanceTo = this.node.distanceTo(entity.position);
+		boolean reachedNode = distanceTo < entity.radius();
+		//Node reached - pick a new one
+		if (reachedNode) {
 			List<Node> edges = this.node.edges();
 			LinkedList<Node> connectedNodes = new LinkedList<>(edges);
 			connectedNodes.removeIf(this.visited::contains);
@@ -25,7 +28,7 @@ public record Wander(Node node, Collection<Node> visited) implements Goal {
 			Node nextNode;
 
 			if (connectedNodes.isEmpty()) {
-				//We've reached a leaf room. Turn back and forget which nodes we've already visited
+				//We've reached a terminal leaf room. Turn back and forget which nodes we've already visited
 				int index = entity.game.main.random.nextInt(0, edges.size());
 
 				nextNode = edges.get(index);
@@ -38,7 +41,8 @@ public record Wander(Node node, Collection<Node> visited) implements Goal {
 			}
 
 			this.visited.add(this.node);
-			entity.setGoal(new Wander(nextNode, this.visited));
+			entity.wander(nextNode, this.visited);
+			entity.moveTowards(nextNode.x(), nextNode.y());
 		}
 		entity.moveTowards(this.node.x(), this.node.y());
 	}

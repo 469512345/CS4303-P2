@@ -20,11 +20,6 @@ public class Grandparent extends Family {
 	}
 
 	@Override
-	public void recalculateGoal() {
-
-	}
-
-	@Override
 	public int pointsForRescuing() {
 		return 150;
 	}

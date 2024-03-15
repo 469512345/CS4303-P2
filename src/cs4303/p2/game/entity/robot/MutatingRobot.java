@@ -1,6 +1,7 @@
 package cs4303.p2.game.entity.robot;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.game.entity.family.Family;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -18,11 +19,6 @@ public class MutatingRobot extends Robot {
 	 */
 	public MutatingRobot(GameScreen game, PVector position) {
 		super(game, position);
-	}
-
-	@Override
-	public void recalculateGoal() {
-
 	}
 
 	@Override
@@ -53,5 +49,30 @@ public class MutatingRobot extends Robot {
 	@Override
 	public float radius() {
 		return 4;
+	}
+
+	@Override
+	public void killFamilyMember(Family family) {
+		this.game.addRobot(new MutatedFamilyRobot(family));
+		this.game.level.family.remove(family);
+	}
+
+	@Override
+	public void recalculateGoal() {
+		Family familyMember = this.nearestKnowsLocation(this.game.level.family);
+		if (familyMember != null) {
+			this.target(familyMember);
+		} else {
+			if(this.knowsLocationOf(this.game.player)) {
+				this.target(this.game.player);
+			} else {
+				this.wander();
+			}
+		}
+	}
+
+	@Override
+	public boolean canSeeHumansThroughWalls() {
+		return super.canSeeHumansThroughWalls();
 	}
 }

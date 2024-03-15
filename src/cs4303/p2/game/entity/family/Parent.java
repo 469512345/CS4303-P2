@@ -20,11 +20,6 @@ public class Parent extends Family {
 	}
 
 	@Override
-	public void recalculateGoal() {
-
-	}
-
-	@Override
 	public int pointsForRescuing() {
 		return 100;
 	}

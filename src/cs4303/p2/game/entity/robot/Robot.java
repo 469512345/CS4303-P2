@@ -3,6 +3,7 @@ package cs4303.p2.game.entity.robot;
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
+import cs4303.p2.game.entity.family.Family;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -11,11 +12,6 @@ import java.awt.Color;
  * Base class for robots
  */
 public abstract class Robot extends AIEntity {
-
-	/**
-	 * Whether this robot is dead
-	 */
-	private boolean dead = false;
 
 	/**
 	 * Construct an enemy
@@ -42,22 +38,36 @@ public abstract class Robot extends AIEntity {
 	/**
 	 * Mark this robot as killed, and for removal on next update cycle
 	 */
+	@Override
 	public void kill() {
-		this.dead = true;
 		this.game.addScore(this.pointsForKilling());
+		this.remove();
 	}
 
 	/**
-	 * Whether this robot is dead, and should be removed from the world
+	 * Kill a family member
 	 *
-	 * @return true if this robot is dead, false otherwise
+	 * @param family family member to kill
 	 */
-	public boolean dead() {
-		return this.dead;
+	public void killFamilyMember(Family family) {
+		family.kill();
+	}
+
+	/**
+	 * Mark this robot as killed, but don't increment score
+	 */
+	@Override
+	public void remove() {
+		this.active = false;
 	}
 
 	@Override
 	protected Color eyeColor() {
 		return Color.RED;
+	}
+
+	@Override
+	public boolean canSeeHumansThroughWalls() {
+		return true;
 	}
 }

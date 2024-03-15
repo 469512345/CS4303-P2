@@ -29,6 +29,10 @@ public abstract class Entity implements Circle {
 	 * The current orientation
 	 */
 	protected float orientation = 0;
+	/**
+	 * Whether this entity is alive
+	 */
+	protected boolean active = true;
 
 	/**
 	 * Construct an target
@@ -39,6 +43,15 @@ public abstract class Entity implements Circle {
 	public Entity(GameScreen game, PVector position) {
 		this.game = game;
 		this.position = position;
+	}
+
+	/**
+	 * Get a copy of the entity's current position
+	 *
+	 * @return copy of the entity's current position
+	 */
+	public PVector copyPosition() {
+		return this.position.copy();
 	}
 
 	/**
@@ -151,10 +164,29 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
+	 * Whether this entity is active, ie still alive and on the map
+	 *
+	 * @return true if this entity is active, false otherwise
+	 */
+	public boolean isActive() {
+		return this.active;
+	}
+
+	/**
+	 * Kill this entity, possibly adding to the score
+	 */
+	public abstract void kill();
+
+	/**
+	 * Remove this entity from the map without affecting the score
+	 */
+	public abstract void remove();
+
+	/**
 	 * Move the target, respecting collisions with the map
 	 */
-	protected void move() {
-		this.game.level.moveNoBounce(this.position, this.velocity, this.game.main.PLAYER_RADIUS_SQUARED);
+	public void move() {
+		this.game.level.moveNoBounce(this.position, this.velocity, this.radius() * this.radius());
 
 		//Update velocity if there is currently movement
 		if (this.velocity.mag() > 0) {
@@ -204,7 +236,7 @@ public abstract class Entity implements Circle {
 	 * @return true of this target can see the given target, false otherwise
 	 */
 	public boolean canSee(Entity entity) {
-		return this.hasLineOfSight(entity) ||
+		return entity.isActive() && (this.hasLineOfSight(entity) ||
 			switch (entity.type()) {
 				case HUMAN -> this.canSeeHumansThroughWalls();
 				case ROBOT -> this.canSeeRobotsThroughWalls();
@@ -212,7 +244,7 @@ public abstract class Entity implements Circle {
 			switch (this.type()) {
 				case HUMAN -> entity.canBeSeenThroughWallsByHumans();
 				case ROBOT -> entity.canBeSeenThroughWallsByRobots();
-			};
+			});
 	}
 
 	/**
@@ -257,7 +289,7 @@ public abstract class Entity implements Circle {
 	 * @return true if this enemy has line of sight to the target, false otherwise
 	 */
 	public boolean hasLineOfSight(Entity target) {
-		return this.hasLineOfSight(target.position);
+		return target.isActive() && this.hasLineOfSight(target.position);
 	}
 
 	@Override

@@ -21,6 +21,10 @@ public class OptionsScreen extends AbstractMenuScreen {
 	 */
 	private final Button toggleFriendlyFireButton;
 	/**
+	 *
+	 */
+	private final Button toggleShowPathfindingInfoButton;
+	/**
 	 * Button to return back to the previous screen
 	 */
 	private final Button returnButton;
@@ -37,6 +41,7 @@ public class OptionsScreen extends AbstractMenuScreen {
 		this.returnScreen = returnScreen;
 
 		this.toggleFriendlyFireButton = new Button(this.main, "Friendly fire", this.main.rect());
+		this.toggleShowPathfindingInfoButton = new Button(this.main, "Show Pathfinding Info", this.main.rect());
 		this.returnButton = new Button(this.main, "Back", this.main.rect());
 	}
 
@@ -48,10 +53,13 @@ public class OptionsScreen extends AbstractMenuScreen {
 	@Override
 	public void draw() {
 		String friendlyFire = this.main.FRIENDLY_FIRE ? "Enabled" : "Disabled";
+		String showPathfindingInfo = this.main.SHOW_PATHFINDING_INFO ? "Enabled" : "Disabled";
 		this.toggleFriendlyFireButton.text("Friendly fire: " + friendlyFire);
+		this.toggleShowPathfindingInfoButton.text("Pathfinding info: " + showPathfindingInfo);
 		this.drawMenu(
 			"Options",
 			this.toggleFriendlyFireButton,
+			this.toggleShowPathfindingInfoButton,
 			this.returnButton
 		);
 	}
@@ -60,6 +68,8 @@ public class OptionsScreen extends AbstractMenuScreen {
 	public void mouseClicked(MouseEvent event) {
 		if (this.toggleFriendlyFireButton.clicked(event)) {
 			this.main.FRIENDLY_FIRE = !this.main.FRIENDLY_FIRE;
+		} else if (this.toggleShowPathfindingInfoButton.clicked(event)) {
+			this.main.SHOW_PATHFINDING_INFO = !this.main.SHOW_PATHFINDING_INFO;
 		} else if (this.returnButton.clicked(event)) {
 			this.main.setScreen(this.returnScreen);
 		}

@@ -1,6 +1,7 @@
 package cs4303.p2.game.entity.robot;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.game.entity.family.Family;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -21,7 +22,16 @@ public class FamilySeekingRobot extends Robot {
 
 	@Override
 	public void recalculateGoal() {
-
+		Family familyMember = this.nearestKnowsLocation(this.game.level.family);
+		if (familyMember != null) {
+			this.target(familyMember);
+		} else {
+			if(this.hasLineOfSight(this.game.player)) {
+				this.target(this.game.player);
+			} else {
+				this.wander();
+			}
+		}
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package cs4303.p2.game.entity.robot;
 
-import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.family.Family;
-import processing.core.PVector;
 
 import java.awt.Color;
 
@@ -19,18 +17,23 @@ public class MutatedFamilyRobot extends Robot {
 	/**
 	 * Construct a mutated family member
 	 *
-	 * @param game     game instance
-	 * @param position initial position
-	 * @param family   the family member that was mutated into this robot
+	 * @param family the family member that was mutated into this robot
 	 */
-	public MutatedFamilyRobot(GameScreen game, PVector position, Family family) {
-		super(game, position);
+	public MutatedFamilyRobot(Family family) {
+		super(family.game, family.position);
 		this.familyMember = family;
 	}
 
 	@Override
 	public int pointsForKilling() {
 		return 150;
+	}
+
+	@Override
+	public void kill() {
+		super.kill();
+		this.game.level.family.add(this.familyMember);
+		this.familyMember.recalculateGoal();
 	}
 
 	@Override
@@ -60,6 +63,15 @@ public class MutatedFamilyRobot extends Robot {
 
 	@Override
 	public void recalculateGoal() {
+		if (this.knowsLocationOf(this.game.player)) {
+			this.target(this.game.player);
+		} else {
+			this.wander();
+		}
+	}
 
+	@Override
+	public boolean canSeeHumansThroughWalls() {
+		return false;
 	}
 }

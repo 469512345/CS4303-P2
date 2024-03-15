@@ -61,6 +61,39 @@ public class AStar {
 	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
 	 */
 	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(T start, T end, Predicate<T> nodeFilter) {
+		long now = System.currentTimeMillis();
+
+		//If the end node doesn't pass the filter, perform a breadth first search to find a connected node that does. This won't be exact, but good enough
+		if (!nodeFilter.test(end)) {
+			List<T> currentEdge = end.edges();
+			LinkedList<T> closed = new LinkedList<>();
+			LinkedList<T> newEdge = new LinkedList<>();
+			boolean foundReplacementEnd = false;
+			while (!foundReplacementEnd) {
+				for (T node : currentEdge) {
+					if (foundReplacementEnd) {
+						break;
+					}
+					for (T connected : node.edges()) {
+						if (newEdge.contains(connected) || currentEdge.contains(connected)) {
+							continue;
+						}
+						if (nodeFilter.test(connected)) {
+							end = connected;
+							foundReplacementEnd = true;
+							break;
+						} else {
+							newEdge.add(connected);
+						}
+					}
+				}
+				closed.addAll(currentEdge);
+				currentEdge.clear();
+				currentEdge.addAll(newEdge);
+				newEdge.clear();
+			}
+		}
+
 		ArrayList<AStarNodeInfo<T>> open = new ArrayList<>();
 		ArrayList<AStarNodeInfo<T>> closed = new ArrayList<>();
 
@@ -102,8 +135,6 @@ public class AStar {
 				current = min.get();
 			} else {
 				// If the open list is empty, then there is no path to the destination node.
-				// This should never happen given the tree based room generation,
-				// but this algorithm should still protect against this case
 				return null;
 			}
 		}

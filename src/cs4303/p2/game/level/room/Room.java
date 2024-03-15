@@ -189,7 +189,7 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 
 		boolean passRandomChance = random.nextFloat(0, 1) < levelInfo.splitChance();
 
-		if (!(mustVerticalSplit || mustHorizontalSplit) && (!verticalSplitAllowed && !horizontalSplitAllowed || !passRandomChance)) {
+		if (!(mustVerticalSplit || mustHorizontalSplit) && ((!verticalSplitAllowed && !horizontalSplitAllowed) || !passRandomChance)) {
 			float lower = levelInfo.minMargin();
 			float upper = levelInfo.maxMargin();
 
@@ -258,9 +258,16 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 * @return created room instance
 	 */
 	public static Room createRoot(GameScreen game, LevelInfo levelInfo) {
-		Room room = createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
-		room.connectNodes();
-		return room;
+		//Sometimes level generation will fail due to bad random numbers.
+		//It's a dirty fix, but it works...
+		while (true) {
+			try {
+				Room room = createRoom(game, null, levelInfo, 0, 0, levelInfo.width(), levelInfo.height());
+				room.connectNodes();
+				return room;
+			} catch (IllegalArgumentException ignored) {
+			}
+		}
 	}
 
 	@Override

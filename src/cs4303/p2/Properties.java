@@ -224,6 +224,10 @@ public abstract class Properties extends PApplet {
 	 * Whether the player can kill their own family, or themself
 	 */
 	public boolean FRIENDLY_FIRE = false;
+	/**
+	 * Whether to show lines representing paths of entities
+	 */
+	public boolean SHOW_PATHFINDING_INFO = true;
 
 	/**
 	 * How many ticks between recalculating the AI for an entity

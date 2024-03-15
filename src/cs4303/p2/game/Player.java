@@ -115,24 +115,6 @@ public final class Player extends Entity implements ProjectileSource {
 	}
 
 	/**
-	 * Get a copy of the player's current position
-	 *
-	 * @return copy of the player's current position
-	 */
-	public PVector copyPosition() {
-		return this.position.copy();
-	}
-
-	/**
-	 * Set the player's position to a new PVector, and clear the position history
-	 *
-	 * @param position new position
-	 */
-	public void setPosition(PVector position) {
-
-	}
-
-	/**
 	 * Respawn the player in a position
 	 *
 	 * @param position position to respawn
@@ -189,5 +171,20 @@ public final class Player extends Entity implements ProjectileSource {
 	@Override
 	protected EntityType type() {
 		return EntityType.HUMAN;
+	}
+
+	@Override
+	public void kill() {
+		//Do nothing
+	}
+
+	@Override
+	public void remove() {
+		//Do nothing
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 }

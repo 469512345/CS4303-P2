@@ -3,20 +3,15 @@ package cs4303.p2.game.entity.family;
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
-import cs4303.p2.game.entity.ai.TargetSight;
-import cs4303.p2.game.entity.ai.Wander;
-import cs4303.p2.game.level.Node;
+import cs4303.p2.game.entity.robot.Robot;
 import processing.core.PVector;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 /**
  * A member of the last family
  */
 public abstract class Family extends AIEntity {
-
-	private boolean rescued = false;
 
 	/**
 	 * Construct a family member
@@ -44,24 +39,21 @@ public abstract class Family extends AIEntity {
 	 * Mark this family member as rescued
 	 */
 	public void rescue() {
-		this.rescued = true;
+		this.active = false;
 		this.game.addScore(this.pointsForRescuing());
 	}
 
 	/**
 	 * Mark this family member as killed
 	 */
+	@Override
 	public void kill() {
-		this.rescued = true;
+		this.active = false;
 	}
 
-	/**
-	 * Whether this family member has been rescued
-	 *
-	 * @return true if this family member has been rescued
-	 */
-	public boolean rescued() {
-		return this.rescued;
+	@Override
+	public void remove() {
+		this.active = false;
 	}
 
 	@Override
@@ -71,14 +63,28 @@ public abstract class Family extends AIEntity {
 
 	@Override
 	public void recalculateGoal() {
-		Node closest = this.game.level.closestNodeTo(this.position.x, this.position.y, true);
-		this.setGoal(new Wander(closest, new ArrayList<>()));
+		Robot nearestRobot = this.nearestInLineOfSight(this.game.level.robots);
+		boolean canSeePlayer = this.knowsLocationOf(this.game.player);
+		boolean canSeeEnemy = nearestRobot != null;
+		if (canSeePlayer) {
+			if (canSeeEnemy) {
+				float nearestDistance = this.distanceTo(nearestRobot);
+				if (nearestDistance < this.distanceTo(this.game.player)) {
+					this.fleeFrom(nearestRobot);
+				} else {
+					this.target(this.game.player);
+				}
+			} else {
+				this.target(this.game.player);
+			}
+		} else {
+			if (canSeeEnemy) {
+				this.fleeFrom(nearestRobot);
+			} else {
+				this.wander();
+			}
+		}
 	}
 
-	@Override
-	public void update() {
-//		if(this.canSee(this.game.player)) {
-//			this.setGoal(new TargetSight(this.game.player, this.game.player.copyPosition()));
-//		}
-	}
+
 }

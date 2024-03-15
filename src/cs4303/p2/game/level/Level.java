@@ -16,13 +16,11 @@ import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
 import processing.core.PVector;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -67,7 +65,7 @@ public class Level {
 	/**
 	 * Nodes in the graph-based representation of the world
 	 */
-	private final List<Node> nodes = new LinkedList<>();
+	public final List<Node> nodes = new LinkedList<>();
 	/**
 	 * Projectiles currently active in the world
 	 */
@@ -87,11 +85,11 @@ public class Level {
 	/**
 	 * Family members in the world
 	 */
-	private final List<Family> family = new LinkedList<>();
+	public final List<Family> family = new LinkedList<>();
 	/**
 	 * Robots in the world
 	 */
-	private final List<Robot> robots = new LinkedList<>();
+	public final List<Robot> robots = new LinkedList<>();
 
 	/**
 	 * Create a new level
@@ -112,21 +110,43 @@ public class Level {
 
 		this.root.appendRooms(this.rooms);
 		LinkedList<LeafRoom> singlyConnectedRooms = new LinkedList<>(this.rooms);
-		singlyConnectedRooms.removeIf(room -> room.corridors.size() != 1); //The starting room must only have 1 corridor
+		singlyConnectedRooms.removeIf(room -> room.corridors.size() >= 2); //The starting room must only have 1 corridor
 		this.startingRoom = singlyConnectedRooms.get(random.nextInt(singlyConnectedRooms.size()));
 
-		//Populate content in rooms
-		for (LeafRoom room : this.rooms) {
-			//Don't put anything in the starting room
-			if (room == this.startingRoom) {
-				continue;
-			}
-			this.addObstaclesToRegion(room, this.levelInfo.minObstaclesPerRoom(), this.levelInfo.maxObstaclesPerRoom());
-			//Determine if the room should have robots or humans in it
-			if (random.nextFloat(0, 1) < this.levelInfo.roomRobotChance()) {
-				this.addRobotsToRegion(room);
-			} else {
-				this.addHumansToRegion(room);
+		if (this.rooms.size() == 1) {
+			//Inject a dummy obstacle to act as the player, and ensure nothing spawns touching the player
+			Obstacle dummyPlayer = new Obstacle(game, startingRoom.centre(), this.game.main.PLAYER_RADIUS);
+			this.obstacles.add(dummyPlayer);
+			this.addObstaclesToRegion(
+				this.startingRoom,
+				this.levelInfo.minObstaclesPerRoom(),
+				this.levelInfo.maxObstaclesPerCorridor()
+			);
+			this.addHumansToRegion(this.startingRoom);
+			this.addRobotsToRegion(this.startingRoom);
+			this.obstacles.remove(dummyPlayer);
+		} else {
+			//Populate content in rooms
+
+			//Ensure that the first room always gets robots - this guarantees all levels will have robots somewhere
+			boolean firstRoom = true;
+			for (LeafRoom room : this.rooms) {
+				//Don't put anything in the starting room if there is more than one room
+				if (room == this.startingRoom) {
+					continue;
+				}
+				this.addObstaclesToRegion(
+					room,
+					this.levelInfo.minObstaclesPerRoom(),
+					this.levelInfo.maxObstaclesPerRoom()
+				);
+				//Determine if the room should have robots or humans in it
+				if (firstRoom || random.nextFloat(0, 1) < this.levelInfo.roomRobotChance()) {
+					firstRoom = false;
+					this.addRobotsToRegion(room);
+				} else {
+					this.addHumansToRegion(room);
+				}
 			}
 		}
 
@@ -441,10 +461,10 @@ public class Level {
 		while (iterator.hasNext()) {
 			Family familyMember = iterator.next();
 			familyMember.update();
-			if (!familyMember.rescued() && familyMember.intersects(this.game.player)) {
+			if (familyMember.isActive() && familyMember.intersects(this.game.player)) {
 				familyMember.rescue();
 			}
-			if (familyMember.rescued()) {
+			if (!familyMember.isActive()) {
 				iterator.remove();
 			}
 		}
@@ -458,11 +478,16 @@ public class Level {
 		while (iterator.hasNext()) {
 			Robot robot = iterator.next();
 			robot.update();
-			if (!robot.dead() && robot.intersects(this.game.player)) {
+			if (robot.isActive() && robot.intersects(this.game.player)) {
 				this.game.die();
 			}
-			if (robot.dead()) {
+			Family familyMember = this.game.level.collidesWithFamily(robot);
+			if (robot.isActive() && familyMember != null) {
+				robot.killFamilyMember(familyMember);
+			}
+			if (!robot.isActive()) {
 				iterator.remove();
+				this.game.checkRoundOver();
 			}
 		}
 	}

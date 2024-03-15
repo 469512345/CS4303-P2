@@ -7,12 +7,13 @@ import cs4303.p2.game.entity.family.Parent;
 import cs4303.p2.game.entity.robot.FamilySeekingRobot;
 import cs4303.p2.game.entity.robot.MutatingRobot;
 import cs4303.p2.game.entity.robot.PlayerSeekingRobot;
+import cs4303.p2.game.entity.robot.Robot;
 import cs4303.p2.game.level.Level;
 import cs4303.p2.game.level.LevelInfo;
-import cs4303.p2.game.level.Node;
 import cs4303.p2.game.subscreens.DiedScreen;
 import cs4303.p2.game.subscreens.GameOverScreen;
 import cs4303.p2.game.subscreens.PauseScreen;
+import cs4303.p2.game.subscreens.WaveCompleteScreen;
 import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.screen.DeferredDrawTarget;
 import cs4303.p2.util.screen.DrawTarget;
@@ -23,7 +24,6 @@ import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import java.awt.Color;
 import java.util.LinkedList;
 
 /**
@@ -72,6 +72,13 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 * Milliseconds since the start of the game
 	 */
 	public long gameTimeMillis;
+
+	/**
+	 * List storing any robots which are created during the update cycle. Adding these during the cycle would cause a
+	 * {@link java.util.ConcurrentModificationException}, so instead we add them to this list, then purge the list after
+	 * the update cycle.
+	 */
+	private final LinkedList<Robot> newRobots = new LinkedList<Robot>();
 
 	/**
 	 * Create a game instance with existing score, lives etc
@@ -153,6 +160,8 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 		this.gameTimeMillis += this.deltaTime;
 		this.player.update();
 		this.level.update();
+		this.level.robots.addAll(this.newRobots);
+		this.newRobots.clear();
 	}
 
 	@Override
@@ -311,8 +320,6 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	public LevelInfo generateLevelInfo() {
 		float width = this.main.width;
 		float height = this.main.height;
-		float minWidth = width / 10f;
-		float minHeight = height / 6f;
 
 		LevelInfo.HumanConstructor[] familyConstructors = {
 			Child::new,
@@ -326,13 +333,18 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 			MutatingRobot::new
 		};
 
+		//Use the same generation as level 2 for level 1
+		int effectiveWave = Math.max(this.wave, 2);
+
+		float divisor = (float) (Math.log(effectiveWave) / 4f + 0.2f);
+
 		return new LevelInfo(
-			width,
-			height,
-			minWidth,
-			minHeight,
-			3 * minWidth,
-			3 * minHeight,
+			width * divisor,
+			height * divisor,
+			192,
+			180,
+			576,
+			540,
 			16,
 			80,
 			0.8f,
@@ -344,10 +356,10 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 			0,
 			1,
 			1,
-			3,
+			1,
 			familyConstructors,
 			1,
-			3,
+			1,
 			robotConstructors,
 			0.6f
 		);
@@ -379,12 +391,32 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 * @return game instance for the next wave
 	 */
 	public GameScreen nextWave() {
-		return new GameScreen(this.main, this.wave + 1, this.score, this.lives);
+		GameScreen next = new GameScreen(this.main, this.wave + 1, this.score, this.lives);
+		next.scale = this.scale;
+		return next;
 	}
 
 	//Defer drawing via builders to the main instance
 	@Override
 	public DrawTarget deferRenderingTo() {
 		return this.main;
+	}
+
+	/**
+	 * Check if the round is over, and if so move onto the next wave
+	 */
+	public void checkRoundOver() {
+		if (this.level.robots.isEmpty()) {
+			this.main.setScreen(new WaveCompleteScreen(this));
+		}
+	}
+
+	/**
+	 * Add a robot to the temporary list, which will be added to the main list after the update cycle has finished
+	 *
+	 * @param robot robot to add
+	 */
+	public void addRobot(Robot robot) {
+		this.newRobots.add(robot);
 	}
 }
