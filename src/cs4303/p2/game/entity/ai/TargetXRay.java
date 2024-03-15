@@ -16,7 +16,7 @@ import java.util.LinkedList;
 public record TargetXRay(Entity target) implements Goal {
 	@Override
 	public void performGoal(@NotNull AIEntity entity) {
-		//If we can see the target, then move onto targetting with line of sight
+		//If we can see the target, then move onto targeting with line of sight
 		if (entity.hasLineOfSight(this.target)) {
 			entity.moveTowards(this.target.position.x, this.target.position.y);
 			return;
