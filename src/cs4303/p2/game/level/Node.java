@@ -60,6 +60,17 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	}
 
 	/**
+	 * Calculate the distance to a point
+	 *
+	 * @param point position vector of point
+	 *
+	 * @return distance to the point
+	 */
+	public float distanceTo(PVector point) {
+		return this.distanceTo(point.x, point.y);
+	}
+
+	/**
 	 * Calculate the distance squared to a point
 	 *
 	 * @param x x coordinate of point
