@@ -230,7 +230,8 @@ public interface Collidable {
 	) {
 		float diffX = c1X - c2X;
 		float diffY = c1Y - c2Y;
-		return Math.sqrt((diffX * diffX) + (diffY * diffY)) <= (c1R + c2R);
+		float combinedRadius = c1R + c2R;
+		return (diffX * diffX) + (diffY * diffY) <= (combinedRadius * combinedRadius);
 	}
 
 	/**
