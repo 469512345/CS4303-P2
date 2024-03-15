@@ -258,7 +258,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	private void fire() {
 		PVector position = this.player.copyPosition();
 		PVector velocity = new PVector(this.main.mouseX, this.main.mouseY);
-		this.unconvert(velocity); // Convert the screen coordinates back to world coordinates
+		this.screenToWorld(velocity); // Convert the screen coordinates back to world coordinates
 		velocity.sub(position)
 			.setMag(this.main.PLAYER_PROJECTILE_MOVEMENT_VELOCITY);
 		Projectile projectile = new Projectile(this, position, velocity, this.player);

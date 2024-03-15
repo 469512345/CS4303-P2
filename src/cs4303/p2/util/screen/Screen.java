@@ -149,7 +149,7 @@ public interface Screen {
 	 *
 	 * @return transformed x coordinate in screen coordinates
 	 */
-	default float convertX(float x) {
+	default float worldToScreenX(float x) {
 		return this.scale() * (x + this.offsetX());
 	}
 
@@ -160,7 +160,7 @@ public interface Screen {
 	 *
 	 * @return transformed y coordinate in screen coordinates
 	 */
-	default float convertY(float y) {
+	default float worldToScreenY(float y) {
 		return this.scale() * (y + this.offsetY());
 	}
 
@@ -169,8 +169,8 @@ public interface Screen {
 	 *
 	 * @param point position vector in world coordinates
 	 */
-	default void convert(@NotNull PVector point) {
-		point.set(this.convertX(point.x), this.convertY(point.y));
+	default void worldToScreen(@NotNull PVector point) {
+		point.set(this.worldToScreenX(point.x), this.worldToScreenY(point.y));
 	}
 
 	/**
@@ -180,7 +180,7 @@ public interface Screen {
 	 *
 	 * @return reverse transformed x coordinate in world coordinates
 	 */
-	default float unconvertX(float x) {
+	default float screenToWorldX(float x) {
 		return x / this.scale() - this.offsetX();
 	}
 
@@ -191,7 +191,7 @@ public interface Screen {
 	 *
 	 * @return reverse transformed y coordinate in world coordinates
 	 */
-	default float unconvertY(float y) {
+	default float screenToWorldY(float y) {
 		return y / this.scale() - this.offsetY();
 	}
 
@@ -200,8 +200,8 @@ public interface Screen {
 	 *
 	 * @param point position vector in screen coordinates
 	 */
-	default void unconvert(@NotNull PVector point) {
-		point.set(this.unconvertX(point.x), this.unconvertY(point.y));
+	default void screenToWorld(@NotNull PVector point) {
+		point.set(this.screenToWorldX(point.x), this.screenToWorldY(point.y));
 	}
 
 }

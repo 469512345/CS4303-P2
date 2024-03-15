@@ -6,6 +6,10 @@ import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import processing.event.MouseEvent;
 
+import processing.event.KeyEvent;
+
+import java.awt.*;
+
 /**
  * Menu screen, when the game opens
  */
@@ -52,6 +56,11 @@ public class MenuScreen extends AbstractMenuScreen {
 			this.optionsButton,
 			this.exitDesktopButton
 		);
+		this.text("Press any key to begin...")
+				.fill(Color.WHITE)
+				.size(50)
+				.centredHorizontally(0, this.main.height * 0.75f, this.main.width)
+				.draw();
 	}
 
 	@Override
@@ -63,5 +72,11 @@ public class MenuScreen extends AbstractMenuScreen {
 		} else if (this.exitDesktopButton.clicked(event)) {
 			this.main.exit();
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent event) {
+		GameScreen gameScreen = new GameScreen(this.main);
+		this.main.setScreen(gameScreen);
 	}
 }
