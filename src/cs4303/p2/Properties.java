@@ -229,15 +229,6 @@ public abstract class Properties extends PApplet {
 	public final int OBSTACLE_EXPLODE_SCORE = 10;
 
 	/**
-	 * Whether the player can kill their own family, or themself
-	 */
-	public boolean FRIENDLY_FIRE = false;
-	/**
-	 * Whether to show lines representing paths of entities
-	 */
-	public boolean SHOW_PATHFINDING_INFO = true;
-
-	/**
 	 * How many ticks between recalculating the AI for an entity
 	 */
 	public final int CALCULATE_AI_EVERY_TICKS = 30;
@@ -285,4 +276,14 @@ public abstract class Properties extends PApplet {
 	 * Separation between the tops of powerups on the HUD
 	 */
 	public final float POWERUP_HUD_SEPARATION = 100;
+
+	//OPTIONS
+	/**
+	 * Whether the player can kill their own family, or themself
+	 */
+	public boolean FRIENDLY_FIRE = false;
+	/**
+	 * Whether to show lines representing paths of entities
+	 */
+	public boolean SHOW_PATHFINDING_INFO = false;
 }
