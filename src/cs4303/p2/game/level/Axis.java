@@ -1,5 +1,7 @@
 package cs4303.p2.game.level;
 
+import cs4303.p2.util.annotation.NotNull;
+
 /**
  * Enum representing the two axes for level generation
  */
@@ -18,6 +20,7 @@ public enum Axis {
 	 *
 	 * @return the other axis
 	 */
+	@NotNull
 	public Axis other() {
 		return this == HORIZONTAL ? VERTICAL : HORIZONTAL;
 	}

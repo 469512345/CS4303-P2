@@ -1,6 +1,7 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.collisions.Rectangle;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -67,7 +68,7 @@ public class Button implements Rectangle {
 	 * @param text      text on button
 	 * @param rectangle rectangle definition
 	 */
-	public Button(Main app, String text, Rectangle rectangle) {
+	public Button(Main app, String text, @NotNull Rectangle rectangle) {
 		this(app, text, rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
 	}
 
@@ -78,6 +79,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public Button text(String text) {
 		this.text = text;
 		return this;
@@ -90,7 +92,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public Button copy(Rectangle rectangle) {
+	public Button copy(@NotNull Rectangle rectangle) {
 		return this.at(rectangle.minX(), rectangle.minY())
 			.size(rectangle.width(), rectangle.height());
 	}
@@ -103,6 +105,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public Button at(float minX, float minY) {
 		this.minX = minX;
 		this.minY = minY;
@@ -116,7 +119,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public Button at(PVector position) {
+	public Button at(@NotNull PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -128,6 +131,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public Button size(float width, float height) {
 		this.width = width;
 		this.height = height;
@@ -141,7 +145,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public Button at(Rectangle rectangle) {
+	public Button at(@NotNull Rectangle rectangle) {
 		return this.at(rectangle.minX(), rectangle.minY())
 			.size(rectangle.width(), rectangle.height());
 	}
@@ -164,6 +168,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public Button hud(boolean hud) {
 		this.hud = hud;
 		return this;
@@ -201,7 +206,7 @@ public class Button implements Rectangle {
 	 *
 	 * @return true if mouse event occurs within the button
 	 */
-	public boolean clicked(MouseEvent event) {
+	public boolean clicked(@NotNull MouseEvent event) {
 		return this.containsPoint(event.getX(), event.getY());
 	}
 

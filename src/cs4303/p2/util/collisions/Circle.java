@@ -1,5 +1,6 @@
 package cs4303.p2.util.collisions;
 
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 
 /**
@@ -33,12 +34,13 @@ public interface Circle extends Collidable {
 	 *
 	 * @return position vector of centre of the circle
 	 */
+	@NotNull
 	default PVector centre() {
 		return new PVector(this.centreX(), this.centreY());
 	}
 
 	@Override
-	default boolean intersects(Circle other) {
+	default boolean intersects(@NotNull Circle other) {
 		return Collidable.circleIntersectsCircle(
 			this.centreX(), this.centreY(), this.radius(),
 			other.centreX(), other.centreY(), other.radius()
@@ -46,7 +48,7 @@ public interface Circle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Rectangle other) {
+	default boolean intersects(@NotNull Rectangle other) {
 		return Collidable.circleIntersectsRect(
 			this.centreX(), this.centreY(), this.radius(),
 			other.minX(), other.minY(), other.width(), other.height()
@@ -54,7 +56,7 @@ public interface Circle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(VerticalLine verticalLine) {
+	default boolean intersects(@NotNull VerticalLine verticalLine) {
 		return Collidable.circleIntersectsVerticalLine(
 			this.centreX(), this.centreY(), this.radius(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
@@ -62,7 +64,7 @@ public interface Circle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(HorizontalLine horizontalLine) {
+	default boolean intersects(@NotNull HorizontalLine horizontalLine) {
 		return Collidable.circleIntersectsHorizontalLine(
 			this.centreX(), this.centreY(), this.radius(),
 			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
@@ -70,7 +72,7 @@ public interface Circle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Line line) {
+	default boolean intersects(@NotNull Line line) {
 		return Collidable.circleIntersectsLine(
 			this.centreX(), this.centreY(), this.radius(),
 			line.x1(), line.y1(), line.x2(), line.y2()
@@ -102,6 +104,7 @@ public interface Circle extends Collidable {
 	 *
 	 * @return circle with provided centre and radius
 	 */
+	@NotNull
 	static Circle of(float centreX, float centreY, float radius) {
 		return new CircleImpl(centreX, centreY, radius);
 	}

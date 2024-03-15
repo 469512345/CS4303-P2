@@ -1,6 +1,8 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -33,6 +35,7 @@ public final class LineBuilder {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
+	@Nullable
 	private Integer strokeColor;
 	/**
 	 * Stroke (outline) weight
@@ -65,6 +68,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder clear() {
 		this.startX = 0;
 		this.startY = 0;
@@ -83,7 +87,8 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	public LineBuilder stroke(Color strokeColor) {
+	@NotNull
+	public LineBuilder stroke(@NotNull Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -96,6 +101,7 @@ public final class LineBuilder {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
+	@NotNull
 	public LineBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
@@ -106,6 +112,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
@@ -118,6 +125,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
@@ -132,6 +140,7 @@ public final class LineBuilder {
 	 *
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder strokeCap(int strokeCap) {
 		this.strokeCap = strokeCap;
 		return this;
@@ -145,6 +154,7 @@ public final class LineBuilder {
 	 * @see PConstants#SQUARE
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder squareCap() {
 		return this.strokeCap(PConstants.SQUARE);
 	}
@@ -157,6 +167,7 @@ public final class LineBuilder {
 	 * @see PConstants#ROUND
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder roundCap() {
 		return this.strokeCap(PConstants.ROUND);
 	}
@@ -169,6 +180,7 @@ public final class LineBuilder {
 	 * @see PConstants#PROJECT
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder projectCap() {
 		return this.strokeCap(PConstants.PROJECT);
 	}
@@ -181,6 +193,7 @@ public final class LineBuilder {
 	 * @see PConstants#MITER
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder miterCap() {
 		return this.strokeCap(PConstants.MITER);
 	}
@@ -193,6 +206,7 @@ public final class LineBuilder {
 	 * @see PConstants#BEVEL
 	 * @see PApplet#strokeCap(int)
 	 */
+	@NotNull
 	public LineBuilder bevelCap() {
 		return this.strokeCap(PConstants.BEVEL);
 	}
@@ -204,7 +218,8 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	public LineBuilder from(PVector position) {
+	@NotNull
+	public LineBuilder from(@NotNull PVector position) {
 		return this.from(position.x, position.y);
 	}
 
@@ -216,6 +231,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder from(float x, float y) {
 		this.startX = x;
 		this.startY = y;
@@ -230,6 +246,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder translate(float x, float y) {
 		this.startX += x;
 		this.startY += y;
@@ -243,7 +260,8 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	public LineBuilder translate(PVector translation) {
+	@NotNull
+	public LineBuilder translate(@NotNull PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -254,7 +272,8 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
-	public LineBuilder to(PVector position) {
+	@NotNull
+	public LineBuilder to(@NotNull PVector position) {
 		return this.to(position.x, position.y);
 	}
 
@@ -266,6 +285,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder to(float x, float y) {
 		this.direction.set(x - this.startX, y - this.startY);
 		return this;
@@ -280,6 +300,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder along(PVector vector) {
 		this.direction.set(vector);
 		return this;
@@ -292,6 +313,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder limit(float limit) {
 		this.direction.limit(limit);
 		return this;
@@ -304,6 +326,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder length(float length) {
 		this.direction.setMag(length);
 		return this;
@@ -316,6 +339,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder asHUD() {
 		return this.hud(true);
 	}
@@ -328,6 +352,7 @@ public final class LineBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public LineBuilder hud(boolean hud) {
 		this.hud = hud;
 		return this;

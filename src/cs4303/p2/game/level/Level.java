@@ -9,6 +9,8 @@ import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.game.level.room.Room;
 import cs4303.p2.game.powerup.Powerup;
 import cs4303.p2.game.powerup.PowerupType;
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.collisions.Collidable;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -42,6 +44,7 @@ public class Level {
 	/**
 	 * Root of the room tree
 	 */
+	@NotNull
 	private final Room root;
 	/**
 	 * Horizontal walls
@@ -98,7 +101,7 @@ public class Level {
 	 * @param game      game instance
 	 * @param levelInfo level generation parameters
 	 */
-	public Level(GameScreen game, LevelInfo levelInfo) {
+	public Level(GameScreen game, @NotNull LevelInfo levelInfo) {
 		this.game = game;
 		this.levelInfo = levelInfo;
 		this.root = Room.createRoot(this.game, this.levelInfo);
@@ -185,7 +188,7 @@ public class Level {
 	 * @param min  minimum number of obstacles
 	 * @param max  maximum number of obstacles
 	 */
-	private void addObstaclesToRegion(Rectangle room, int min, int max) {
+	private void addObstaclesToRegion(@NotNull Rectangle room, int min, int max) {
 		Random random = this.game.main.random;
 		//Get the smallest dimension of the room
 		float minimumDimension = Math.min(room.height(), room.width());
@@ -212,7 +215,7 @@ public class Level {
 	 *
 	 * @param room room to populate
 	 */
-	private void addRobotsToRegion(Rectangle room) {
+	private void addRobotsToRegion(@NotNull Rectangle room) {
 		Random random = this.game.main.random;
 
 		LevelInfo.RobotConstructor[] constructors = this.levelInfo.robotConstructors();
@@ -234,7 +237,7 @@ public class Level {
 	 *
 	 * @param room room to populate
 	 */
-	private void addHumansToRegion(Rectangle room) {
+	private void addHumansToRegion(@NotNull Rectangle room) {
 		Random random = this.game.main.random;
 
 		LevelInfo.HumanConstructor[] constructors = this.levelInfo.humanConstructors();
@@ -257,7 +260,7 @@ public class Level {
 	 * @param room room to add powerup in
 	 * @param type type of powerup to add
 	 */
-	private void addPowerupToRegion(Rectangle room, PowerupType type) {
+	private void addPowerupToRegion(@NotNull Rectangle room, PowerupType type) {
 		Random random = this.game.main.random;
 
 		this.populateRegion(this.powerups, 1, 1,
@@ -280,11 +283,11 @@ public class Level {
 	 * @param <T>                type of item being populated
 	 */
 	private <T extends Collidable> void populateRegion(
-		Collection<T> collection,
+		@NotNull Collection<T> collection,
 		int min,
 		int max,
-		LevelInfo.ObjectConstructor<T> constructor,
-		BiConsumer<T, PVector> positionRandomizer
+		@NotNull LevelInfo.ObjectConstructor<T> constructor,
+		@NotNull BiConsumer<T, PVector> positionRandomizer
 	) {
 		Random random = this.game.main.random;
 		int objectsToAdd = random.nextInt(min, max + 1);
@@ -541,7 +544,7 @@ public class Level {
 	 * @param velocity      current velocity, will not be changed
 	 * @param radiusSquared radius squared of the circular object being moved
 	 */
-	public void moveNoBounce(PVector position, PVector velocity, float radiusSquared) {
+	public void moveNoBounce(@NotNull PVector position, @NotNull PVector velocity, float radiusSquared) {
 		float newX = position.x + velocity.x;
 		float newY = position.y + velocity.y;
 
@@ -575,7 +578,7 @@ public class Level {
 	 *
 	 * @return the number of bounces which were encountered
 	 */
-	public int moveBounce(PVector position, PVector velocity, float radius) {
+	public int moveBounce(@NotNull PVector position, @NotNull PVector velocity, float radius) {
 		return this.moveBounce(position, velocity, radius, 0, velocity.mag(), new HashSet<>());
 	}
 
@@ -592,12 +595,12 @@ public class Level {
 	 * @return the number of bounces which were encountered
 	 */
 	private int moveBounce(
-		PVector position,
-		PVector velocity,
+		@NotNull PVector position,
+		@NotNull PVector velocity,
 		float radius,
 		int count,
 		float initialMagnitude,
-		Set<Collidable> surfaces
+		@NotNull Set<Collidable> surfaces
 	) {
 		//Add the radius to the length of the velocity when checking trajectory
 		float mag = velocity.mag();
@@ -679,7 +682,7 @@ public class Level {
 	 *
 	 * @return true if the two points have line of sight, false if there is a wall in the way
 	 */
-	public boolean lineOfSightBetween(PVector point1, PVector point2) {
+	public boolean lineOfSightBetween(@NotNull PVector point1, @NotNull PVector point2) {
 		return !this.lineIntersectsWalls(Line.of(point1, point2));
 	}
 
@@ -707,7 +710,7 @@ public class Level {
 	 *
 	 * @return true if it intersects any wall, false otherwise
 	 */
-	private boolean lineIntersectsWalls(Line line) {
+	public boolean lineIntersectsWalls(Line line) {
 		return this.collidesWithWall(line) != null;
 	}
 
@@ -735,7 +738,8 @@ public class Level {
 	 *
 	 * @return object which collided, or null if none
 	 */
-	private <T extends Collidable> T collidesWithAnythingIn(Collidable subject, Collection<T> objects) {
+	@Nullable
+	private <T extends Collidable> T collidesWithAnythingIn(Collidable subject, @NotNull Collection<T> objects) {
 		for (T object : objects) {
 			if (object != subject && object.intersects(subject)) {
 				return object;
@@ -752,6 +756,7 @@ public class Level {
 	 *
 	 * @return first wall with collision, or null if none collided
 	 */
+	@Nullable
 	public Collidable collidesWithWall(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.walls);
 	}
@@ -764,6 +769,7 @@ public class Level {
 	 *
 	 * @return first obstacle with collision, or null if none collided
 	 */
+	@Nullable
 	public Obstacle collidesWithObstacle(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.obstacles);
 	}
@@ -776,6 +782,7 @@ public class Level {
 	 *
 	 * @return first family member with collision, or null if none collided
 	 */
+	@Nullable
 	private Family collidesWithFamily(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.family);
 	}
@@ -788,6 +795,7 @@ public class Level {
 	 *
 	 * @return first robot with collision, or null if none collided
 	 */
+	@Nullable
 	private Robot collidesWithRobot(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.robots);
 	}
@@ -800,6 +808,7 @@ public class Level {
 	 *
 	 * @return first projectile with collision, or null if none collided
 	 */
+	@Nullable
 	private Projectile collidesWithProjectile(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.projectiles);
 	}
@@ -812,6 +821,7 @@ public class Level {
 	 *
 	 * @return first powerup with collision, or null if none collided
 	 */
+	@Nullable
 	private Powerup collidesWithPowerup(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.powerups);
 	}
@@ -825,6 +835,7 @@ public class Level {
 	 *
 	 * @return node if it was found, or null if no nodes were found (for example if none had direct line of sight).
 	 */
+	@Nullable
 	public Node closestNodeTo(float x, float y, boolean requireLineOfSight) {
 		float smallestDistanceSq = Float.MAX_VALUE;
 		Node min = null;

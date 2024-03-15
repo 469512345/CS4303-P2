@@ -1,5 +1,6 @@
 package cs4303.p2.util.keybind;
 
+import cs4303.p2.util.annotation.NotNull;
 import processing.event.Event;
 import processing.event.MouseEvent;
 
@@ -32,7 +33,7 @@ public final class MouseKeybind implements Keybind {
 	 *
 	 * @param event event to mirror
 	 */
-	public MouseKeybind(MouseEvent event) {
+	public MouseKeybind(@NotNull MouseEvent event) {
 		this(event.getButton(), event.getModifiers());
 	}
 

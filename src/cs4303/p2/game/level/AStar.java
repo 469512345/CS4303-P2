@@ -1,5 +1,8 @@
 package cs4303.p2.game.level;
 
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +49,8 @@ public class AStar {
 	 *
 	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
 	 */
-	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(T start, T end) {
+	@Nullable
+	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(@NotNull T start, @NotNull T end) {
 		return shortestPathBetween(start, end, (node) -> true);
 	}
 
@@ -60,9 +64,8 @@ public class AStar {
 	 *
 	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
 	 */
-	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(T start, T end, Predicate<T> nodeFilter) {
-		long now = System.currentTimeMillis();
-
+	@Nullable
+	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(@NotNull T start, @NotNull T end, @NotNull Predicate<T> nodeFilter) {
 		//If the end node doesn't pass the filter, perform a breadth first search to find a connected node that does. This won't be exact, but good enough
 		if (!nodeFilter.test(end)) {
 			List<T> currentEdge = end.edges();
@@ -75,7 +78,7 @@ public class AStar {
 						break;
 					}
 					for (T connected : node.edges()) {
-						if (newEdge.contains(connected) || currentEdge.contains(connected)) {
+						if (newEdge.contains(connected) || currentEdge.contains(connected) || closed.contains(connected)) {
 							continue;
 						}
 						if (nodeFilter.test(connected)) {
@@ -186,7 +189,8 @@ public class AStar {
 		 *
 		 * @return node info wrapper for new node
 		 */
-		public static <T extends AStarNode<T>> AStarNodeInfo<T> next(T node, AStarNodeInfo<T> previous, T endNode) {
+		@NotNull
+		public static <T extends AStarNode<T>> AStarNodeInfo<T> next(@NotNull T node, @NotNull AStarNodeInfo<T> previous, T endNode) {
 			return new AStarNodeInfo<>(
 				node,
 				previous,
@@ -205,7 +209,8 @@ public class AStar {
 		 *
 		 * @return A* start node
 		 */
-		public static <T extends AStarNode<T>> AStarNodeInfo<T> startNode(T startNode, T endNode) {
+		@NotNull
+		public static <T extends AStarNode<T>> AStarNodeInfo<T> startNode(@NotNull T startNode, T endNode) {
 			return new AStarNodeInfo<>(
 				startNode,
 				null,

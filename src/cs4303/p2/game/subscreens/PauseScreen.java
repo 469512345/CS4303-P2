@@ -3,6 +3,7 @@ package cs4303.p2.game.subscreens;
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.menu.MenuScreen;
 import cs4303.p2.menu.OptionsScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
@@ -39,7 +40,7 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 	 *
 	 * @param game game instance
 	 */
-	public PauseScreen(GameScreen game) {
+	public PauseScreen(@NotNull GameScreen game) {
 		super(game);
 
 		this.continueButton = new Button(game.main, "Continue", game.rect()).asHUD();
@@ -62,7 +63,7 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
+	public void mouseClicked(@NotNull MouseEvent event) {
 		if (this.continueButton.clicked(event)) {
 			this.game.main.setScreen(this.game);
 		} else if (this.restartButton.clicked(event)) {
@@ -77,7 +78,7 @@ public final class PauseScreen extends AbstractGameMenuScreen {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent event) {
+	public void keyPressed(@NotNull KeyEvent event) {
 		if (event.getKeyCode() == PConstants.ESC) {
 			//Overwrite key to stop process ending
 			this.game.main.key = 0;

@@ -1,6 +1,7 @@
 package cs4303.p2;
 
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.EllipseBuilder;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.builder.RectBuilder;
@@ -175,6 +176,7 @@ public class Main extends Properties implements Rectangle, DrawTarget {
 	 *
 	 * @return textBuilder builder instance
 	 */
+	@NotNull
 	@Override
 	public TextBuilder text(String text) {
 		return this.textBuilder.clear()
@@ -186,6 +188,7 @@ public class Main extends Properties implements Rectangle, DrawTarget {
 	 *
 	 * @return ellipseBuilder instance
 	 */
+	@NotNull
 	@Override
 	public EllipseBuilder ellipse() {
 		return this.ellipseBuilder.clear();
@@ -196,6 +199,7 @@ public class Main extends Properties implements Rectangle, DrawTarget {
 	 *
 	 * @return rectBuilder instance
 	 */
+	@NotNull
 	@Override
 	public RectBuilder rect() {
 		return this.rectBuilder.clear();

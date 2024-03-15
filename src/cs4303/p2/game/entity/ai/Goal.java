@@ -8,9 +8,9 @@ import cs4303.p2.game.entity.AIEntity;
 public sealed interface Goal permits Flee, Wander, TargetSight, TargetXRay {
 
 	/**
-	 * Perform the goal on the enemy, updating position and velocity accordingly
+	 * Perform the goal on the entity, updating position and velocity accordingly
 	 *
-	 * @param entity
+	 * @param entity entity being controlled
 	 */
 	void performGoal(AIEntity entity);
 

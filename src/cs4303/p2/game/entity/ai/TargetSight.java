@@ -2,6 +2,7 @@ package cs4303.p2.game.entity.ai;
 
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.Entity;
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 
 /**
@@ -12,7 +13,7 @@ import processing.core.PVector;
  */
 public record TargetSight(Entity target, PVector lastKnownLocation) implements Goal {
 	@Override
-	public void performGoal(AIEntity entity) {
+	public void performGoal(@NotNull AIEntity entity) {
 		if (entity.hasLineOfSight(this.target)) {
 			//Move towards the enemy and update its last known position
 			entity.moveTowards(this.target.position.x, this.target.position.y);

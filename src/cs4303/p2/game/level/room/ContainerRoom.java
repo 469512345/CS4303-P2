@@ -129,6 +129,7 @@ public final class ContainerRoom extends Room {
 		this.corridor.draw();
 	}
 
+	@Nullable
 	@Override
 	public LeafRoom findRoom(Axis axis, AxisDirection direction) {
 		ArrayList<LeafRoom> children = new ArrayList<>();
@@ -153,7 +154,7 @@ public final class ContainerRoom extends Room {
 	}
 
 	@Override
-	public void appendCorridors(Collection<Corridor> corridors) {
+	public void appendCorridors(@NotNull Collection<Corridor> corridors) {
 		corridors.add(this.corridor);
 		this.child1.appendCorridors(corridors);
 		this.child2.appendCorridors(corridors);
@@ -191,7 +192,7 @@ public final class ContainerRoom extends Room {
 	 *
 	 * @return random number in range
 	 */
-	private static float split(Random random, float min, float max, float smallest) {
+	private static float split(@NotNull Random random, float min, float max, float smallest) {
 		float midPoint = (min + max) / 2f;
 		float difference = (max - min) - 2 * smallest;
 		float stdDev = difference / 2f;

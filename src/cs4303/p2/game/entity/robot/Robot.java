@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
 import cs4303.p2.game.entity.family.Family;
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -23,6 +24,7 @@ public abstract class Robot extends AIEntity {
 		super(game, position);
 	}
 
+	@NotNull
 	@Override
 	protected EntityType type() {
 		return EntityType.ROBOT;
@@ -49,7 +51,7 @@ public abstract class Robot extends AIEntity {
 	 *
 	 * @param family family member to kill
 	 */
-	public void killFamilyMember(Family family) {
+	public void killFamilyMember(@NotNull Family family) {
 		family.kill();
 	}
 

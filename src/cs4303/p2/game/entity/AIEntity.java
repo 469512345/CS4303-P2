@@ -8,6 +8,7 @@ import cs4303.p2.game.entity.ai.TargetXRay;
 import cs4303.p2.game.entity.ai.Wander;
 import cs4303.p2.game.level.AStar;
 import cs4303.p2.game.level.Node;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PVector;
@@ -20,22 +21,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Abstract target which has AI
+ * Abstract entity which has AI
  */
 public abstract class AIEntity extends Entity {
 
 	/**
-	 * Current goal of this target
+	 * Current goal of this entity
 	 */
 	protected Goal goal;
 
+	/**
+	 * How many update cycles this entity has survived for. Once this is a multiple of
+	 * {@link cs4303.p2.Properties#CALCULATE_AI_EVERY_TICKS}, the AI will be recalculated.
+	 */
 	protected long ticks;
 
+	/**
+	 * Current path being targeted. This is cached as A* search is not called on each update cycle
+	 */
+	@Nullable
 	protected LinkedList<IntPoint> path;
+	/**
+	 * Current target point. This is caches as A* search is not called on each update cycle
+	 */
 	protected IntPoint endPoint;
 
 	/**
-	 * Construct an target
+	 * Construct an entity with AI
 	 *
 	 * @param game     game instance
 	 * @param position initial position
@@ -68,12 +80,12 @@ public abstract class AIEntity extends Entity {
 	}
 
 	/**
-	 * Recalculate the goal for this target
+	 * Recalculate the goal for this entity
 	 */
 	public abstract void recalculateGoal();
 
 	/**
-	 * Get the nearest entity in a collection that this entity can see
+	 * Get the nearest entity in a collection that this entity can see, according to {@link #hasLineOfSight(Entity)}.
 	 *
 	 * @param entities collection of entities
 	 * @param <T>      entity type
@@ -81,7 +93,7 @@ public abstract class AIEntity extends Entity {
 	 * @return nearest entity that this entity can see, or null if no entities can be seen
 	 */
 	@Nullable
-	public <T extends Entity> T nearestInLineOfSight(Collection<T> entities) {
+	public <T extends Entity> T nearestInLineOfSight(@NotNull Collection<T> entities) {
 		float nearestDistance = Float.MAX_VALUE;
 		T nearestEntity = null;
 		for (T entity : entities) {
@@ -96,22 +108,16 @@ public abstract class AIEntity extends Entity {
 		return nearestEntity;
 	}
 
-	public <T extends Entity> T nearestCanSee(Collection<T> entities) {
-		float nearestDistance = Float.MAX_VALUE;
-		T nearestEntity = null;
-		for (T entity : entities) {
-			if (this.canSee(entity)) {
-				float distance = this.distanceTo(entity);
-				if (distance < nearestDistance) {
-					nearestDistance = distance;
-					nearestEntity = entity;
-				}
-			}
-		}
-		return nearestEntity;
-	}
-
-	public <T extends Entity> T nearestKnowsLocation(Collection<T> entities) {
+	/**
+	 * Get the nearest entity in a collection that this entity can see, according to {@link #knowsLocationOf(Entity)}.
+	 *
+	 * @param entities collection of entities
+	 * @param <T>      entity type
+	 *
+	 * @return nearest entity that this entity can see, or null if no entities can be seen
+	 */
+	@Nullable
+	public <T extends Entity> T nearestKnowsLocation(@NotNull Collection<T> entities) {
 		float nearestDistance = Float.MAX_VALUE;
 		T nearestEntity = null;
 		for (T entity : entities) {
@@ -133,7 +139,7 @@ public abstract class AIEntity extends Entity {
 	 *
 	 * @return Euclidean distance between this entity and another entity
 	 */
-	public float distanceTo(Entity other) {
+	public float distanceTo(@NotNull Entity other) {
 		return this.position.dist(other.position);
 	}
 
@@ -160,7 +166,8 @@ public abstract class AIEntity extends Entity {
 		if (this.goal instanceof Wander wander) {
 			this.game.line()
 				.from(this.position)
-				.to(wander.node()
+				.to(
+					wander.node()
 						.x(),
 					wander.node()
 						.y()
@@ -192,9 +199,12 @@ public abstract class AIEntity extends Entity {
 		}
 	}
 
+	/**
+	 * Set this entity to wander around the map
+	 */
 	public void wander() {
 		//If we are already wandering, then don't bother to change it
-		if(this.goal instanceof Wander) {
+		if (this.goal instanceof Wander) {
 			return;
 		}
 		Node closest = this.game.level.closestNodeTo(this.position.x, this.position.y, true);
@@ -203,11 +213,24 @@ public abstract class AIEntity extends Entity {
 		}
 	}
 
+	/**
+	 * Set this entity to wander towards a given node, with a list of nodes which have already been visited
+	 *
+	 * @param node    destination node
+	 * @param visited nodes which have already been visited
+	 */
 	public void wander(Node node, Collection<Node> visited) {
 		this.goal = new Wander(node, visited);
 	}
 
-	public void target(Entity target) {
+	/**
+	 * Set this entity to target another entity. If this entity can see the other entity through walls (according to
+	 * {@link #canSeeHumansThroughWalls()} and {@link #canSeeRobotsThroughWalls()}, then the {@link TargetXRay} variant
+	 * will be used, otherwise {@link TargetSight}).
+	 *
+	 * @param target entity to target
+	 */
+	public void target(@NotNull Entity target) {
 		boolean xray = switch (target.type()) {
 			case HUMAN -> this.canSeeHumansThroughWalls();
 			case ROBOT -> this.canSeeRobotsThroughWalls();
@@ -219,14 +242,29 @@ public abstract class AIEntity extends Entity {
 		}
 	}
 
-	public void targetSight(Entity target) {
+	/**
+	 * Set this entity to target another entity, but only while they are in line of sight
+	 *
+	 * @param target entity to target
+	 */
+	public void targetSight(@NotNull Entity target) {
 		this.goal = new TargetSight(target, target.copyPosition());
 	}
 
+	/**
+	 * Set this entity to target another entity, allowing the use of XRay between walls
+	 *
+	 * @param target entity to target
+	 */
 	public void targetXray(Entity target) {
 		this.goal = new TargetXRay(target);
 	}
 
+	/**
+	 * Set this entity to flee from another entity
+	 *
+	 * @param entity entity to flee from
+	 */
 	public void fleeFrom(Entity entity) {
 		this.goal = new Flee(entity);
 	}
@@ -253,6 +291,9 @@ public abstract class AIEntity extends Entity {
 		this.moveAlongPath();
 	}
 
+	/**
+	 * Let this entity continue along its cached path if it can
+	 */
 	private void moveAlongPath() {
 		if (this.path == null) {
 			return;
@@ -292,7 +333,7 @@ public abstract class AIEntity extends Entity {
 	 * @return true if this entity can see the other entity, or knows where it is according to
 	 * {@link TargetSight#lastKnownLocation()}.
 	 */
-	public boolean knowsLocationOf(Entity entity) {
+	public boolean knowsLocationOf(@NotNull Entity entity) {
 		if (!entity.isActive()) {
 			return false;
 		}
@@ -308,7 +349,7 @@ public abstract class AIEntity extends Entity {
 	}
 
 	/**
-	 *
+	 * An integer node for A star search. This is much easier than using floating point nodes
 	 */
 	protected record IntPoint(int x, int y) implements AStar.AStarNode<IntPoint> {
 
@@ -318,18 +359,26 @@ public abstract class AIEntity extends Entity {
 		private static final int INT_POINT_RESOLUTION = 7;
 
 		@Override
-		public float costTo(IntPoint other) {
+		public float costTo(@NotNull IntPoint other) {
 			int diffX = this.x - other.x;
 			int diffY = this.y - other.y;
 			return (float) Math.sqrt(diffX * diffX + diffY * diffY);
 		}
 
-		public float costTo(PVector position) {
+		/**
+		 * Calculate the cost between this node and another position
+		 *
+		 * @param position other position
+		 *
+		 * @return cost between this node and the other position
+		 */
+		public float costTo(@NotNull PVector position) {
 			float diffX = position.x - this.x;
 			float diffY = position.y - this.y;
 			return (float) Math.sqrt(diffX * diffX + diffY * diffY);
 		}
 
+		@NotNull
 		@Override
 		public List<IntPoint> edges() {
 			ArrayList<IntPoint> edges = new ArrayList<>(4);
@@ -361,6 +410,7 @@ public abstract class AIEntity extends Entity {
 		 *
 		 * @return int point to the resolution of {@link #INT_POINT_RESOLUTION}.
 		 */
+		@NotNull
 		public static IntPoint of(float x, float y) {
 			return new IntPoint(
 				convert((int) x),
@@ -368,11 +418,27 @@ public abstract class AIEntity extends Entity {
 			);
 		}
 
-		public static IntPoint of(PVector point) {
+		/**
+		 * Create an IntPoint from a position vector
+		 *
+		 * @param point position vector
+		 *
+		 * @return IntPoint from position vector
+		 */
+		@NotNull
+		public static IntPoint of(@NotNull PVector point) {
 			return IntPoint.of(point.x, point.y);
 		}
 
-		public static IntPoint of(Node node) {
+		/**
+		 * Create an IntPoint from a node
+		 *
+		 * @param node node
+		 *
+		 * @return IntPoint from node
+		 */
+		@NotNull
+		public static IntPoint of(@NotNull Node node) {
 			return IntPoint.of(node.x(), node.y());
 		}
 	}

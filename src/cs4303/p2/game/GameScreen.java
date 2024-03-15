@@ -14,6 +14,7 @@ import cs4303.p2.game.subscreens.DiedScreen;
 import cs4303.p2.game.subscreens.GameOverScreen;
 import cs4303.p2.game.subscreens.PauseScreen;
 import cs4303.p2.game.subscreens.WaveCompleteScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.TextBuilder;
 import cs4303.p2.util.screen.DeferredDrawTarget;
 import cs4303.p2.util.screen.DrawTarget;
@@ -42,6 +43,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	/**
 	 * Player instance
 	 */
+	@NotNull
 	public final Player player;
 	/**
 	 * The current level
@@ -78,7 +80,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 * {@link java.util.ConcurrentModificationException}, so instead we add them to this list, then purge the list after
 	 * the update cycle.
 	 */
-	private final LinkedList<Robot> newRobots = new LinkedList<Robot>();
+	private final LinkedList<Robot> newRobots = new LinkedList<>();
 
 	/**
 	 * Create a game instance with existing score, lives etc
@@ -106,7 +108,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 *
 	 * @param main Main instance
 	 */
-	public GameScreen(Main main) {
+	public GameScreen(@NotNull Main main) {
 		this(main, 1, 0, main.STARTING_LIVES);
 	}
 
@@ -165,7 +167,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent event) {
+	public void keyPressed(@NotNull KeyEvent event) {
 		if (event.getKeyCode() == PConstants.ESC) {
 			//Overwrite key to stop process ending
 			this.main.key = 0;
@@ -317,6 +319,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 *
 	 * @return level parameters
 	 */
+	@NotNull
 	public LevelInfo generateLevelInfo() {
 		float width = this.main.width;
 		float height = this.main.height;
@@ -393,6 +396,7 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 	 *
 	 * @return game instance for the next wave
 	 */
+	@NotNull
 	public GameScreen nextWave() {
 		GameScreen next = new GameScreen(this.main, this.wave + 1, this.score, this.lives);
 		next.scale = this.scale;

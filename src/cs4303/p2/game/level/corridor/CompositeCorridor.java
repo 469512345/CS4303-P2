@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.room.LeafRoom;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
@@ -21,31 +22,38 @@ public final class CompositeCorridor extends Corridor {
 	/**
 	 * Node connecting to the bottom or right of room 1
 	 */
+	@NotNull
 	private final Node node1;
 	/**
 	 * Node of first corner
 	 */
+	@NotNull
 	private final Node node2;
 	/**
 	 * Node of second corner
 	 */
+	@NotNull
 	private final Node node3;
 	/**
 	 * Node connecting to the top or left of room s
 	 */
+	@NotNull
 	private final Node node4;
 
 	/**
 	 * Segment between node 1 and node 2
 	 */
+	@NotNull
 	private final Rectangle segment1;
 	/**
 	 * Segment between node 2 and node 3
 	 */
+	@NotNull
 	private final Rectangle segment2;
 	/**
 	 * Segment between node 3 and node 4
 	 */
+	@NotNull
 	private final Rectangle segment3;
 
 	/**
@@ -63,10 +71,10 @@ public final class CompositeCorridor extends Corridor {
 	 */
 	public CompositeCorridor(
 		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width,
-		PVector node1,
-		PVector node2,
-		PVector node3,
-		PVector node4
+		@NotNull PVector node1,
+		@NotNull PVector node2,
+		@NotNull PVector node3,
+		@NotNull PVector node4
 	) {
 		super(game, room1, room2, axis, width);
 		this.node1 = new Node(node1);
@@ -115,7 +123,7 @@ public final class CompositeCorridor extends Corridor {
 	 * @param verticalWalls   collection of vertical walls to append to
 	 */
 	@Override
-	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
+	public void appendWalls(@NotNull Collection<HorizontalLine> horizontalWalls, @NotNull Collection<VerticalLine> verticalWalls) {
 		if (this.axis == Axis.VERTICAL) {
 			float sign = Math.signum(this.node4.y() - this.node1.y());
 			HorizontalLine seg1Top = HorizontalLine.of(

@@ -1,6 +1,8 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.Rectangle;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -20,6 +22,7 @@ public final class TextBuilder {
 	/**
 	 * TextBuilder to show
 	 */
+	@Nullable
 	private String text;
 
 	/**
@@ -50,6 +53,7 @@ public final class TextBuilder {
 	/**
 	 * Fill color (or null for no fill)
 	 */
+	@Nullable
 	private Integer fillColor;
 	/**
 	 * Whether this ellipse is hud, and won't be affected by any transformation matrices on the screen
@@ -70,6 +74,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder clear() {
 		this.text = null;
 		this.positionX = 0;
@@ -89,6 +94,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder text(String text) {
 		this.text = text;
 		return this;
@@ -101,7 +107,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder fill(Color fillColor) {
+	@NotNull
+	public TextBuilder fill(@NotNull Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -112,6 +119,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
@@ -122,6 +130,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder noFill() {
 		this.fillColor = null;
 		return this;
@@ -134,7 +143,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder at(PVector position) {
+	@NotNull
+	public TextBuilder at(@NotNull PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -146,6 +156,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
@@ -162,6 +173,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
@@ -175,7 +187,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder translate(PVector translation) {
+	@NotNull
+	public TextBuilder translate(@NotNull PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -188,6 +201,7 @@ public final class TextBuilder {
 	 *
 	 * @see PApplet#textSize(float)
 	 */
+	@NotNull
 	public TextBuilder size(float size) {
 		this.size = size;
 		return this;
@@ -202,7 +216,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder centredInRect(PVector p1, float width, float height) {
+	@NotNull
+	public TextBuilder centredInRect(@NotNull PVector p1, float width, float height) {
 		return this.centredInRect(p1.x, p1.y, width, height);
 	}
 
@@ -214,7 +229,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder centredHorizontally(PVector p1, float width) {
+	@NotNull
+	public TextBuilder centredHorizontally(@NotNull PVector p1, float width) {
 		return this.centredHorizontally(p1.x, p1.y, width);
 	}
 
@@ -226,7 +242,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder centredVertically(PVector p1, float height) {
+	@NotNull
+	public TextBuilder centredVertically(@NotNull PVector p1, float height) {
 		return this.centredVertically(p1.x, p1.y, height);
 	}
 
@@ -239,6 +256,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder centredHorizontally(float x, float y, float width) {
 		return this.centredInRect(x, y, width, -1);
 	}
@@ -252,6 +270,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder centredVertically(float x, float y, float height) {
 		return this.centredInRect(x, y, -1, height);
 	}
@@ -266,6 +285,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder centredInRect(float x, float y, float width, float height) {
 		this.positionX = x;
 		this.positionY = y;
@@ -281,7 +301,8 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
-	public TextBuilder centredInRect(Rectangle rectangle) {
+	@NotNull
+	public TextBuilder centredInRect(@NotNull Rectangle rectangle) {
 		return this.centredInRect(rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height());
 	}
 
@@ -291,6 +312,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder asHUD() {
 		return this.hud(true);
 	}
@@ -303,6 +325,7 @@ public final class TextBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public TextBuilder hud(boolean hud) {
 		this.hud = hud;
 		return this;

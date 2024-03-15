@@ -1,6 +1,8 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -37,10 +39,12 @@ public final class EllipseBuilder {
 	/**
 	 * Fill color (or null for no fill)
 	 */
+	@Nullable
 	private Integer fillColor;
 	/**
 	 * Stroke (outline) colour (or null for no outline)
 	 */
+	@Nullable
 	private Integer strokeColor;
 	/**
 	 * Stroke (outline) width
@@ -65,6 +69,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder clear() {
 		this.positionX = 0;
 		this.positionY = 0;
@@ -84,7 +89,8 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	public EllipseBuilder fill(Color fillColor) {
+	@NotNull
+	public EllipseBuilder fill(@NotNull Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -98,6 +104,7 @@ public final class EllipseBuilder {
 	 * @see Color#getRGB()
 	 * @see Color#Color(int)
 	 */
+	@NotNull
 	public EllipseBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
@@ -108,6 +115,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder noFill() {
 		this.fillColor = null;
 		return this;
@@ -122,7 +130,8 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#stroke(float, float, float)
 	 */
-	public EllipseBuilder stroke(Color strokeColor) {
+	@NotNull
+	public EllipseBuilder stroke(@NotNull Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -135,6 +144,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
+	@NotNull
 	public EllipseBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
@@ -147,6 +157,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#noStroke()
 	 */
+	@NotNull
 	public EllipseBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
@@ -161,6 +172,7 @@ public final class EllipseBuilder {
 	 *
 	 * @see PApplet#strokeWeight(float)
 	 */
+	@NotNull
 	public EllipseBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
@@ -173,7 +185,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	public EllipseBuilder copy(Circle circle) {
+	public EllipseBuilder copy(@NotNull Circle circle) {
 		return this.at(circle.centreX(), circle.centreY())
 			.radius(circle.radius());
 	}
@@ -185,7 +197,8 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	public EllipseBuilder at(PVector position) {
+	@NotNull
+	public EllipseBuilder at(@NotNull PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -197,6 +210,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
@@ -211,6 +225,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
@@ -224,7 +239,8 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
-	public EllipseBuilder translate(PVector translation) {
+	@NotNull
+	public EllipseBuilder translate(@NotNull PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -235,6 +251,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder radius(float radius) {
 		float diameter = radius * 2;
 		return this.size(diameter, diameter);
@@ -248,6 +265,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder size(float width, float height) {
 		this.width = width;
 		this.height = height;
@@ -261,6 +279,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder width(float width) {
 		this.width = width;
 		return this;
@@ -273,6 +292,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder height(float height) {
 		this.height = height;
 		return this;
@@ -284,6 +304,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder asHUD() {
 		return this.hud(true);
 	}
@@ -296,6 +317,7 @@ public final class EllipseBuilder {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public EllipseBuilder hud(boolean hud) {
 		this.hud = hud;
 		return this;

@@ -1,5 +1,6 @@
 package cs4303.p2;
 
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.keybind.KeyKeybind;
 import cs4303.p2.util.keybind.Keybind;
 import cs4303.p2.util.keybind.MouseKeybind;
@@ -162,30 +163,37 @@ public abstract class Properties extends PApplet {
 	/**
 	 * Keybind for move up
 	 */
+	@NotNull
 	public Keybind KEYBIND_MOVE_UP = new KeyKeybind(87, 0); // w
 	/**
 	 * Keybind for move down
 	 */
+	@NotNull
 	public Keybind KEYBIND_MOVE_DOWN = new KeyKeybind(83, 0); // s
 	/**
 	 * Keybind for move left
 	 */
+	@NotNull
 	public Keybind KEYBIND_MOVE_LEFT = new KeyKeybind(65, 0); // a
 	/**
 	 * Keybind for move right
 	 */
+	@NotNull
 	public Keybind KEYBIND_MOVE_RIGHT = new KeyKeybind(68, 0); // d
 	/**
 	 * Keybind for fire
 	 */
+	@NotNull
 	public Keybind KEYBIND_FIRE = new MouseKeybind(PConstants.LEFT, 0); // left click
 	/**
 	 * Keybind for zoom in
 	 */
+	@NotNull
 	public Keybind KEYBIND_ZOOM_IN = new KeyKeybind(61, KeyEvent.CTRL); // CTRL + +
 	/**
 	 * Keybind for zoom out
 	 */
+	@NotNull
 	public Keybind KEYBIND_ZOOM_OUT = new KeyKeybind(45, KeyEvent.CTRL); // CTRL + -
 
 	//Menu screen properties

@@ -2,6 +2,7 @@ package cs4303.p2.game.subscreens;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.menu.AbstractMenuScreen;
+import cs4303.p2.util.annotation.NotNull;
 
 import java.awt.Color;
 
@@ -14,6 +15,7 @@ public abstract class AbstractGameMenuScreen extends AbstractMenuScreen {
 	/**
 	 * Game instance
 	 */
+	@NotNull
 	protected final GameScreen game;
 
 	/**
@@ -21,7 +23,7 @@ public abstract class AbstractGameMenuScreen extends AbstractMenuScreen {
 	 *
 	 * @param game game instance
 	 */
-	public AbstractGameMenuScreen(GameScreen game) {
+	public AbstractGameMenuScreen(@NotNull GameScreen game) {
 		super(game.main);
 		this.game = game;
 	}
@@ -42,6 +44,7 @@ public abstract class AbstractGameMenuScreen extends AbstractMenuScreen {
 	 *
 	 * @return colour of the overlay over the game background
 	 */
+	@NotNull
 	protected Color overlayColor() {
 		return this.main.OVERLAY_COLOR;
 	}

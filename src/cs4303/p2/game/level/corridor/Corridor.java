@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.room.LeafRoom;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -46,11 +47,13 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	 * Nodes of the corridor. If the corridor is straight then this will only be the start and end point, but if the
 	 * corridor has bends there will be point at each 90-degree bend.
 	 */
+	@NotNull
 	public final ArrayList<Node> nodes;
 	/**
 	 * Rectangle segments that make up this corridor. These are calculated from the points upon construction to avoid
 	 * recomputing each frame
 	 */
+	@NotNull
 	public final ArrayList<Rectangle> segments;
 
 	/**
@@ -115,7 +118,7 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	 *
 	 * @return random value in range
 	 */
-	protected static float random(Random random, float min, float max) {
+	protected static float random(@NotNull Random random, float min, float max) {
 		float mean = (min + max) / 2f;
 		float stdDev = (max - min) / 4f;
 
@@ -135,7 +138,8 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	 *
 	 * @return rectangle segment
 	 */
-	protected static Rectangle lineToRect(PVector p1, PVector p2, float margin) {
+	@NotNull
+	protected static Rectangle lineToRect(@NotNull PVector p1, @NotNull PVector p2, float margin) {
 		float minX = Float.min(p1.x, p2.x);
 		float minY = Float.min(p1.y, p2.y);
 
@@ -160,10 +164,11 @@ public sealed abstract class Corridor permits CompositeCorridor, StraightCorrido
 	 *
 	 * @return corridor instance
 	 */
+	@NotNull
 	public static Corridor createCorridor(
-		GameScreen game,
-		LeafRoom room1,
-		LeafRoom room2,
+		@NotNull GameScreen game,
+		@NotNull LeafRoom room1,
+		@NotNull LeafRoom room2,
 		Axis axis,
 		float width
 	) {

@@ -1,6 +1,7 @@
 package cs4303.p2.menu;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import cs4303.p2.util.screen.Screen;
 import processing.core.PConstants;
@@ -19,14 +20,17 @@ public class OptionsScreen extends AbstractMenuScreen {
 	/**
 	 * Button for toggling friendly fire
 	 */
+	@NotNull
 	private final Button toggleFriendlyFireButton;
 	/**
 	 *
 	 */
+	@NotNull
 	private final Button toggleShowPathfindingInfoButton;
 	/**
 	 * Button to return back to the previous screen
 	 */
+	@NotNull
 	private final Button returnButton;
 
 	/**
@@ -65,7 +69,7 @@ public class OptionsScreen extends AbstractMenuScreen {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
+	public void mouseClicked(@NotNull MouseEvent event) {
 		if (this.toggleFriendlyFireButton.clicked(event)) {
 			this.main.FRIENDLY_FIRE = !this.main.FRIENDLY_FIRE;
 		} else if (this.toggleShowPathfindingInfoButton.clicked(event)) {
@@ -76,7 +80,7 @@ public class OptionsScreen extends AbstractMenuScreen {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent event) {
+	public void keyPressed(@NotNull KeyEvent event) {
 		if (event.getKeyCode() == PConstants.ESC) {
 			this.main.key = 0;
 			this.main.keyCode = 0;

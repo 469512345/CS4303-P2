@@ -2,6 +2,7 @@ package cs4303.p2.game.entity;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Node;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.EllipseBuilder;
 import cs4303.p2.util.collisions.Circle;
 import processing.core.PVector;
@@ -35,7 +36,7 @@ public abstract class Entity implements Circle {
 	protected boolean active = true;
 
 	/**
-	 * Construct an target
+	 * Construct a target
 	 *
 	 * @param game     game instance
 	 * @param position initial position
@@ -227,7 +228,7 @@ public abstract class Entity implements Circle {
 	}
 
 	/**
-	 * Whether an target can see another target, respecting the values of {@link #canSeeHumansThroughWalls()},
+	 * Whether a target can see another target, respecting the values of {@link #canSeeHumansThroughWalls()},
 	 * {@link #canSeeRobotsThroughWalls()}, {@link #canBeSeenThroughWallsByHumans()}, and
 	 * {@link #canBeSeenThroughWallsByRobots()}.
 	 *
@@ -235,7 +236,7 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return true of this target can see the given target, false otherwise
 	 */
-	public boolean canSee(Entity entity) {
+	public boolean canSee(@NotNull Entity entity) {
 		return entity.isActive() && (this.hasLineOfSight(entity) ||
 			switch (entity.type()) {
 				case HUMAN -> this.canSeeHumansThroughWalls();
@@ -266,7 +267,7 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return true if this enemy has line of sight to the point, false otherwise
 	 */
-	public boolean hasLineOfSight(PVector position) {
+	public boolean hasLineOfSight(@NotNull PVector position) {
 		return this.hasLineOfSight(position.x, position.y);
 	}
 
@@ -277,7 +278,7 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return true if this enemy has line of sight to the node, false otherwise
 	 */
-	public boolean hasLineOfSight(Node node) {
+	public boolean hasLineOfSight(@NotNull Node node) {
 		return this.hasLineOfSight(node.x(), node.y());
 	}
 
@@ -288,7 +289,7 @@ public abstract class Entity implements Circle {
 	 *
 	 * @return true if this enemy has line of sight to the target, false otherwise
 	 */
-	public boolean hasLineOfSight(Entity target) {
+	public boolean hasLineOfSight(@NotNull Entity target) {
 		return target.isActive() && this.hasLineOfSight(target.position);
 	}
 

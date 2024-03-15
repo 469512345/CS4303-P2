@@ -1,6 +1,7 @@
 package cs4303.p2.game.entity.robot;
 
 import cs4303.p2.game.entity.family.Family;
+import cs4303.p2.util.annotation.NotNull;
 
 import java.awt.Color;
 
@@ -12,6 +13,7 @@ public class MutatedFamilyRobot extends Robot {
 	/**
 	 * The family member that was mutated into this robot
 	 */
+	@NotNull
 	private final Family familyMember;
 
 	/**
@@ -19,7 +21,7 @@ public class MutatedFamilyRobot extends Robot {
 	 *
 	 * @param family the family member that was mutated into this robot
 	 */
-	public MutatedFamilyRobot(Family family) {
+	public MutatedFamilyRobot(@NotNull Family family) {
 		super(family.game, family.position);
 		this.familyMember = family;
 	}

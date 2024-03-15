@@ -2,6 +2,7 @@ package cs4303.p2.menu;
 
 import cs4303.p2.Main;
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import processing.event.MouseEvent;
 
@@ -13,10 +14,12 @@ public class MenuScreen extends AbstractMenuScreen {
 	/**
 	 * Play button on the screen
 	 */
+	@NotNull
 	private final Button playButton;
 	/**
 	 * Options button
 	 */
+	@NotNull
 	private final Button optionsButton;
 	/**
 	 * Exit to desktop button
@@ -28,7 +31,7 @@ public class MenuScreen extends AbstractMenuScreen {
 	 *
 	 * @param main main instance
 	 */
-	public MenuScreen(Main main) {
+	public MenuScreen(@NotNull Main main) {
 		super(main);
 
 		this.playButton = new Button(main, "Play", main.rect());
@@ -52,7 +55,7 @@ public class MenuScreen extends AbstractMenuScreen {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
+	public void mouseClicked(@NotNull MouseEvent event) {
 		if (this.playButton.clicked(event)) {
 			this.main.setScreen(new GameScreen(this.main));
 		} else if (this.optionsButton.clicked(event)) {

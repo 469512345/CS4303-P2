@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import processing.core.PVector;
 
 /**
@@ -76,6 +78,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return position vector of the centre of the rectangle
 	 */
+	@NotNull
 	default PVector centre() {
 		return new PVector(this.centreX(), this.centreY());
 	}
@@ -88,6 +91,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return copy of this rectangle with margin applied
 	 */
+	@NotNull
 	default Rectangle withMargin(float margin) {
 		return Rectangle.of(
 			this.minX() - margin,
@@ -98,7 +102,7 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Circle circle) {
+	default boolean intersects(@NotNull Circle circle) {
 		return Collidable.circleIntersectsRect(
 			circle.centreX(), circle.centreY(), circle.radius(),
 			this.minX(), this.minY(), this.width(), this.height()
@@ -106,7 +110,7 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Rectangle other) {
+	default boolean intersects(@NotNull Rectangle other) {
 		return Collidable.rectIntersectsRect(
 			this.minX(), this.minY(), this.width(), this.height(),
 			other.minX(), other.minY(), other.width(), other.height()
@@ -114,7 +118,7 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(VerticalLine verticalLine) {
+	default boolean intersects(@NotNull VerticalLine verticalLine) {
 		return Collidable.rectIntersectsVerticalLine(
 			this.minX(), this.minY(), this.width(), this.height(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
@@ -122,7 +126,7 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(HorizontalLine horizontalLine) {
+	default boolean intersects(@NotNull HorizontalLine horizontalLine) {
 		return Collidable.rectIntersectsHorizontalLine(
 			this.minX(), this.minY(), this.width(), this.height(),
 			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
@@ -130,7 +134,7 @@ public interface Rectangle extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Line line) {
+	default boolean intersects(@NotNull Line line) {
 		return Collidable.rectangleIntersectsLine(
 			this.minX(), this.minY(), this.width(), this.height(),
 			line.x1(), line.y1(), line.x2(), line.y2()
@@ -145,6 +149,7 @@ public interface Rectangle extends Collidable {
 		);
 	}
 
+	@NotNull
 	@Override
 	default PVector closestPoint(float x, float y) {
 		return Collidable.rectClosestPoint(
@@ -160,7 +165,8 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return new rectangle representing the intersection, or null if the rectangles do not intersect
 	 */
-	default Rectangle intersection(Rectangle other) {
+	@Nullable
+	default Rectangle intersection(@NotNull Rectangle other) {
 		return Collidable.rectIntersectionWithRect(
 			this.minX(), this.minY(), this.width(), this.height(),
 			other.minX(), other.minY(), other.width(), other.height()
@@ -172,6 +178,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return top edge of this rectangle
 	 */
+	@NotNull
 	default HorizontalLine topEdge() {
 		return HorizontalLine.of(this.minX(), this.maxX(), this.minY());
 	}
@@ -181,6 +188,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return bottom edge of this rectangle
 	 */
+	@NotNull
 	default HorizontalLine bottomEdge() {
 		return HorizontalLine.of(this.minX(), this.maxX(), this.maxY());
 	}
@@ -190,6 +198,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return left edge of this rectangle
 	 */
+	@NotNull
 	default VerticalLine leftEdge() {
 		return VerticalLine.of(this.minX(), this.minY(), this.maxY());
 	}
@@ -199,6 +208,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return right edge of this rectangle
 	 */
+	@NotNull
 	default VerticalLine rightEdge() {
 		return VerticalLine.of(this.maxX(), this.minY(), this.maxY());
 	}
@@ -213,6 +223,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return rectangle instance between the two points
 	 */
+	@NotNull
 	static Rectangle fromPoints(float x1, float y1, float x2, float y2) {
 		float minX = Math.min(x1, x2);
 		float maxX = Math.max(x1, x2);
@@ -236,6 +247,7 @@ public interface Rectangle extends Collidable {
 	 *
 	 * @return rectangle instance with the given parameters
 	 */
+	@NotNull
 	static Rectangle of(float minX, float minY, float width, float height) {
 		return new RectangleImpl(minX, minY, width, height);
 	}

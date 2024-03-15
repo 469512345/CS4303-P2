@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import processing.core.PVector;
 
 /**
@@ -100,7 +102,7 @@ public interface Collidable {
 	 *
 	 * @return true if this object contains the point inside, or on the line
 	 */
-	default boolean containsPoint(PVector point) {
+	default boolean containsPoint(@NotNull PVector point) {
 		return this.containsPoint(point.x, point.y);
 	}
 
@@ -121,7 +123,7 @@ public interface Collidable {
 	 *
 	 * @return position vector of closest point on shape
 	 */
-	default PVector closestPoint(PVector point) {
+	default PVector closestPoint(@NotNull PVector point) {
 		return this.closestPoint(point.x, point.y);
 	}
 
@@ -146,7 +148,7 @@ public interface Collidable {
 	 *
 	 * @return distance between the given point, and the closest point on this shape
 	 */
-	default float closestDistanceFrom(PVector point) {
+	default float closestDistanceFrom(@NotNull PVector point) {
 		return this.closestPoint(point)
 			.sub(point)
 			.mag();
@@ -173,7 +175,7 @@ public interface Collidable {
 	 *
 	 * @return distance squared the given point, and the closest point on this shape
 	 */
-	default float closestDistanceSqFrom(PVector point) {
+	default float closestDistanceSqFrom(@NotNull PVector point) {
 		return this.closestPoint(point)
 			.sub(point)
 			.magSq();
@@ -400,6 +402,7 @@ public interface Collidable {
 	 *
 	 * @return position vector of the closest point on the line to the given point
 	 */
+	@NotNull
 	static PVector horizontalLineClosestPoint(
 		float hlMinX, float hlMaxX, float hlY,
 		float x, float y
@@ -427,6 +430,7 @@ public interface Collidable {
 	 *
 	 * @return position vector of the closest point on the line to the given point
 	 */
+	@NotNull
 	static PVector verticalLineClosestPoint(
 		float vlX, float vlMinY, float vlMaxY,
 		float x, float y
@@ -539,6 +543,7 @@ public interface Collidable {
 	 *
 	 * @return position vector of intersection between the lines, or null if they do not intersect
 	 */
+	@Nullable
 	static PVector horizontalLineIntersectionWithVerticalLine(
 		float hlMinX, float hlMaxX, float hlY,
 		float vlX, float vlMinY, float vlMaxY
@@ -561,6 +566,7 @@ public interface Collidable {
 	 *
 	 * @return position vector of point inside or on the perimeter of rectangle
 	 */
+	@NotNull
 	static PVector rectClosestPoint(
 		float rMinX, float rMinY, float rWidth, float rHeight,
 		float x, float y
@@ -631,6 +637,7 @@ public interface Collidable {
 	 *
 	 * @return intersection between the rectangles, or null if they do not intersect
 	 */
+	@Nullable
 	static Rectangle rectIntersectionWithRect(
 		float r1MinX, float r1MinY, float r1Width, float r1Height,
 		float r2MinX, float r2MinY, float r2Width, float r2Height
@@ -796,6 +803,7 @@ public interface Collidable {
 	 *
 	 * @return closest point on the line segment to the given point
 	 */
+	@NotNull
 	static PVector lineClosestPoint(
 		float lX1, float lY1, float lX2, float lY2,
 		float x, float y
@@ -865,6 +873,7 @@ public interface Collidable {
 	 * @return a {@link PVector} representing the intersection point between the two line segments, or {@code null} if
 	 * they do not intersect
 	 */
+	@Nullable
 	static PVector lineIntersectionWithLine(
 		float l1X1, float l1Y1, float l1X2, float l1Y2,
 		float l2X1, float l2Y1, float l2X2, float l2Y2

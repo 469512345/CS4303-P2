@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.level.Axis;
 import cs4303.p2.game.level.Node;
 import cs4303.p2.game.level.room.LeafRoom;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.collisions.HorizontalLine;
 import cs4303.p2.util.collisions.Rectangle;
 import cs4303.p2.util.collisions.VerticalLine;
@@ -20,10 +21,12 @@ public final class StraightCorridor extends Corridor implements Rectangle {
 	/**
 	 * First point - min x or min y - connecting to bottom or right of room 1
 	 */
+	@NotNull
 	private final Node node1;
 	/**
 	 * Second point - max x or max y - connecting to top or left of room 2
 	 */
+	@NotNull
 	private final Node node2;
 
 	/**
@@ -38,7 +41,7 @@ public final class StraightCorridor extends Corridor implements Rectangle {
 	 * @param node2 node in room 2
 	 */
 	public StraightCorridor(
-		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width, PVector node1, PVector node2
+		GameScreen game, LeafRoom room1, LeafRoom room2, Axis axis, float width, @NotNull PVector node1, @NotNull PVector node2
 	) {
 		super(game, room1, room2, axis, width);
 		this.node1 = new Node(node1);
@@ -71,7 +74,7 @@ public final class StraightCorridor extends Corridor implements Rectangle {
 	 * @param verticalWalls   collection of vertical walls to append to
 	 */
 	@Override
-	public void appendWalls(Collection<HorizontalLine> horizontalWalls, Collection<VerticalLine> verticalWalls) {
+	public void appendWalls(@NotNull Collection<HorizontalLine> horizontalWalls, @NotNull Collection<VerticalLine> verticalWalls) {
 		if (this.axis == Axis.HORIZONTAL) {
 			VerticalLine leftWall = VerticalLine.of(
 				this.minX(),

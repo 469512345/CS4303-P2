@@ -10,6 +10,11 @@ import cs4303.p2.util.builder.TextBuilder;
  */
 public interface DeferredDrawTarget extends DrawTarget {
 
+	/**
+	 * Object to refer rendering to
+	 *
+	 * @return DrawTarget object to defer rendering to
+	 */
 	DrawTarget deferRenderingTo();
 
 	@Override

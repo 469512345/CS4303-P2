@@ -4,6 +4,7 @@ import cs4303.p2.game.GameScreen;
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.EntityType;
 import cs4303.p2.game.entity.robot.Robot;
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 
 import java.awt.Color;
@@ -23,6 +24,7 @@ public abstract class Family extends AIEntity {
 		super(game, position);
 	}
 
+	@NotNull
 	@Override
 	protected EntityType type() {
 		return EntityType.HUMAN;

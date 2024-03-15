@@ -2,6 +2,7 @@ package cs4303.p2.game.subscreens;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import processing.event.MouseEvent;
 
@@ -31,7 +32,7 @@ public final class DiedScreen extends AbstractGameMenuScreen {
 	 * Create a died screen
 	 * @param game game instance
 	 */
-	public DiedScreen(GameScreen game) {
+	public DiedScreen(@NotNull GameScreen game) {
 		super(game);
 		this.respawnButton = new Button(game.main, "Respawn", game.rect()).asHUD();
 		this.restartButton = new Button(game.main, "Restart game", game.rect()).asHUD();
@@ -51,7 +52,7 @@ public final class DiedScreen extends AbstractGameMenuScreen {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
+	public void mouseClicked(@NotNull MouseEvent event) {
 		if (this.respawnButton.clicked(event)) {
 			this.game.respawn();
 			this.game.main.setScreen(this.game);

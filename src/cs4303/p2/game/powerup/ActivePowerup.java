@@ -1,5 +1,7 @@
 package cs4303.p2.game.powerup;
 
+import cs4303.p2.util.annotation.NotNull;
+
 /**
  * An object storing an active powerup on the player, and how long is left on it
  */
@@ -18,7 +20,7 @@ public final class ActivePowerup {
 	 *
 	 * @param powerup powerup applied
 	 */
-	public ActivePowerup(PowerupType powerup) {
+	public ActivePowerup(@NotNull PowerupType powerup) {
 		this.powerup = powerup;
 		this.remainingMillis = powerup.durationMillis;
 	}

@@ -1,5 +1,7 @@
 package cs4303.p2.util.collisions;
 
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import processing.core.PVector;
 
 /**
@@ -42,7 +44,7 @@ public interface Line extends Collidable {
 	 * @return true if the lines intersect, false otherwise
 	 */
 	@Override
-	default boolean intersects(Line other) {
+	default boolean intersects(@NotNull Line other) {
 		return Collidable.lineIntersectsLine(
 			this.x1(), this.y1(), this.x2(), this.y2(),
 			other.x1(), other.y1(), other.x2(), other.y2()
@@ -50,7 +52,7 @@ public interface Line extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Circle circle) {
+	default boolean intersects(@NotNull Circle circle) {
 		return Collidable.circleIntersectsLine(
 			circle.centreX(), circle.centreY(), circle.radius(),
 			this.x1(), this.y1(), this.x2(), this.y2()
@@ -58,7 +60,7 @@ public interface Line extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Rectangle rectangle) {
+	default boolean intersects(@NotNull Rectangle rectangle) {
 		return Collidable.rectangleIntersectsLine(
 			rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height(),
 			this.x1(), this.y1(), this.x2(), this.y2()
@@ -66,7 +68,7 @@ public interface Line extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(VerticalLine verticalLine) {
+	default boolean intersects(@NotNull VerticalLine verticalLine) {
 		return Collidable.verticalLineIntersectsLine(
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY(),
 			this.x1(), this.y1(), this.x2(), this.y2()
@@ -74,7 +76,7 @@ public interface Line extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(HorizontalLine horizontalLine) {
+	default boolean intersects(@NotNull HorizontalLine horizontalLine) {
 		return Collidable.horizontalLineIntersectsLine(
 			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y(),
 			this.x1(), this.y1(), this.x2(), this.y2()
@@ -89,6 +91,7 @@ public interface Line extends Collidable {
 		);
 	}
 
+	@NotNull
 	@Override
 	default PVector closestPoint(float x, float y) {
 		return Collidable.lineClosestPoint(
@@ -104,7 +107,8 @@ public interface Line extends Collidable {
 	 *
 	 * @return point of intersection between this line and the other line, or null if none exists
 	 */
-	default PVector intersection(Line line) {
+	@Nullable
+	default PVector intersection(@NotNull Line line) {
 		return Collidable.lineIntersectionWithLine(
 			this.x1(), this.y1(), this.x2(), this.y2(),
 			line.x1(), line.y1(), line.x2(), line.y2()
@@ -118,7 +122,8 @@ public interface Line extends Collidable {
 	 *
 	 * @return point of intersection between this line and the horizontal line, or null if none exists
 	 */
-	default PVector intersection(HorizontalLine horizontalLine) {
+	@Nullable
+	default PVector intersection(@NotNull HorizontalLine horizontalLine) {
 		return Collidable.lineIntersectionWithLine(
 			this.x1(), this.y1(), this.x2(), this.y2(),
 			horizontalLine.minX(), horizontalLine.y(), horizontalLine.maxX(), horizontalLine.y()
@@ -132,7 +137,8 @@ public interface Line extends Collidable {
 	 *
 	 * @return point of intersection between this line and the vertical line, or null if none exists
 	 */
-	default PVector intersection(VerticalLine verticalLine) {
+	@Nullable
+	default PVector intersection(@NotNull VerticalLine verticalLine) {
 		return Collidable.lineIntersectionWithLine(
 			this.x1(), this.y1(), this.x2(), this.y2(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.x(), verticalLine.maxY()
@@ -149,6 +155,7 @@ public interface Line extends Collidable {
 	 *
 	 * @return new line instance between the two points
 	 */
+	@NotNull
 	static Line of(float x1, float y1, float x2, float y2) {
 		return new LineImpl(x1, y1, x2, y2);
 	}
@@ -161,7 +168,8 @@ public interface Line extends Collidable {
 	 *
 	 * @return new line instances between the two points
 	 */
-	static Line of(PVector p1, PVector p2) {
+	@NotNull
+	static Line of(@NotNull PVector p1, @NotNull PVector p2) {
 		return new LineImpl(p1.x, p1.y, p2.x, p2.y);
 	}
 

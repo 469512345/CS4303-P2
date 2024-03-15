@@ -2,6 +2,7 @@ package cs4303.p2.game.entity.ai;
 
 import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.level.Node;
+import cs4303.p2.util.annotation.NotNull;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import java.util.List;
 public record Wander(Node node, Collection<Node> visited) implements Goal {
 
 	@Override
-	public void performGoal(AIEntity entity) {
+	public void performGoal(@NotNull AIEntity entity) {
 		float distanceTo = this.node.distanceTo(entity.position);
 		boolean reachedNode = distanceTo < entity.radius();
 		//Node reached - pick a new one

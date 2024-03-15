@@ -5,6 +5,7 @@ import cs4303.p2.game.entity.EntityType;
 import cs4303.p2.game.powerup.ActivePowerup;
 import cs4303.p2.game.powerup.Powerup;
 import cs4303.p2.game.powerup.PowerupType;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.builder.TextBuilder;
 import processing.core.PVector;
@@ -96,6 +97,14 @@ public final class Player extends Entity implements ProjectileSource {
 		}
 	}
 
+	/**
+	 * Format a duration as milliseconds to a XX:XX time string
+	 *
+	 * @param millis milliseconds
+	 *
+	 * @return formatted string
+	 */
+	@NotNull
 	private static String millisToTimeString(long millis) {
 		long seconds = millis / 1000;
 		long minutes = seconds / 60;
@@ -103,11 +112,29 @@ public final class Player extends Entity implements ProjectileSource {
 		return zeroPad(minutes) + ":" + zeroPad(seconds);
 	}
 
+	/**
+	 * Format a number into a zero padded, 2-digit string (e.g. 09)
+	 *
+	 * @param number number to format
+	 *
+	 * @return formatted padded number
+	 */
+	@NotNull
 	private static String zeroPad(long number) {
 		return leftPad(String.valueOf(number), "0", 2);
 	}
 
-	private static String leftPad(String source, String padding, int minimumLength) {
+	/**
+	 * Left pad a string with a prefix until it reaches a minimum length
+	 *
+	 * @param source        source string
+	 * @param padding       padding prefix
+	 * @param minimumLength minimum length
+	 *
+	 * @return left-padded string of at least the given minimum length
+	 */
+	@NotNull
+	private static String leftPad(@NotNull String source, String padding, int minimumLength) {
 		StringBuilder sourceBuilder = new StringBuilder(source);
 		while (sourceBuilder.length() < minimumLength) {
 			sourceBuilder.insert(0, padding);
@@ -170,7 +197,11 @@ public final class Player extends Entity implements ProjectileSource {
 	 *
 	 * @return lagged position
 	 */
+	@NotNull
 	public PVector laggedPosition() {
+		if (this.positionHistory.isEmpty()) {
+			return this.position.copy();
+		}
 		return this.positionHistory.peek();
 	}
 
@@ -198,7 +229,7 @@ public final class Player extends Entity implements ProjectileSource {
 	 *
 	 * @param powerup powerup to apply to the player
 	 */
-	public void applyPowerup(Powerup powerup) {
+	public void applyPowerup(@NotNull Powerup powerup) {
 		this.activePowerups.add(new ActivePowerup(powerup.type));
 		powerup.remove();
 	}
@@ -232,6 +263,7 @@ public final class Player extends Entity implements ProjectileSource {
 		return this.game.main.PLAYER_MOVEMENT_VELOCITY;
 	}
 
+	@NotNull
 	@Override
 	protected EntityType type() {
 		return EntityType.HUMAN;

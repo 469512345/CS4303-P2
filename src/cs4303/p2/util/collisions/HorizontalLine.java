@@ -1,5 +1,6 @@
 package cs4303.p2.util.collisions;
 
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 import processing.core.PVector;
 
@@ -30,7 +31,7 @@ public interface HorizontalLine extends Collidable {
 	float maxX();
 
 	@Override
-	default boolean intersects(Circle circle) {
+	default boolean intersects(@NotNull Circle circle) {
 		return Collidable.circleIntersectsHorizontalLine(
 			circle.centreX(), circle.centreY(), circle.radius(),
 			this.minX(), this.maxX(), this.y()
@@ -38,7 +39,7 @@ public interface HorizontalLine extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Rectangle rectangle) {
+	default boolean intersects(@NotNull Rectangle rectangle) {
 		return Collidable.rectIntersectsHorizontalLine(
 			rectangle.minX(), rectangle.minY(), rectangle.width(), rectangle.height(),
 			this.minX(), this.maxX(), this.y()
@@ -46,7 +47,7 @@ public interface HorizontalLine extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(VerticalLine verticalLine) {
+	default boolean intersects(@NotNull VerticalLine verticalLine) {
 		return Collidable.horizontalLineIntersectsVerticalLine(
 			this.minX(), this.maxX(), this.y(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
@@ -54,7 +55,7 @@ public interface HorizontalLine extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(HorizontalLine horizontalLine) {
+	default boolean intersects(@NotNull HorizontalLine horizontalLine) {
 		return Collidable.horizontalLineIntersectsHorizontalLine(
 			this.minX(), this.maxX(), this.y(),
 			horizontalLine.minX(), horizontalLine.maxX(), horizontalLine.y()
@@ -62,7 +63,7 @@ public interface HorizontalLine extends Collidable {
 	}
 
 	@Override
-	default boolean intersects(Line line) {
+	default boolean intersects(@NotNull Line line) {
 		return Collidable.horizontalLineIntersectsLine(
 			this.minX(), this.maxX(), this.y(),
 			line.x1(), line.y1(), line.x2(), line.y2()
@@ -76,7 +77,7 @@ public interface HorizontalLine extends Collidable {
 	 *
 	 * @return Point of intersection between this line and the vertical line, or null if none exists
 	 */
-	default @Nullable PVector intersection(VerticalLine verticalLine) {
+	default @Nullable PVector intersection(@NotNull VerticalLine verticalLine) {
 		return Collidable.horizontalLineIntersectionWithVerticalLine(
 			this.minX(), this.maxX(), this.y(),
 			verticalLine.x(), verticalLine.minY(), verticalLine.maxY()
@@ -90,13 +91,15 @@ public interface HorizontalLine extends Collidable {
 	 *
 	 * @return point of intersection between this line and the other line, or null if none exists
 	 */
-	default PVector intersection(Line line) {
+	@Nullable
+	default PVector intersection(@NotNull Line line) {
 		return Collidable.lineIntersectionWithLine(
 			line.x1(), line.y1(), line.x2(), line.y2(),
 			this.minX(), this.y(), this.maxX(), this.y()
 		);
 	}
 
+	@NotNull
 	@Override
 	default PVector closestPoint(float x, float y) {
 		return Collidable.horizontalLineClosestPoint(
@@ -123,6 +126,7 @@ public interface HorizontalLine extends Collidable {
 	 *
 	 * @return horizontal line with given parameters
 	 */
+	@NotNull
 	static HorizontalLine of(float x1, float x2, float y) {
 		float minX = Math.min(x1, x2);
 		float maxX = Math.max(x1, x2);

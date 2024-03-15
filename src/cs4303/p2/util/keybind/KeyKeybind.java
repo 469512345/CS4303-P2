@@ -1,5 +1,6 @@
 package cs4303.p2.util.keybind;
 
+import cs4303.p2.util.annotation.NotNull;
 import processing.event.Event;
 import processing.event.KeyEvent;
 
@@ -32,7 +33,7 @@ public final class KeyKeybind implements Keybind {
 	 *
 	 * @param event event to mirror
 	 */
-	public KeyKeybind(KeyEvent event) {
+	public KeyKeybind(@NotNull KeyEvent event) {
 		this(event.getKeyCode(), event.getModifiers());
 	}
 

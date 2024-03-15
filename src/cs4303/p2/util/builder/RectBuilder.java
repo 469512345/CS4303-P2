@@ -1,6 +1,8 @@
 package cs4303.p2.util.builder;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
+import cs4303.p2.util.annotation.Nullable;
 import cs4303.p2.util.collisions.Rectangle;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -54,12 +56,14 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @see PApplet#fill(float, float, float, float)
 	 */
+	@Nullable
 	private Integer fillColor;
 	/**
 	 * Stroke (outline) colour (or null for no outline)
 	 *
 	 * @see PApplet#stroke(float, float, float, float)
 	 */
+	@Nullable
 	private Integer strokeColor;
 	/**
 	 * Stroke (outline) weight
@@ -88,7 +92,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder fill(Color fillColor) {
+	@NotNull
+	public RectBuilder fill(@NotNull Color fillColor) {
 		return this.fill(fillColor.getRGB());
 	}
 
@@ -97,6 +102,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder clear() {
 		this.positionX = 0;
 		this.positionY = 0;
@@ -122,6 +128,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @see PApplet#fill(int)
 	 */
+	@NotNull
 	public RectBuilder fill(int fillColor) {
 		this.fillColor = fillColor;
 		return this;
@@ -132,6 +139,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder noFill() {
 		this.fillColor = null;
 		return this;
@@ -144,7 +152,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder stroke(Color strokeColor) {
+	@NotNull
+	public RectBuilder stroke(@NotNull Color strokeColor) {
 		return this.stroke(strokeColor.getRGB());
 	}
 
@@ -157,6 +166,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @see PApplet#stroke(int)
 	 */
+	@NotNull
 	public RectBuilder stroke(int strokeColor) {
 		this.strokeColor = strokeColor;
 		return this;
@@ -167,6 +177,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder noStroke() {
 		this.strokeColor = null;
 		return this;
@@ -179,6 +190,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder strokeWeight(float strokeWeight) {
 		this.strokeWeight = strokeWeight;
 		return this;
@@ -191,7 +203,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder at(PVector position) {
+	@NotNull
+	public RectBuilder at(@NotNull PVector position) {
 		return this.at(position.x, position.y);
 	}
 
@@ -203,6 +216,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder at(float x, float y) {
 		this.positionX = x;
 		this.positionY = y;
@@ -216,7 +230,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder copy(Rectangle rectangle) {
+	@NotNull
+	public RectBuilder copy(@NotNull Rectangle rectangle) {
 		return this.at(rectangle.minX(), rectangle.minY())
 			.size(rectangle.width(), rectangle.height());
 	}
@@ -229,6 +244,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder translate(float x, float y) {
 		this.positionX += x;
 		this.positionY += y;
@@ -242,7 +258,8 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
-	public RectBuilder translate(PVector translation) {
+	@NotNull
+	public RectBuilder translate(@NotNull PVector translation) {
 		return this.translate(translation.x, translation.y);
 	}
 
@@ -254,6 +271,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder size(float width, float height) {
 		this.width = width;
 		this.height = height;
@@ -267,6 +285,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder cornerRadius(float radius) {
 		return this.cornerRadii(radius, radius, radius, radius);
 	}
@@ -281,6 +300,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder cornerRadii(
 		float topLeftRadius,
 		float topRightRadius,
@@ -300,6 +320,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder asHUD() {
 		return this.hud(true);
 	}
@@ -312,6 +333,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return this
 	 */
+	@NotNull
 	public RectBuilder hud(boolean hud) {
 		this.hud = hud;
 		return this;
@@ -381,6 +403,7 @@ public final class RectBuilder implements Rectangle {
 	 *
 	 * @return immutable rectangle from current rect builder state
 	 */
+	@NotNull
 	public Rectangle capture() {
 		return Rectangle.of(this.positionX, this.positionY, this.width, this.height);
 	}

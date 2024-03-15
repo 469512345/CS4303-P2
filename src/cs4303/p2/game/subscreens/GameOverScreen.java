@@ -2,6 +2,7 @@ package cs4303.p2.game.subscreens;
 
 import cs4303.p2.game.GameScreen;
 import cs4303.p2.menu.MenuScreen;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import processing.event.MouseEvent;
 
@@ -28,7 +29,7 @@ public final class GameOverScreen extends AbstractGameMenuScreen {
 	 *
 	 * @param game game instance
 	 */
-	public GameOverScreen(GameScreen game) {
+	public GameOverScreen(@NotNull GameScreen game) {
 		super(game);
 		this.playAgainButton = new Button(game.main, "Play Again", game.rect()).asHUD();
 		this.exitMenuButton = new Button(game.main, "Exit to Menu", game.rect()).asHUD();
@@ -46,7 +47,7 @@ public final class GameOverScreen extends AbstractGameMenuScreen {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent event) {
+	public void mouseClicked(@NotNull MouseEvent event) {
 		if (this.playAgainButton.clicked(event)) {
 			this.game.main.setScreen(new GameScreen(this.game.main));
 		} else if (this.exitMenuButton.clicked(event)) {

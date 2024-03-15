@@ -1,5 +1,6 @@
 package cs4303.p2.game.level;
 
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	 *
 	 * @param position position of node
 	 */
-	public Node(PVector position) {
+	public Node(@NotNull PVector position) {
 		this(position.x, position.y, new ArrayList<>());
 	}
 
@@ -30,7 +31,7 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	 *
 	 * @param other node to connect this node to
 	 */
-	public void connectTo(Node other) {
+	public void connectTo(@NotNull Node other) {
 		this.edges.add(other);
 		other.edges.add(this);
 	}
@@ -43,7 +44,7 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	 * @return cost between the two nodes
 	 */
 	@Override
-	public float costTo(Node other) {
+	public float costTo(@NotNull Node other) {
 		return this.distanceTo(other.x, other.y);
 	}
 
@@ -66,7 +67,7 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	 *
 	 * @return distance to the point
 	 */
-	public float distanceTo(PVector point) {
+	public float distanceTo(@NotNull PVector point) {
 		return this.distanceTo(point.x, point.y);
 	}
 
@@ -88,8 +89,8 @@ public record Node(float x, float y, ArrayList<Node> edges) implements AStar.ASt
 	@Override
 	public String toString() {
 		return new StringJoiner(", ", Node.class.getSimpleName() + "[", "]")
-			.add("x=" + x)
-			.add("y=" + y)
+			.add("x=" + this.x)
+			.add("y=" + this.y)
 			.toString();
 	}
 

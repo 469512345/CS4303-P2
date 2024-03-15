@@ -167,6 +167,7 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 *
 	 * @return created room
 	 */
+	@NotNull
 	public static Room createRoom(
 		@NotNull GameScreen game,
 		@Nullable ContainerRoom parent,
@@ -233,7 +234,7 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 *
 	 * @return int < 0 for lower, int > 1 for greater, 0 for equal
 	 */
-	public int compareTo(Room other, Axis axis, AxisDirection axisDirection) {
+	public int compareTo(@NotNull Room other, Axis axis, AxisDirection axisDirection) {
 		if (axis == Axis.HORIZONTAL) {
 			if (axisDirection == AxisDirection.MIN) {
 				return Float.compare(this.minX, other.minX);
@@ -257,7 +258,8 @@ public sealed abstract class Room implements Rectangle permits LeafRoom, Contain
 	 *
 	 * @return created room instance
 	 */
-	public static Room createRoot(GameScreen game, LevelInfo levelInfo) {
+	@NotNull
+	public static Room createRoot(@NotNull GameScreen game, @NotNull LevelInfo levelInfo) {
 		//Sometimes level generation will fail due to bad random numbers.
 		//It's a dirty fix, but it works...
 		while (true) {

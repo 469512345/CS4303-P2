@@ -4,6 +4,7 @@ import cs4303.p2.game.entity.AIEntity;
 import cs4303.p2.game.entity.Entity;
 import cs4303.p2.game.level.AStar;
 import cs4303.p2.game.level.Node;
+import cs4303.p2.util.annotation.NotNull;
 
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ import java.util.LinkedList;
  */
 public record TargetXRay(Entity target) implements Goal {
 	@Override
-	public void performGoal(AIEntity entity) {
+	public void performGoal(@NotNull AIEntity entity) {
 		//If we can see the target, then move onto targetting with line of sight
 		if (entity.hasLineOfSight(this.target)) {
 			entity.moveTowards(this.target.position.x, this.target.position.y);

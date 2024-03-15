@@ -1,6 +1,7 @@
 package cs4303.p2.menu;
 
 import cs4303.p2.Main;
+import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.builder.Button;
 import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.screen.DeferredDrawTarget;
@@ -39,7 +40,7 @@ public abstract class AbstractMenuScreen implements Screen, DeferredDrawTarget {
 	 * @param text    title text for menu
 	 * @param buttons buttons to show on the screen
 	 */
-	protected final void drawMenu(String text, Button... buttons) {
+	protected final void drawMenu(String text, @NotNull Button... buttons) {
 		this.drawBackground();
 		float thirdWidth = this.main.width / 3f;
 

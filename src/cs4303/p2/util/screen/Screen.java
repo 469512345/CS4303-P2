@@ -1,5 +1,6 @@
 package cs4303.p2.util.screen;
 
+import cs4303.p2.util.annotation.NotNull;
 import processing.core.PVector;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -168,7 +169,7 @@ public interface Screen {
 	 *
 	 * @param point position vector in world coordinates
 	 */
-	default void convert(PVector point) {
+	default void convert(@NotNull PVector point) {
 		point.set(this.convertX(point.x), this.convertY(point.y));
 	}
 
@@ -199,7 +200,7 @@ public interface Screen {
 	 *
 	 * @param point position vector in screen coordinates
 	 */
-	default void unconvert(PVector point) {
+	default void unconvert(@NotNull PVector point) {
 		point.set(this.unconvertX(point.x), this.unconvertY(point.y));
 	}
 
