@@ -8,6 +8,7 @@ import cs4303.p2.game.level.corridor.Corridor;
 import cs4303.p2.game.level.room.LeafRoom;
 import cs4303.p2.game.level.room.Room;
 import cs4303.p2.game.powerup.Powerup;
+import cs4303.p2.game.powerup.PowerupType;
 import cs4303.p2.util.builder.LineBuilder;
 import cs4303.p2.util.collisions.Collidable;
 import cs4303.p2.util.collisions.HorizontalLine;
@@ -115,7 +116,7 @@ public class Level {
 
 		if (this.rooms.size() == 1) {
 			//Inject a dummy obstacle to act as the player, and ensure nothing spawns touching the player
-			Obstacle dummyPlayer = new Obstacle(game, startingRoom.centre(), this.game.main.PLAYER_RADIUS);
+			Obstacle dummyPlayer = new Obstacle(game, this.startingRoom.centre(), this.game.main.PLAYER_RADIUS);
 			this.obstacles.add(dummyPlayer);
 			this.addObstaclesToRegion(
 				this.startingRoom,
@@ -148,6 +149,16 @@ public class Level {
 					this.addHumansToRegion(room);
 				}
 			}
+		}
+
+		//Add powerups to world
+		for (int i = 0; i < this.levelInfo.powerupInWorld(); i++) {
+			//Cycle through powerup types for even distribution
+			PowerupType type = PowerupType.values()[i % PowerupType.values().length];
+
+			int roomIndex = random.nextInt(0, this.rooms.size());
+			LeafRoom room = this.rooms.get(roomIndex);
+			this.addPowerupToRegion(room, type);
 		}
 
 		//Populate content in corridors
@@ -236,6 +247,24 @@ public class Level {
 				//Position the centre of the obstacle at least one radius from the edge of the room
 				position.x = random.nextFloat(room.minX() + radius, room.maxX() - radius);
 				position.y = random.nextFloat(room.minY() + radius, room.maxY() - radius);
+			}
+		);
+	}
+
+	/**
+	 * Adds a powerup to a room
+	 *
+	 * @param room room to add powerup in
+	 * @param type type of powerup to add
+	 */
+	private void addPowerupToRegion(Rectangle room, PowerupType type) {
+		Random random = this.game.main.random;
+
+		this.populateRegion(this.powerups, 1, 1,
+			(game, position) -> new Powerup(game, position, type),
+			(powerup, position) -> {
+				position.x = random.nextFloat(room.minX(), room.maxX());
+				position.y = random.nextFloat(room.minY(), room.maxY());
 			}
 		);
 	}
@@ -450,7 +479,18 @@ public class Level {
 	 * Update the powerups in the world, removing any which have been collected
 	 */
 	private void updatePowerups() {
-		this.powerups.removeIf(Powerup::collected);
+		Iterator<Powerup> iterator = this.powerups.iterator();
+		while (iterator.hasNext()) {
+			Powerup powerup = iterator.next();
+
+			if (powerup.intersects(this.game.player)) {
+				this.game.player.applyPowerup(powerup);
+			}
+
+			if (powerup.collected()) {
+				iterator.remove();
+			}
+		}
 	}
 
 	/**
@@ -682,7 +722,8 @@ public class Level {
 		return this.collidesWithObstacle(subject) != null ||
 			this.collidesWithFamily(subject) != null ||
 			this.collidesWithRobot(subject) != null ||
-			this.collidesWithProjectile(subject) != null;
+			this.collidesWithProjectile(subject) != null ||
+			this.collidesWithPowerup(subject) != null;
 	}
 
 	/**
@@ -761,6 +802,18 @@ public class Level {
 	 */
 	private Projectile collidesWithProjectile(Collidable subject) {
 		return this.collidesWithAnythingIn(subject, this.projectiles);
+	}
+
+	/**
+	 * Check if an object collides with any powerup, returning the powerup with the collision. Note this will only
+	 * consider the first collision
+	 *
+	 * @param subject object to test
+	 *
+	 * @return first powerup with collision, or null if none collided
+	 */
+	private Powerup collidesWithPowerup(Collidable subject) {
+		return this.collidesWithAnythingIn(subject, this.powerups);
 	}
 
 	/**

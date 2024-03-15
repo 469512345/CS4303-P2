@@ -1,6 +1,7 @@
 package cs4303.p2.game.powerup;
 
 import cs4303.p2.game.GameScreen;
+import cs4303.p2.util.builder.RectBuilder;
 import cs4303.p2.util.collisions.Rectangle;
 import processing.core.PVector;
 
@@ -9,6 +10,9 @@ import processing.core.PVector;
  */
 public class Powerup implements Rectangle {
 
+	/**
+	 * Game instance
+	 */
 	private final GameScreen game;
 	/**
 	 * Position of the powerup
@@ -30,7 +34,7 @@ public class Powerup implements Rectangle {
 	 * @param position position of the powerup
 	 * @param type     type of the powerup
 	 */
-	protected Powerup(GameScreen game, PVector position, PowerupType type) {
+	public Powerup(GameScreen game, PVector position, PowerupType type) {
 		this.game = game;
 		this.position = position;
 		this.type = type;
@@ -40,7 +44,19 @@ public class Powerup implements Rectangle {
 	 * Draw the powerup on screen
 	 */
 	public void draw() {
-		this.type.draw(this.game, this.position);
+		RectBuilder rect = this.game.rect();
+		rect
+			.at(this.position)
+			.size(this.game.main.POWERUP_WIDTH, this.game.main.POWERUP_HEIGHT)
+			.fill(this.type.color)
+			.stroke(this.type.strokeColor)
+			.strokeWeight(1)
+			.draw();
+		this.game.text(this.type.text)
+			.fill(this.game.main.POWERUP_TEXT_COLOR)
+			.size(this.game.main.POWERUP_TEXT_SIZE)
+			.centredInRect(rect)
+			.draw();
 	}
 
 	@Override
@@ -55,12 +71,12 @@ public class Powerup implements Rectangle {
 
 	@Override
 	public float width() {
-		return this.type.width;
+		return this.game.main.POWERUP_WIDTH;
 	}
 
 	@Override
 	public float height() {
-		return this.type.height;
+		return this.game.main.POWERUP_HEIGHT;
 	}
 
 	/**

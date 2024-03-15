@@ -1,8 +1,5 @@
 package cs4303.p2.game.powerup;
 
-import cs4303.p2.game.GameScreen;
-import processing.core.PVector;
-
 import java.awt.Color;
 
 /**
@@ -14,76 +11,59 @@ public enum PowerupType {
 	 */
 	SPEED_BOOST(
 		10_000, //10 seconds
-		20,
-		20
-	) {
-		@Override
-		public void draw(GameScreen game, PVector position) {
-			game.rect()
-				.at(position)
-				.size(this.width, this.height)
-				.fill(Color.RED)
-				.draw();
-		}
-	},
+		Color.GREEN,
+		Color.LIGHT_GRAY,
+		"Speed"
+	),
 	/**
 	 * XRay powerup, allowing the player to see through walls
 	 */
 	XRAY(
 		10_000,
-		20,
-		20
-	) {
-		@Override
-		public void draw(GameScreen game, PVector position) {
-
-		}
-	},
+		Color.CYAN,
+		Color.BLUE,
+		"XRay"
+	),
 	/**
 	 * Beacon powerup, allowing the player to be seen by other family members through walls
 	 */
 	FAMILY_BEACON(
 		10_000,
-		20,
-		20
-	) {
-		@Override
-		public void draw(GameScreen game, PVector position) {
-
-		}
-	};
+		Color.YELLOW,
+		Color.ORANGE,
+		"Beacon"
+	);
 
 	/**
 	 * Duration in milliseconds
 	 */
 	public final long durationMillis;
 	/**
-	 * Width of powerup
+	 * fill colour
 	 */
-	public final float width;
+	public final Color color;
 	/**
-	 * Height of powerup
+	 * line colour
 	 */
-	public final float height;
+	public final Color strokeColor;
+	/**
+	 * text in powerup
+	 */
+	public final String text;
 
 	/**
 	 * Construct a powerup type
 	 *
+	 * @param color          fillColor of powerup
+	 * @param strokeColor    line color of powerup
 	 * @param durationMillis duration in milliseconds
-	 * @param width          width on screen
-	 * @param height         height on screen
+	 * @param text           text on powerup
 	 */
-	PowerupType(long durationMillis, float width, float height) {
-		this.durationMillis = durationMillis;
-		this.width = width;
-		this.height = height;
-	}
 
-	/**
-	 * Draw this powerup on screen in a position
-	 *
-	 * @param game     game instance to draw to
-	 * @param position position of powerup on screen
-	 */
-	public abstract void draw(GameScreen game, PVector position);
+	PowerupType(long durationMillis, Color color, Color strokeColor, String text) {
+		this.durationMillis = durationMillis;
+		this.color = color;
+		this.strokeColor = strokeColor;
+		this.text = text;
+	}
 }

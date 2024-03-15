@@ -338,6 +338,8 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 
 		float divisor = (float) (Math.log(effectiveWave) / 4f + 0.2f);
 
+		int maxEntitiesPerRoom = Math.floorDiv(this.wave - 1, 3) + 1;
+
 		return new LevelInfo(
 			width * divisor,
 			height * divisor,
@@ -352,16 +354,17 @@ public class GameScreen implements Screen, DeferredDrawTarget {
 			5,
 			25,
 			1,
-			3,
+			maxEntitiesPerRoom,
 			0,
 			1,
 			1,
-			1,
+			maxEntitiesPerRoom,
 			familyConstructors,
 			1,
-			1,
+			maxEntitiesPerRoom,
 			robotConstructors,
-			0.6f
+			0.6f,
+			this.wave
 		);
 	}
 

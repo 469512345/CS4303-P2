@@ -233,4 +233,48 @@ public abstract class Properties extends PApplet {
 	 * How many ticks between recalculating the AI for an entity
 	 */
 	public final int CALCULATE_AI_EVERY_TICKS = 30;
+	/**
+	 * Width of powerup displays on the HUD
+	 */
+	public final float POWERUP_HUD_WIDTH = 100;
+	/**
+	 * Height of powerup displays on the HUD
+	 */
+	public final float POWERUP_HUD_HEIGHT = 80;
+	/**
+	 * Y coordinate of the powerup hud
+	 */
+	public final float POWERUP_HUD_Y = 200;
+	/**
+	 * Width of powerup in world
+	 */
+	public final float POWERUP_WIDTH = 20;
+	/**
+	 * Height of powerup in world
+	 */
+	public final float POWERUP_HEIGHT = 20;
+	/**
+	 * Powerup text size
+	 */
+	public final float POWERUP_TEXT_SIZE = 5;
+	/**
+	 * Powerup text size in the HUD
+	 */
+	public final float POWERUP_HUD_TEXT_SIZE = 30;
+	/**
+	 * Padding from top of box for powerup text
+	 */
+	public final float POWERUP_HUD_TEXT_PADDING_TOP = 10;
+	/**
+	 * Padding from top of box for powerup timer text
+	 */
+	public final float POWERUP_HUD_TIMER_PADDING_TOP = 50;
+	/**
+	 * Powerup text colour
+	 */
+	public final Color POWERUP_TEXT_COLOR = Color.BLACK;
+	/**
+	 * Separation between the tops of powerups on the HUD
+	 */
+	public final float POWERUP_HUD_SEPARATION = 100;
 }

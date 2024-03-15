@@ -1,7 +1,6 @@
 package cs4303.p2.game.level;
 
 import cs4303.p2.game.GameScreen;
-import cs4303.p2.game.entity.Entity;
 import cs4303.p2.game.entity.family.Family;
 import cs4303.p2.game.entity.robot.Robot;
 import processing.core.PVector;
@@ -33,6 +32,7 @@ import processing.core.PVector;
  * @param maxRobotsPerRoom        maximum number of robots per room
  * @param robotConstructors       constructors for robots available in this level
  * @param roomRobotChance         chance that a room generates with robots, otherwise it will generate with humans
+ * @param powerupInWorld          number of powerups there should be in the world
  */
 public record LevelInfo(
 	float width,
@@ -57,7 +57,8 @@ public record LevelInfo(
 	int minRobotsPerRoom,
 	int maxRobotsPerRoom,
 	RobotConstructor[] robotConstructors,
-	float roomRobotChance
+	float roomRobotChance,
+	int powerupInWorld
 ) {
 
 	/**
@@ -80,16 +81,16 @@ public record LevelInfo(
 	}
 
 	/**
-	 * Constructor for humans.
-	 * Making this its own type makes creating arrays much easier; it is not easy to create an array of a generic type
+	 * Constructor for humans. Making this its own type makes creating arrays much easier; it is not easy to create an
+	 * array of a generic type
 	 */
 	public interface HumanConstructor extends ObjectConstructor<Family> {
 
 	}
 
 	/**
-	 * Constructor for robots.
-	 * Making this its own type makes creating arrays much easier; it is not easy to create an array of a generic type
+	 * Constructor for robots. Making this its own type makes creating arrays much easier; it is not easy to create an
+	 * array of a generic type
 	 */
 	public interface RobotConstructor extends ObjectConstructor<Robot> {
 	}
