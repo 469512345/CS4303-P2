@@ -2,7 +2,7 @@
 
 Ballista command is a simple city defense game where the player must protect their cities from falling meteorites (and more).
 
-# How to run Ballista Command
+# How to run Robotron 4303
 
 This game is just a java project which includes Processing as a library (libjars/core.jar).
 
