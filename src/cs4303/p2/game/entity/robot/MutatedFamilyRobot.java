@@ -55,7 +55,7 @@ public class MutatedFamilyRobot extends Robot {
 
 	@Override
 	public float velocityMagnitude() {
-		return this.familyMember.velocityMagnitude();
+		return this.familyMember.velocityMagnitude() * 2;
 	}
 
 	@Override

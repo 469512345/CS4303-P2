@@ -17,7 +17,7 @@ public record TargetSight(Entity target, PVector lastKnownLocation) implements G
 		if (entity.hasLineOfSight(this.target)) {
 			//Move towards the enemy and update its last known position
 			entity.moveTowards(this.target.position.x, this.target.position.y);
-			this.lastKnownLocation.set(this.target.position.copy());
+			this.lastKnownLocation.set(this.target.position);
 		} else {
 			if (entity.containsPoint(this.lastKnownLocation)) {
 				entity.recalculateGoal();

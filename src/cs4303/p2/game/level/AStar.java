@@ -4,6 +4,7 @@ import cs4303.p2.util.annotation.NotNull;
 import cs4303.p2.util.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +66,11 @@ public class AStar {
 	 * @return list containing the nodes in ascending order (i.e., start node at front of list, end node last in list)
 	 */
 	@Nullable
-	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(@NotNull T start, @NotNull T end, @NotNull Predicate<T> nodeFilter) {
+	public static <T extends AStarNode<T>> LinkedList<T> shortestPathBetween(
+		@NotNull T start,
+		@NotNull T end,
+		@NotNull Predicate<T> nodeFilter
+	) {
 		//If the end node doesn't pass the filter, perform a breadth first search to find a connected node that does. This won't be exact, but good enough
 		if (!nodeFilter.test(end)) {
 			List<T> currentEdge = end.edges();
@@ -133,7 +138,8 @@ public class AStar {
 
 			//Find the node in the open list with the lowest total cost
 			Optional<AStarNodeInfo<T>> min = open.stream()
-				.min((a, b) -> Float.compare(a.totalCost(), b.totalCost()));
+				.min(Comparator.comparing(AStarNodeInfo::totalCost));
+
 			if (min.isPresent()) {
 				current = min.get();
 			} else {
@@ -190,7 +196,11 @@ public class AStar {
 		 * @return node info wrapper for new node
 		 */
 		@NotNull
-		public static <T extends AStarNode<T>> AStarNodeInfo<T> next(@NotNull T node, @NotNull AStarNodeInfo<T> previous, T endNode) {
+		public static <T extends AStarNode<T>> AStarNodeInfo<T> next(
+			@NotNull T node,
+			@NotNull AStarNodeInfo<T> previous,
+			T endNode
+		) {
 			return new AStarNodeInfo<>(
 				node,
 				previous,

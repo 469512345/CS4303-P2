@@ -19,6 +19,8 @@ public record Flee(Entity enemy) implements Goal {
 	public void performGoal(@NotNull AIEntity entity) {
 		//If we can see the enemy, flee from it
 		if (entity.hasLineOfSight(this.enemy)) {
+			float myDistanceToEnemy = entity.distanceTo(this.enemy);
+
 			//Try to find a node on the map that we can see and is further away from the enemy than me
 			Node furthestNode = null;
 			float furthestDistance = Float.MIN_VALUE;
@@ -26,7 +28,7 @@ public record Flee(Entity enemy) implements Goal {
 				if (entity.hasLineOfSight(node)) {
 					float distanceToEnemy = node.distanceTo(this.enemy.position);
 					float distanceToMe = node.distanceTo(entity.position);
-					if (distanceToEnemy > distanceToMe && distanceToEnemy > furthestDistance) {
+					if (distanceToEnemy > distanceToMe && distanceToEnemy > myDistanceToEnemy && distanceToEnemy > furthestDistance) {
 						furthestNode = node;
 						furthestDistance = distanceToEnemy;
 					}

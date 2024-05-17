@@ -284,8 +284,16 @@ public abstract class AIEntity extends Entity {
 			start,
 			this.endPoint,
 			point -> { // Filter to only points where this enemy wouldn't collide with any obstacles
-				Circle circle = Circle.of(point.x, point.y, this.radius());
-				return this.game.level.collidesWithObstacle(circle) == null && this.game.level.collidesWithWall(circle) == null;
+				//Temporarily position the entity in the location to test for collisions.
+				//This is a bit of a weird thing to do, but avoids allocating a Circle object for the single test on each node.
+				//This has been measured to make a speed improvement in the algorithm
+				float initialX = this.position.x;
+				float initialY = this.position.y;
+				this.position.set(point.x, point.y);
+				boolean valid = this.game.level.collidesWithObstacle(this) == null &&
+					this.game.level.collidesWithWall(this) == null;
+				this.position.set(initialX, initialY);
+				return valid;
 			}
 		);
 		this.moveAlongPath();

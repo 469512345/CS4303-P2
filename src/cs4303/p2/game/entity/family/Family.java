@@ -69,13 +69,9 @@ public abstract class Family extends AIEntity {
 		boolean canSeePlayer = this.knowsLocationOf(this.game.player);
 		boolean canSeeEnemy = nearestRobot != null;
 		if (canSeePlayer) {
-			if (canSeeEnemy) {
-				float nearestDistance = this.distanceTo(nearestRobot);
-				if (nearestDistance < this.distanceTo(this.game.player)) {
-					this.fleeFrom(nearestRobot);
-				} else {
-					this.target(this.game.player);
-				}
+			//Flee from the enemy if we can see it, and it's closer than the player
+			if (canSeeEnemy && this.distanceTo(nearestRobot) < this.distanceTo(this.game.player)) {
+				this.fleeFrom(nearestRobot);
 			} else {
 				this.target(this.game.player);
 			}

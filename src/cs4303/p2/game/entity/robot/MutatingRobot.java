@@ -74,6 +74,6 @@ public class MutatingRobot extends Robot {
 
 	@Override
 	public boolean canSeeHumansThroughWalls() {
-		return super.canSeeHumansThroughWalls();
+		return false;
 	}
 }
